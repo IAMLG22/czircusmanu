@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spaghettería Circus — Trattoria-espectáculo en Teatinos, Málaga · desde 1997</title>
+  <meta name="description" content="El gratinado que Málaga lleva pidiendo desde 1997. Trattoria italiana en Teatinos: pasta fresca, horno y espectáculo en el plato. Reserva tu mesa.">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+  <!-- Preload de la imagen del hero (primera impresión rápida) -->
+  <link rel="preload" as="image" href="assets/img/hero-reserva.webp?v=1" fetchpriority="high">
+
+  <!-- Google Fonts: Rye (display circo) + Fraunces (serif) + Inter (cuerpo) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rye&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap">
+
+  <!-- Estilos (bump ?v= en cada subida a Hostinger) -->
+  <link rel="stylesheet" href="styles.css?v=20260919e">
+  <!-- Globos (balloons-js). OJO: el paquete NO publica build UMD — solo CJS
+       (dist/index.js) y ESM (dist/index.esm.js) —, así que la URL .umd.js
+       da 404 y un <script src> normal petaría con "exports is not defined".
+       Con type="module" el navegador carga el ESM tal cual: sigue siendo
+       vanilla, sin npm ni bundler. Los módulos van diferidos por defecto,
+       así que el DOM ya está montado cuando esto corre. -->
+  <script type="module">
+    import { balloons } from "https://cdn.jsdelivr.net/npm/balloons-js@0.0.3/dist/index.esm.js";
+
+    /* Boton decorativo de lanzar globos. Es solo un guino de feria del hero:
+       NO tiene nada que ver con la transicion de reserva. */
+    const boton = document.querySelector("[data-globos]");
+    if (boton) {
+      boton.addEventListener("click", (evento) => {
+        evento.preventDefault();
+        balloons();
+      });
+    }
+
+    /* -------------------------------------------------------
+       Transicion de telon de circo para los enlaces de reserva:
+       1) Los paneles se cierran hacia el centro (~1s)
+       2) El logo aparece sobre el telon cerrado
+       3) Se navega a contacto.html (sin hash, para verla desde arriba)
+       ------------------------------------------------------- */
+    const pocoMovimiento = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let enTransicion = false;   // evita apilar telones con el doble clic
+
+    function crearTelon() {
+      const wrap = document.createElement("div");
+      wrap.className = "telon-reserva";
+      wrap.setAttribute("aria-hidden", "true");
+      wrap.innerHTML =
+        '<div class="telon-reserva-panel izq"></div>' +
+        '<div class="telon-reserva-logo">' +
+          '<span class="brand-word">Spaghetter\u00eda Circus</span>' +
+          '<small>EST. 1997 \u00b7 TEATINOS, M\u00c1LAGA</small>' +
+        '</div>' +
+        '<div class="telon-reserva-panel der"></div>';
+      document.body.appendChild(wrap);
+      return wrap;
+    }
+
+    function transicionReserva(destino) {
+      if (enTransicion) return;
+      enTransicion = true;
+
+      // Quien pide menos movimiento se va directo, sin telon.
+      if (pocoMovimiento.matches) { window.location.href = destino; return; }
+
+      const telon = crearTelon();
+      // Frame 1: el navegador pinta el telon (paneles fuera de pantalla).
+      // Frame 2: .is-closed -> los paneles se cierran hacia el centro.
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          telon.classList.add("is-closed");
+        });
+      });
+
+      // Navegar con el telon ya cerrado y el logo lucido: paneles ~1s,
+      // logo .5s con delay .8s, mas una pausa para que se lea.
+      setTimeout(() => {
+        try { sessionStorage.setItem("circus_telon_reserva", "1"); } catch (e) {}
+        window.location.href = destino;
+      }, 1400);
+    }
+
+    /* Interceptar TODOS los enlaces de reserva, por delegacion. */
+    document.addEventListener("click", (evento) => {
+      const enlace = evento.target.closest('a[href*="contacto.html#reserva"]');
+      if (!enlace) return;
+      // Respetamos abrir en pestana nueva / clic con modificador.
+      if (evento.defaultPrevented || evento.metaKey || evento.ctrlKey ||
+          evento.shiftKey || evento.altKey || evento.button !== 0) return;
+
+      evento.preventDefault();
+      // Sin hash a proposito: contacto se ve desde arriba.
+      transicionReserva("contacto.html");
+    });
+  </script>
+</head>
+<body class="home">
+
+  <!-- ===== TELÓN de apertura (solo Home; se desactiva tras 1ª visita) ===== -->
+  <div class="telon" data-telon aria-hidden="true">
+    <div class="telon-panel izq"></div>
+    <div class="telon-logo">
+      <span class="brand-word">Spaghettería Circus</span>
+      <small>EST. 1997 · TEATINOS, MÁLAGA</small>
+    </div>
+    <div class="telon-panel der"></div>
+  </div>
+
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+
+  <!-- ===== HEADER / NAV (FIJO arriba de todo) =====
+       Los 4 enlaces quedan SIEMPRE fijos en la parte superior: en escritorio
+       dos a la izquierda y dos a la derecha; en móvil, dentro de la
+       hamburguesa. El logo va absolutamente centrado dentro de la barra.
+       En la home arranca GRANDE en el centro de la portada y, al hacer
+       scroll, sube y se encoge hasta «aparcar» en la cabecera (lo mueve
+       initBrandMorph() en main.js). Sin JS se queda directamente aparcado. -->
+  <header class="site-header site-header--home" data-header>
+    <div class="wrap">
+      <nav class="nav nav--marquesina" data-nav aria-label="Principal">
+
+        <!-- Enlaces: 2 a la izquierda · [hueco del logo] · 2 a la derecha -->
+        <div class="nav-menu" id="nav-menu">
+          <a href="carta.html">Carta</a>
+          <a href="la-casa.html">Nosotros</a>
+          <a href="el-local.html">El Local</a>
+          <a href="contacto.html">Contacto</a>
+        </div>
+
+        <!-- El logo que se transforma con el scroll -->
+        <a class="nav-brand" href="index.html" data-brand-morph>
+          <span class="nav-brand-word">Spaghettería Circus</span>
+          <small>Teatinos · Málaga · desde 1997</small>
+        </a>
+
+        <button class="nav-toggle" data-nav-toggle aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M3 6h18M3 12h18M3 18h18"/>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== MENU KINETICO (movil) =====
+       Sustituye al desplegable crema de antes. Lo anima initMenuKinetico()
+       en main.js con GSAP; sin JS se queda oculto y quedan los enlaces del
+       footer, que llevan a las mismas paginas. -->
+  <div class="kn" data-kn="closed">
+    <div class="kn-overlay" data-kn-close></div>
+    <nav class="kn-menu" aria-label="Menu principal">
+      <div class="kn-bg" aria-hidden="true">
+        <span class="kn-backdrop first"></span>
+        <span class="kn-backdrop second"></span>
+        <span class="kn-backdrop"></span>
+        <div class="kn-shapes" aria-hidden="true">
+          <!-- Una forma por enlace. Se activan al pasar por encima (o al abrir,
+               en tactil, que no tiene hover). Puro decorado. -->
+          <svg class="kn-shape kn-shape-1" viewBox="0 0 400 400" fill="none">
+            <!-- El scale va en el <g> a proposito: GSAP escribe el atributo
+                 transform del elemento que anima, y si lo pusieramos en el
+                 <path> se lo llevaria por delante (estrellas a tamano 1). -->
+            <g transform="translate(40 60) scale(3.4)"><path class="kn-shape-el" d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.7L12 17.3 5.8 20.8l1.6-6.7L2.2 8.9l6.9-.6z" fill="rgba(227,197,121,.30)"/></g>
+            <g transform="translate(268 150) scale(2.2)"><path class="kn-shape-el" d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.7L12 17.3 5.8 20.8l1.6-6.7L2.2 8.9l6.9-.6z" fill="rgba(227,197,121,.22)"/></g>
+            <g transform="translate(110 262) scale(4.4)"><path class="kn-shape-el" d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.7L12 17.3 5.8 20.8l1.6-6.7L2.2 8.9l6.9-.6z" fill="rgba(227,197,121,.18)"/></g>
+          </svg>
+          <svg class="kn-shape kn-shape-2" viewBox="0 0 400 400" fill="none">
+            <circle class="kn-shape-el" cx="78" cy="96" r="46" fill="rgba(227,197,121,.26)"/>
+            <circle class="kn-shape-el" cx="296" cy="188" r="66" fill="rgba(227,197,121,.18)"/>
+            <circle class="kn-shape-el" cx="156" cy="304" r="34" fill="rgba(227,197,121,.30)"/>
+          </svg>
+          <svg class="kn-shape kn-shape-3" viewBox="0 0 400 400" fill="none">
+            <path class="kn-shape-el" d="M92 210 L154 88 L216 210 Z" fill="rgba(227,197,121,.26)"/>
+            <path class="kn-shape-el" d="M214 318 L272 196 L330 318 Z" fill="rgba(227,197,121,.18)"/>
+            <path class="kn-shape-el" d="M36 330 L82 240 L128 330 Z" fill="rgba(227,197,121,.30)"/>
+          </svg>
+          <svg class="kn-shape kn-shape-4" viewBox="0 0 400 400" fill="none">
+            <circle class="kn-shape-el" cx="112" cy="124" r="58" stroke="rgba(227,197,121,.34)" stroke-width="7"/>
+            <circle class="kn-shape-el" cx="272" cy="226" r="80" stroke="rgba(227,197,121,.24)" stroke-width="7"/>
+            <circle class="kn-shape-el" cx="140" cy="308" r="40" stroke="rgba(227,197,121,.4)" stroke-width="7"/>
+          </svg>
+        </div>
+      </div>
+
+      <button class="kn-close" type="button" data-kn-close aria-label="Cerrar menu">
+        <span class="kn-close-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+        </span>
+      </button>
+
+      <div class="kn-wrap">
+        <ul class="kn-list">
+            <li class="kn-item" data-shape="1">
+              <a class="kn-link" href="carta.html"><span class="kn-link-text">Carta</span></a>
+            </li>
+            <li class="kn-item" data-shape="2">
+              <a class="kn-link" href="la-casa.html"><span class="kn-link-text">Nosotros</span></a>
+            </li>
+            <li class="kn-item" data-shape="3">
+              <a class="kn-link" href="el-local.html"><span class="kn-link-text">El Local</span></a>
+            </li>
+            <li class="kn-item" data-shape="4">
+              <a class="kn-link" href="contacto.html"><span class="kn-link-text">Contacto</span></a>
+            </li>
+        </ul>
+        <div class="kn-cta" data-kn-fade>
+          <a class="btn btn--primario" href="contacto.html#reserva">Reservar mesa</a>
+        </div>
+        <p class="kn-pie" data-kn-fade>
+          Av. de Gregorio Prieto, 25 &middot; Teatinos, M&aacute;laga<br>
+          <a href="tel:+34951732575">+34 951 732 575</a>
+        </p>
+      </div>
+    </nav>
+  </div>
+
+
+  <main id="main">
+
+    <!-- ===== 1. PORTADA (la ilustración manda) =====
+         Fondo casi limpio: sólo un velo muy suave arriba (para que se lean
+         los enlaces y el logo sobre la madera) y otro abajo (para el cartel
+         de reserva). El centro —payaso, plato y cartel de RESERVADO— se
+         queda despejado a propósito. -->
+    <section class="hero" aria-labelledby="hero-titulo">
+
+      <!-- Fondo: la escena central (con el payaso) se ve entera y los
+           laterales se rellenan con la MISMA escena SIN payaso, para que al
+           ampliar la pantalla no aparezca un payaso cortado por los lados. -->
+      <div class="hero-strip" aria-hidden="true">
+        <img class="hero-copy" src="assets/img/hero-lados.webp?v=1" alt="" loading="eager" decoding="async">
+        <img class="hero-bg"
+             src="assets/img/hero-reserva.webp?v=1" alt=""
+             fetchpriority="high" loading="eager" decoding="async"
+             width="1800" height="1557">
+        <img class="hero-copy" src="assets/img/hero-lados.webp?v=1" alt="" loading="eager" decoding="async">
+      </div>
+
+      <div class="hero-veil" aria-hidden="true"></div>
+
+      <div class="hero-inner">
+        <h1 id="hero-titulo" class="sr-only">Spaghettería Circus — trattoria-espectáculo en Teatinos, Málaga, desde 1997</h1>
+
+        <!-- ===== Bloque de arriba: logo + cartel de reserva =====
+             El cartel va centrado justo debajo del subtítulo, dentro de la
+             franja que queda ENTRE el subtítulo y la cabeza del payaso. Su
+             tamaño se calcula en svh para que esa franja se respete sea cual
+             sea la pantalla (ver .cta-cartel en el CSS). -->
+        <div class="hero-top">
+
+          <!-- Hueco que reserva el sitio del logo grande (que vive en la
+               cabecera y sube con el scroll). La altura la calcula el JS;
+               sin JS vale 0 y el logo se queda directamente en la barra. -->
+          <div class="hero-logo-space" data-logo-space aria-hidden="true"></div>
+
+          <!-- Cartel de reserva (diseño propio, Canva). El PNG original
+               (logoreserva.png) venía con medio lienzo transparente de más;
+               esta versión está recortada al dibujo para que el área
+               clicable sea exactamente el cartel. -->
+          <!-- // TODO: integrar sistema de reservas — de momento va a contacto/teléfono -->
+          <a class="cta-cartel" href="contacto.html#reserva">
+            <picture>
+              <source srcset="assets/img/boton-reserva.webp?v=1" type="image/webp">
+              <img src="assets/img/boton-reserva.png?v=1"
+                   width="973" height="624"
+                   alt="Tu mesa te espera: ¡toca aquí para reservar!"
+                   fetchpriority="high" decoding="async">
+            </picture>
+          </a>
+
+          <!-- Guiño de feria: lanza los globos de balloons-js. Es decorado,
+               no navegación, así que va como <button> y no como enlace. -->
+          <button class="cta-globos" type="button" data-globos>
+            <span aria-hidden="true">🎈</span> ¡Lanzar globos!
+          </button>
+        </div>
+
+        <!-- Secundario: ancho y hueco. Al ser transparente, la ilustración
+             se sigue viendo por detrás aunque lo cruce de lado a lado. -->
+        <a class="cta-carta" href="carta.html">
+          <span>Ver la carta</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M5 12h13M13 6l6 6-6 6"/>
+          </svg>
+        </a>
+      </div>
+
+      <a class="hero-scroll" href="#franja" aria-label="Bajar al contenido">
+        <span class="hero-scroll-txt">Desliza</span>
+        <span class="hero-scroll-linea" aria-hidden="true"></span>
+      </a>
+    </section>
+
+    <!-- ===== 2. FRANJA DE CARPA (separador decorativo, sin contenido) ===== -->
+    <div class="franja-carpa" id="franja" role="presentation"></div>
+
+    <!-- ===== 3. PLATOS ESTRELLA ===== -->
+    <section class="section" aria-labelledby="estrella-titulo">
+      <div class="wrap">
+        <div class="section-head center reveal">
+          <span class="kicker">Los números fuertes</span>
+          <h2 id="estrella-titulo">Platos que llenan la sala</h2>
+          <p class="lead">Empezando por el gratinado, nuestro cabeza de cartel desde el primer día.</p>
+        </div>
+        <!-- Se rellena desde lib/manifest.js (data.stars). Contenido de respaldo abajo por si falla el JS -->
+        <div class="platos-grid" data-stars>
+          <noscript>
+            <article class="plato-card"><div class="plato-body"><h3>El Gratinado</h3><p>Nuestro plato insignia desde 1997.</p></div></article>
+          </noscript>
+        </div>
+        <div class="center" style="margin-top:2.5rem">
+          <a class="btn btn--secundario" href="carta.html">Ver toda la carta</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 4. LA HISTORIA (Desde 1997) ===== -->
+    <section class="section bg-crema-2" aria-labelledby="historia-titulo">
+      <div class="wrap">
+        <div class="split split--reverse">
+          <div class="split-media split-media--foto reveal">
+            <!-- La fachada del restaurante antiguo, apaisada y con esquinas
+                 redondeadas: metida en un círculo se perdían los neones de
+                 los lados. -->
+            <img class="foto-nosotros" src="assets/img/fachada-antigua.webp?v=2"
+                 alt="Fachada del restaurante antiguo, con los neones de Restaurante, Circus y Spaghettería sobre la verja"
+                 width="1600" height="1236" loading="lazy" decoding="async">
+          </div>
+          <div class="split-body reveal reveal-delay-1">
+            <span class="kicker">Nosotros</span>
+            <h2 id="historia-titulo">28 años de función, un solo escenario</h2>
+            <p>Abrimos en 1997 y desde entonces no hemos bajado el telón ni un día. De La Malagueta a Teatinos, con la misma cocina, las mismas recetas y las mismas ganas de que salgas contento.</p>
+            <p>Un solo local, llevado por la casa. Aquí cada plato es un número y el gratinado siempre cierra la primera parte.</p>
+            <a class="btn btn--primario" href="la-casa.html">Conócenos</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 5. EL LOCAL EN TEATINOS (mapa crema + ficha superpuesta) =====
+         El mapa va de fondo y la ficha flota encima.
+
+         SOBRE EL MAPA: el Place ID del negocio es
+             ChIJQTQ2Euj3cg0R8MCcaTkP9aM
+         Google sólo acepta `place_id` en el iframe a través de la Maps Embed
+         API, y ésa SÍ pide clave. El embed gratuito (el de abajo) no entiende
+         el place_id: si se lo pasas te pinta el mapamundi. Por eso el iframe
+         va por nombre + dirección (cae en la ficha correcta del negocio) y el
+         Place ID se usa en los enlaces de "Cómo llegar", donde sí funciona
+         sin clave y lleva exactamente a esta ficha.
+
+         Si algún día sacas una clave de Google Maps, sustituye el src del
+         iframe por esta línea y ya irá por Place ID:
+         https://www.google.com/maps/embed/v1/place?key=TU_CLAVE&q=place_id:ChIJQTQ2Euj3cg0R8MCcaTkP9aM -->
+    <section class="mapa-bloque" aria-labelledby="local-titulo">
+
+      <!-- El mapa es DECORADO: no se arrastra, no hace zoom y no se puede
+           pulsar (pointer-events:none en el CSS + tabindex -1 + aria-hidden),
+           así no se "engancha" el scroll al pasar por encima. Quien quiera el
+           mapa de verdad tiene el botón «Cómo llegar». -->
+      <div class="mapa-lienzo" aria-hidden="true">
+        <!-- Por COORDENADAS y no por nombre de sitio a proposito: con
+             ?q=<sitio> Google pinta encima su propio chincheta con la
+             etiqueta del negocio y un boton "Abrir en Maps" que se comen
+             el diseno. Con ?q=<lat,lng> el mapa sale limpio (la atribucion
+             de Google de abajo se mantiene, que es obligatoria). Las
+             coordenadas son las que devuelve el propio embed para
+             Av. de Gregorio Prieto, 25. -->
+        <iframe
+          class="mapa-iframe" tabindex="-1"
+          title="Mapa de Spaghettería Circus en Av. de Gregorio Prieto, 25, Teatinos (Málaga)"
+          src="https://www.google.com/maps?q=36.7157389,-4.4631458&z=17&hl=es&output=embed"
+          loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+        <span class="mapa-velo"></span>
+
+        <!-- Marcador de la casa, justo en el centro (que es donde el embed
+             centra el restaurante). -->
+        <span class="mapa-pin">
+          <span class="mapa-pin-onda"></span>
+          <span class="mapa-pin-gota">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.7L12 17.3 5.8 20.8l1.6-6.7L2.2 8.9l6.9-.6z"/>
+            </svg>
+          </span>
+          <span class="mapa-pin-cartel">Spaghettería Circus</span>
+        </span>
+      </div>
+
+      <div class="wrap">
+        <div class="mapa-ficha reveal">
+          <span class="kicker">El Local</span>
+          <h2 id="local-titulo">Nos vemos en Teatinos</h2>
+
+          <p class="mapa-nombre">Restaurante Spaghettería Circus</p>
+          <address class="mapa-dir">
+            Av. de Gregorio Prieto, 25 · Teatinos-Universidad<br>
+            29010 Málaga, España
+          </address>
+
+          <p class="mapa-estado">
+            <span class="estado" data-estado><span class="punto"></span><span>Comprobando horario…</span></span>
+          </p>
+
+          <!-- Si cambian los horarios, cámbialos también en lib/manifest.js
+               (hours) para que el cartel «Abierto / Cerrado» siga cuadrando. -->
+          <dl class="mapa-horario">
+            <div class="mapa-fila"><dt>Lunes y miércoles</dt><dd>13:00 a 16:00</dd></div>
+            <div class="mapa-fila"><dt>Martes</dt><dd class="es-cerrado">Cerrado</dd></div>
+            <div class="mapa-fila"><dt>Jueves</dt><dd>13:00 a 16:00 y 20:00 a 23:30</dd></div>
+            <div class="mapa-fila"><dt>Viernes, sábado y domingo</dt><dd>13:00 a 16:30 y 20:00 a 23:30</dd></div>
+          </dl>
+
+          <p class="mapa-contacto">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+            <a href="mailto:1997circus@gmail.com">1997circus@gmail.com</a>
+          </p>
+
+          <!-- Un solo botón a propósito: cero ruido.
+               Aquí sí tira del Place ID (la API de enlaces de Maps no pide clave). -->
+          <a class="mapa-comollegar"
+             href="https://www.google.com/maps/dir/?api=1&amp;destination=Av.+de+Gregorio+Prieto,+25,+29010+M%C3%A1laga&amp;destination_place_id=ChIJQTQ2Euj3cg0R8MCcaTkP9aM"
+             target="_blank" rel="noopener">
+            Cómo llegar
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 6. BANDA DE RESERVA (foto fija con efecto parallax) =====
+         La foto NO se mueve con el scroll: va con `background-attachment:
+         fixed`, así que se queda clavada al viewport mientras el contenido
+         pasa por encima. El truco del `inset: -50px` en .banda-foto es para
+         que los redondeos de subpíxel no dejen una línea fina en los bordes
+         (la sección recorta con overflow:hidden).
+         En iOS `fixed` no funciona, así que hay un media query que lo pasa
+         a `scroll` — se ve como una foto de fondo normal, sin roturas. -->
+    <section class="section banda-reserva" aria-labelledby="reserva-titulo">
+      <div class="banda-foto" aria-hidden="true"></div>
+      <div class="banda-velo" aria-hidden="true"></div>
+      <div class="wrap">
+        <!-- Marquesina de luces -->
+        <div class="marquesina" aria-hidden="true">
+          <span class="bombilla"></span><span class="bombilla"></span><span class="bombilla"></span>
+          <span class="bombilla"></span><span class="bombilla"></span><span class="bombilla"></span>
+          <span class="bombilla"></span><span class="bombilla"></span><span class="bombilla"></span>
+        </div>
+        <h2 id="reserva-titulo">Reserva tu mesa</h2>
+        <p>El mejor sitio de la sala es el que reservas con tiempo. Llámanos y te guardamos función.</p>
+        <!-- // TODO: integrar sistema de reservas — de momento enlaza a contacto/teléfono -->
+        <a class="btn btn--primario" href="contacto.html#reserva">Reservar mesa</a>
+        <a class="banda-tel" href="tel:+34951732575">+34 951 732 575</a>
+      </div>
+    </section>
+
+    <!-- ===== 7. INSTAGRAM (doble marquesina, a sangre) =====
+         Dos filas de fotos a todo el ancho: la de arriba va hacia la
+         izquierda y la de abajo hacia la derecha. Sin título encima: mandan
+         las fotos. En el centro, flotando por encima, la tarjeta del perfil.
+         main.js (initIgCarrusel) duplica las fotos de cada fila para que el
+         bucle no tenga costura. -->
+    <section class="ig-seccion" aria-label="Fotos de Instagram de Spaghettería Circus">
+
+      <div class="ig-carrusel">
+
+        <!-- Fila de arriba: se desplaza hacia la IZQUIERDA -->
+        <div class="ig-fila ig-fila--izq">
+          <div class="ig-pista" data-ig-pista>
+            <a class="ig-foto" href="https://www.instagram.com/spaghetteriacircus/" target="_blank" rel="noopener">
+              <img src="assets/img/ig-01.webp" alt="Bruschetta al pomodoro recién servida" width="285" height="378" loading="lazy" decoding="async"></a>
+            <a class="ig-foto" href="https://www.instagram.com/spaghetteriacircus/" target="_blank" rel="noopener">
+              <img src="assets/img/ig-02.webp" alt="Tablas de gratinados saliendo del horno" width="285" height="378" loading="lazy" decoding="async"></a>
+            <a class="ig-foto" href="https://www.instagram.com/spaghetteriacircus/" target="_blank" rel="noopener">
+              <img src="assets/img/ig-03.webp" alt="Clienta enrollando spaghetti en el tenedor" width="285" height="378" loading="lazy" decoding="async"></a>
+            <a class="ig-foto" href="https://www.instagram.com/spaghetteriacircus/" target="_blank" rel="noopener">
+              <img src="assets/img/ig-04.webp" alt="Pedido para llevar con la bolsa de la casa" width="285" height="378" loading="lazy" decoding="async"></a>
+            <a class="ig-foto" href="https://www.instagram.com/spaghetteriacircus/" target="_blank" rel="noopener">
+              <img src="assets/img/ig-05.webp" alt="Penne gratinados con champiñones" width="284" height="379" loading="lazy" decoding="async"></a>
+            <a class="ig-foto" href="https://www.instagram.com/spaghetteriacircus/" target="_blank" rel="noopener">
+              <img src="assets/img/ig-06.webp" alt="La sala con el cartel de Circus y las guirnaldas de luces" width="287" height="380" loading="lazy" decoding="async"></a>
+          </div>
+        </div>
+
+        <!-- Fila de abajo: se desplaza hacia la DERECHA -->
+        <div class="ig-fila ig-fila--der">
+          <div class="ig-pista" data-ig-pista>
+            <a class="ig-foto" href="https://www.instagram.com/spaghetteriacircus/" target="_blank" rel="noopener">
+              <img src="assets/img/ig-07.webp" alt="Mesa de amigas riéndose durante la comida" width="285" height="377" loading="lazy" decoding="async"></a>
+            <a class="ig-foto" href="https://www.instagram.com/spaghetteriacircus/" target="_blank" rel="noopener">
+              <img src="assets/img/ig-08.webp" alt="Surtido de gratinados y bruschettas en tabla" width="285" height="378" loading="lazy" decoding="async"></a>
+            <a class="ig-foto" href="https://www.instagram.com/spaghetteriacircus/" target="_blank" rel="noopener">
+              <img src="assets/img/ig-09.webp" alt="Pareja compartiendo un plato de pasta" width="285" height="377" loading="lazy" decoding="async"></a>
+            <a class="ig-foto" href="https://www.instagram.com/spaghetteriacircus/" target="_blank" rel="noopener">
+              <img src="assets/img/ig-10.webp" alt="Bolsa de pedido para llevar sobre la mesa" width="285" height="378" loading="lazy" decoding="async"></a>
+            <a class="ig-foto" href="https://www.instagram.com/spaghetteriacircus/" target="_blank" rel="noopener">
+              <img src="assets/img/ig-11.webp" alt="Plato de penne con salsa de champiñones" width="284" height="377" loading="lazy" decoding="async"></a>
+            <a class="ig-foto" href="https://www.instagram.com/spaghetteriacircus/" target="_blank" rel="noopener">
+              <img src="assets/img/ig-12.webp" alt="Rincón del reservado con los carteles de circo" width="284" height="378" loading="lazy" decoding="async"></a>
+          </div>
+        </div>
+
+        <!-- Tarjeta del perfil. Va FUERA de las filas a propósito: si
+             estuviera dentro, pasar el ratón por ella pararía esa fila. -->
+        <div class="ig-tarjeta">
+          <span class="ig-tarjeta-logo" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+            </svg>
+          </span>
+          <span class="ig-tarjeta-handle">@spaghetteriacircus</span>
+          <p class="ig-tarjeta-txt">Entre bastidores: el gratinado saliendo del horno, la sala llena y el circo de cada día.</p>
+          <a class="ig-tarjeta-btn" href="https://www.instagram.com/spaghetteriacircus/" target="_blank" rel="noopener">Seguir</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER (una sola vez) ===== -->
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="brand-word">Spaghettería Circus</span>
+          <p>Trattoria-espectáculo en Teatinos.<br>Montando el mejor plato de Málaga desde 1997.</p>
+          <div class="footer-social">
+            <a href="https://www.instagram.com/spaghetteriacircus/" target="_blank" rel="noopener" aria-label="Instagram">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+            </a>
+            <a href="tel:+34951732575" aria-label="Llamar">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8 9.5a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Navegación</h4>
+          <ul>
+            <li><a href="carta.html">Carta</a></li>
+            <li><a href="la-casa.html">Nosotros</a></li>
+            <li><a href="el-local.html">El Local</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Contacto</h4>
+          <ul>
+            <li><a href="tel:+34951732575">+34 951 732 575</a></li>
+            <li><a href="mailto:1997circus@gmail.com">1997circus@gmail.com</a></li>
+            <li><address>Av. de Gregorio Prieto, 25<br>29010 Málaga (Teatinos)</address></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Horarios</h4>
+          <dl class="footer-horario">
+            <dt>Lun y miér</dt><dd>13:00 – 16:00</dd>
+            <dt>Martes</dt><dd>Cerrado</dd>
+            <dt>Jueves</dt><dd>13:00 – 16:00 · 20:00 – 23:30</dd>
+            <dt>Vie, sáb y dom</dt><dd>13:00 – 16:30 · 20:00 – 23:30</dd>
+          </dl>
+          <p style="margin-top:.8rem"><span class="estado" data-estado><span class="punto"></span><span>Comprobando…</span></span></p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© <span id="year">2026</span> Spaghettería Circus · Todos los derechos reservados</span>
+        <span><a href="#">Aviso legal</a> · <a href="#">Privacidad</a> · <a href="#">Cookies</a></span>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ===== Scripts (orden importa; todos con defer) ===== -->
+  <script defer src="lib/gsap.min.js"></script>
+  <script defer src="lib/ScrollTrigger.min.js"></script>
+  <script defer src="lib/manifest.js"></script>
+  <script defer src="main.js?v=20260919e"></script>
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>

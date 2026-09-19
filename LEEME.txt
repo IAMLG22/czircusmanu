@@ -1,0 +1,277 @@
+====================================================================
+  SPAGHETTERÍA CIRCUS — Web (HTML + CSS + JS, sin build, sin npm)
+====================================================================
+
+Esta es una web estática: se abre con doble clic y se sube tal cual
+a Hostinger (o cualquier hosting) arrastrando la carpeta. No necesita
+instalar nada.
+
+
+--------------------------------------------------------------------
+1) VER LA WEB EN TU ORDENADOR
+--------------------------------------------------------------------
+- Doble clic en "index.html" -> se abre en el navegador.
+  (Casi todo funciona así. Algún detalle fino se ve mejor con un
+   servidor local, pero para revisar textos vale de sobra.)
+
+
+--------------------------------------------------------------------
+2) SUBIRLA A HOSTINGER (drag & drop)
+--------------------------------------------------------------------
+a) Entra en tu panel de Hostinger -> Administrador de archivos.
+b) Abre la carpeta "public_html".
+c) Arrastra TODO el contenido de esta carpeta dentro de public_html
+   (index.html, styles.css, main.js, la carpeta lib/, assets/,
+   .htaccess, favicon.svg y las demás páginas .html).
+   IMPORTANTE: sube también el archivo ".htaccess" (evita que se
+   vean versiones antiguas tras actualizar).
+d) Listo. Tu web estará en tu dominio.
+
+Cada vez que actualices archivos, cambia la fecha del final de estas
+dos líneas en TODAS las páginas .html (busca "?v=20260911"):
+   styles.css?v=20260911   ->  styles.css?v=20260101 (fecha de hoy)
+   main.js?v=20260911      ->  main.js?v=20260101
+Así el navegador coge la versión nueva al instante.
+
+
+--------------------------------------------------------------------
+3) EDITAR TEXTOS, PLATOS, PRECIOS Y HORARIOS
+--------------------------------------------------------------------
+Casi todo el contenido "de datos" está en UN solo archivo:
+
+   lib/manifest.js
+
+Ábrelo con el Bloc de notas (o mejor, con Notepad++ / VS Code) y edita:
+   - Teléfono, email, dirección, Instagram  -> sección "contact"
+   - Horarios                                -> sección "hours" y "hoursText"
+   - Platos estrella de la home              -> sección "stars"
+   - La carta completa                       -> sección "menu"
+   - Nota de Google (reseñas)                -> sección "social_proof"
+
+Los textos "de párrafo" (hero, historia, etc.) están directamente en
+los archivos .html, bien comentados con <!-- comentarios -->.
+
+
+--------------------------------------------------------------------
+4) CAMBIAR HORARIOS (importante entender el formato)
+--------------------------------------------------------------------
+En lib/manifest.js, "hours" usa números de día:
+   0 = Domingo, 1 = Lunes, 2 = Martes ... 6 = Sábado
+Cada día es una lista de franjas [inicio, fin] en formato "HH:MM".
+Ejemplo (jueves con dos turnos):
+   4: [["13:00","16:00"], ["20:00","23:30"]],
+Un día cerrado se deja vacío:
+   2: [],   // Martes cerrado
+
+El cartel "Abierto ahora / Cerrado" se calcula solo desde aquí.
+(Recuerda actualizar también "hoursText", que es el texto que se ve.)
+
+OJO: el horario se ve escrito en TRES sitios. Si lo cambias, cámbialo
+en los tres para que no se contradigan:
+   1. lib/manifest.js -> "hours" (el que calcula Abierto/Cerrado)
+   2. index.html -> la ficha del bloque del mapa ("Nos vemos en Teatinos")
+   3. el pie de página de todas las .html (bloque "Horarios")
+
+
+--------------------------------------------------------------------
+5) PONER LAS FOTOS REALES
+--------------------------------------------------------------------
+Ahora hay "placeholders" (recuadros con el texto de qué foto va).
+Para poner fotos de verdad:
+   1. Guarda tus fotos en formato .webp dentro de "assets/img/"
+      (si solo tienes .jpg, también sirve; usa esa extensión).
+   2. En el HTML, busca los bloques con class="ph-img" y cámbialos por:
+      <img src="assets/img/nombre-de-tu-foto.webp"
+           alt="Descripción de la foto" loading="lazy">
+   3. Para los platos de la carta/home, en lib/manifest.js puedes
+      añadir el nombre del archivo donde pone "photoHint".
+
+Consejo: fotos horizontales para el hero y cuadradas para Instagram.
+
+
+--------------------------------------------------------------------
+5 bis) EL CARTEL DE "RESERVAR" DE LA PORTADA
+--------------------------------------------------------------------
+El botón grande de la portada es una imagen tuya (la de Canva):
+
+   assets/img/boton-reserva.webp   (la que se usa normalmente)
+   assets/img/boton-reserva.png    (respaldo para navegadores viejos)
+
+Las dos salen de "assets/img/logoreserva.png", que es el archivo
+original de Canva. Ese original traía medio lienzo transparente de
+sobra por abajo, así que está recortado al dibujo: si no, el botón
+ocuparía el doble de alto y se podría pulsar en zonas vacías.
+
+Si rehaces el cartel en Canva:
+   1. Expórtalo en PNG con fondo transparente.
+   2. Recórtalo pegado al dibujo (sin márgenes vacíos).
+   3. Guárdalo como assets/img/boton-reserva.png (y .webp si puedes).
+   4. Cambia el ancho y alto que pone en index.html (width="973"
+      height="624") por los de tu imagen nueva, para que no baile
+      la página mientras carga.
+
+El tamaño en pantalla lo manda el CSS (.cta-cartel), no la imagen.
+
+
+--------------------------------------------------------------------
+5 ter) LAS FOTOS DE INSTAGRAM (las dos filas que se mueven)
+--------------------------------------------------------------------
+Ya están puestas tus 12 fotos reales. Van en dos filas a todo lo ancho:
+la de arriba se desplaza hacia la izquierda y la de abajo hacia la
+derecha. Al poner el ratón encima de UNA foto, esa foto se ilumina y se
+para la fila entera (sólo esa fila; la otra sigue).
+
+Los archivos son:
+   assets/img/ig-01.webp ... ig-12.webp
+Salen de tus capturas de pantalla, sólo que convertidas a .webp: las 12
+juntas pesan 241 KB en vez de los 2,7 MB de los PNG originales.
+
+LAS CAPTURAS ORIGINALES ("Captura de pantalla 2026-09-17...png") YA NO
+SE USAN. Puedes borrarlas de assets/img/ para no subir 2,7 MB de más.
+
+Para cambiar una foto: guarda la nueva como ig-05.webp (por ejemplo),
+del mismo tamaño aproximado (vertical, tipo 4:5), y listo.
+Para añadir o quitar fotos, en index.html busca el bloque
+"7. INSTAGRAM" y copia o borra un bloque <a class="ig-foto">...</a>
+dentro de la fila que quieras. main.js duplica solo las de cada fila
+para que el bucle no tenga costura.
+
+Las fotos se ven oscuras y sin color a propósito (así las 12 casan bien
+aunque unas sean más claras que otras) y recuperan su color al pasar el
+ratón. Si quieres tocar eso, está en styles.css, en ".ig-foto img".
+
+EL FONDO DE PAYASOS HACIENDO MALABARES:
+En styles.css busca ".ig-fondo" (tiene un cartel ►►► para encontrarlo).
+Ahí dentro hay una línea comentada:
+
+   /* background-image: url("assets/img/payasos-malabares.gif"); */
+
+Quítale el /* y el */ y deja tu gif en assets/img/ con ese nombre.
+Mientras tanto la sección se queda con el crema limpio de la web.
+
+
+--------------------------------------------------------------------
+5 quinquies) EL VÍDEO DE FONDO DE "RESERVA TU MESA"
+--------------------------------------------------------------------
+Esa sección lleva de fondo un vídeo en bucle del payaso haciendo
+malabares:
+
+   assets/img/payaso-malabares.mp4    (el vídeo)
+   assets/img/payaso-malabares.webp   (el fotograma de portada)
+
+Va mudo, en bucle, sin controles y no se puede pulsar: es decorado.
+Arranca solo (en el móvil también, porque lleva `muted` y `playsinline`,
+que es lo que exigen los navegadores para dejar que un vídeo empiece
+sin que lo pidas).
+
+Tu archivo original pesaba 5,7 MB, demasiado para una web. El que se
+usa está recomprimido y sin pista de audio: 1,2 MB, y a simple vista
+no se nota la diferencia. El original
+("Quiero_que_me_generes_un_vídeo.mp4") ya no se usa: puedes borrarlo.
+
+Si cambias el vídeo:
+   1. Guárdalo como assets/img/payaso-malabares.mp4
+   2. Saca un fotograma y guárdalo como payaso-malabares.webp
+      (es lo que se ve mientras el vídeo carga).
+   3. Comprímelo antes de subirlo. Como referencia: 10 segundos a
+      1280x720 deberían quedarse por debajo de 1,5 MB.
+
+Quien tenga activado en su móvil u ordenador el ajuste de "reducir
+movimiento" no verá el vídeo: se le queda el fotograma fijo. Es a
+propósito, por accesibilidad.
+
+--------------------------------------------------------------------
+5 sexies) LA FACHADA ANTIGUA EN LA SECCIÓN "NOSOTROS"
+--------------------------------------------------------------------
+   assets/img/fachada-antigua.webp   (sale de tu antiguorest.jpg)
+
+Es la foto de la fachada del restaurante antiguo, con los neones de
+"Restaurante · CIRCUS · Spaghettería" y la verja. Va apaisada, con las
+esquinas redondeadas y una sombra suave.
+
+Estuvo un rato recortada en círculo y quedaba mal: al ser una foto
+horizontal, el redondel se comía los neones de los lados. Ahora se ve
+entera. El encuadre fino se ajusta en styles.css, en ".foto-nosotros":
+   object-position: center 42%;
+
+Ahí antes había un sello de "Est. 1997" que se quitó.
+
+--------------------------------------------------------------------
+5 septies) FOTO ANTIGUA DEL INTERIOR (ya no se usa)
+--------------------------------------------------------------------
+   assets/img/local-interior.webp
+
+Sale de tu foto original (Gemini_Generated_Image_vghzl3...jpg), sólo
+que comprimida: pasa de 2,5 MB a 179 KB, que es lo que aguanta una web
+sin ponerse lenta. La original se queda en la carpeta por si acaso.
+
+Es la foto de la mesa con la ensalada, recortada. Estaba de fondo en
+"Reserva tu mesa" hasta que la sustituyó la fachada antigua. Se queda
+en la carpeta por si quieres recuperarla o usarla en otro sitio; si no
+la vas a usar, puedes borrarla.
+
+
+--------------------------------------------------------------------
+5 quater) EL MAPA DE "EL LOCAL"
+--------------------------------------------------------------------
+El mapa se ve en tonos crema con un truco de CSS, porque el mapa
+gratuito de Google no deja cambiarle los colores. Está en styles.css,
+en ".mapa-iframe" (la línea del "filter").
+
+El mapa es SOLO DECORADO: no se puede arrastrar, ni hacer zoom, ni
+pulsarlo (pointer-events:none). Es a propósito, para que al hacer
+scroll con el ratón por encima no se quede el scroll "enganchado"
+dentro del mapa. Quien quiera el mapa de verdad tiene el botón
+"Cómo llegar".
+
+El marcador del centro (la chapa con la estrella y el cartelito) es
+nuestro, hecho con CSS: está en ".mapa-pin". Cae justo encima del
+punto donde Google centra el restaurante.
+
+El identificador del negocio en Google (Place ID) es:
+   ChIJQTQ2Euj3cg0R8MCcaTkP9aM
+Se usa en el enlace "Cómo llegar", que lleva justo a vuestra ficha.
+El mapa incrustado va por nombre + dirección, porque el iframe gratuito
+de Google no entiende el Place ID (si se lo pasas, pinta el mundo
+entero). Si algún día sacas una clave de Google Maps, en index.html
+hay un comentario con la línea exacta que habría que poner.
+
+
+--------------------------------------------------------------------
+6) LA CARTA EN PDF (opcional)
+--------------------------------------------------------------------
+El botón "Descargar carta (PDF)" busca el archivo:
+   assets/docs/carta.pdf
+Solo tienes que dejar ahí tu PDF con ese nombre. Si aún no lo tienes,
+el botón no molesta; puedes ocultarlo borrando su línea en carta.html.
+
+
+--------------------------------------------------------------------
+7) SISTEMA DE RESERVAS (pendiente, ya preparado)
+--------------------------------------------------------------------
+De momento "Reservar" lleva al teléfono (contacto.html#reserva).
+Cuando quieras poner reservas online (TheFork, CoverManager, etc.):
+   - Abre contacto.html y busca el comentario:
+        // TODO: integrar sistema de reservas
+   - Ahí pega el widget/enlace que te den. Todo el hueco está listo.
+
+
+--------------------------------------------------------------------
+8) COLORES Y TIPOGRAFÍAS
+--------------------------------------------------------------------
+Están al principio de "styles.css", en la sección "1. TOKENS".
+Cambia un color ahí y se actualiza en toda la web.
+   --granate  (rojo teatro)   --oro (dorado)
+   --crema    (fondo)         --tinta (texto)
+
+
+--------------------------------------------------------------------
+9) LA CARPETA lib/
+--------------------------------------------------------------------
+Contiene manifest.js (tus datos) y las librerías de animación
+(gsap). No borres nada de ahí; se sube junto con la web.
+
+
+¿Dudas? Todo el código está comentado en español. Busca los
+comentarios <!-- ... --> en los .html y /* ... */ en el CSS/JS.
+====================================================================

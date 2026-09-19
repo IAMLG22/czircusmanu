@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>El Local · Cómo llegar — Spaghettería Circus, Teatinos (Málaga)</title>
+  <meta name="description" content="Av. de Gregorio Prieto, 25, Teatinos (Málaga). Horarios, mapa, parking y cómo llegar a Spaghettería Circus.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rye&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="styles.css?v=20260919e">
+</head>
+<body>
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+
+  <header class="site-header">
+    <div class="wrap">
+      <nav class="nav" data-nav aria-label="Principal">
+        <a class="nav-brand" href="index.html">Spaghettería Circus<small>Teatinos · Málaga</small></a>
+        <div class="nav-links" id="nav-links">
+          <a href="carta.html">Carta</a>
+          <a href="la-casa.html">Nosotros</a>
+          <a href="el-local.html" aria-current="page">El Local</a>
+          <a href="contacto.html">Contacto</a>
+        </div>
+        <div class="nav-actions">
+          <a class="btn btn--secundario btn--sm" href="carta.html">Ver la carta</a>
+          <a class="btn btn--primario btn--sm" href="contacto.html#reserva">Reservar</a>
+          <button class="nav-toggle" data-nav-toggle aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-links">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          </button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== MENU KINETICO (movil) =====
+       Sustituye al desplegable crema de antes. Lo anima initMenuKinetico()
+       en main.js con GSAP; sin JS se queda oculto y quedan los enlaces del
+       footer, que llevan a las mismas paginas. -->
+  <div class="kn" data-kn="closed">
+    <div class="kn-overlay" data-kn-close></div>
+    <nav class="kn-menu" aria-label="Menu principal">
+      <div class="kn-bg" aria-hidden="true">
+        <span class="kn-backdrop first"></span>
+        <span class="kn-backdrop second"></span>
+        <span class="kn-backdrop"></span>
+        <div class="kn-shapes" aria-hidden="true">
+          <!-- Una forma por enlace. Se activan al pasar por encima (o al abrir,
+               en tactil, que no tiene hover). Puro decorado. -->
+          <svg class="kn-shape kn-shape-1" viewBox="0 0 400 400" fill="none">
+            <!-- El scale va en el <g> a proposito: GSAP escribe el atributo
+                 transform del elemento que anima, y si lo pusieramos en el
+                 <path> se lo llevaria por delante (estrellas a tamano 1). -->
+            <g transform="translate(40 60) scale(3.4)"><path class="kn-shape-el" d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.7L12 17.3 5.8 20.8l1.6-6.7L2.2 8.9l6.9-.6z" fill="rgba(227,197,121,.30)"/></g>
+            <g transform="translate(268 150) scale(2.2)"><path class="kn-shape-el" d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.7L12 17.3 5.8 20.8l1.6-6.7L2.2 8.9l6.9-.6z" fill="rgba(227,197,121,.22)"/></g>
+            <g transform="translate(110 262) scale(4.4)"><path class="kn-shape-el" d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.7L12 17.3 5.8 20.8l1.6-6.7L2.2 8.9l6.9-.6z" fill="rgba(227,197,121,.18)"/></g>
+          </svg>
+          <svg class="kn-shape kn-shape-2" viewBox="0 0 400 400" fill="none">
+            <circle class="kn-shape-el" cx="78" cy="96" r="46" fill="rgba(227,197,121,.26)"/>
+            <circle class="kn-shape-el" cx="296" cy="188" r="66" fill="rgba(227,197,121,.18)"/>
+            <circle class="kn-shape-el" cx="156" cy="304" r="34" fill="rgba(227,197,121,.30)"/>
+          </svg>
+          <svg class="kn-shape kn-shape-3" viewBox="0 0 400 400" fill="none">
+            <path class="kn-shape-el" d="M92 210 L154 88 L216 210 Z" fill="rgba(227,197,121,.26)"/>
+            <path class="kn-shape-el" d="M214 318 L272 196 L330 318 Z" fill="rgba(227,197,121,.18)"/>
+            <path class="kn-shape-el" d="M36 330 L82 240 L128 330 Z" fill="rgba(227,197,121,.30)"/>
+          </svg>
+          <svg class="kn-shape kn-shape-4" viewBox="0 0 400 400" fill="none">
+            <circle class="kn-shape-el" cx="112" cy="124" r="58" stroke="rgba(227,197,121,.34)" stroke-width="7"/>
+            <circle class="kn-shape-el" cx="272" cy="226" r="80" stroke="rgba(227,197,121,.24)" stroke-width="7"/>
+            <circle class="kn-shape-el" cx="140" cy="308" r="40" stroke="rgba(227,197,121,.4)" stroke-width="7"/>
+          </svg>
+        </div>
+      </div>
+
+      <button class="kn-close" type="button" data-kn-close aria-label="Cerrar menu">
+        <span class="kn-close-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+        </span>
+      </button>
+
+      <div class="kn-wrap">
+        <ul class="kn-list">
+            <li class="kn-item" data-shape="1">
+              <a class="kn-link" href="carta.html"><span class="kn-link-text">Carta</span></a>
+            </li>
+            <li class="kn-item" data-shape="2">
+              <a class="kn-link" href="la-casa.html"><span class="kn-link-text">Nosotros</span></a>
+            </li>
+            <li class="kn-item" data-shape="3">
+              <a class="kn-link" href="el-local.html" aria-current="page"><span class="kn-link-text">El Local</span></a>
+            </li>
+            <li class="kn-item" data-shape="4">
+              <a class="kn-link" href="contacto.html"><span class="kn-link-text">Contacto</span></a>
+            </li>
+        </ul>
+        <div class="kn-cta" data-kn-fade>
+          <a class="btn btn--primario" href="contacto.html#reserva">Reservar mesa</a>
+        </div>
+        <p class="kn-pie" data-kn-fade>
+          Av. de Gregorio Prieto, 25 &middot; Teatinos, M&aacute;laga<br>
+          <a href="tel:+34951732575">+34 951 732 575</a>
+        </p>
+      </div>
+    </nav>
+  </div>
+
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="wrap">
+        <span class="kicker">El Local · Teatinos</span>
+        <h1>Cómo llegar</h1>
+        <p>Estamos en el corazón de Teatinos. Te contamos horarios, dónde aparcar y cómo encontrarnos.</p>
+      </div>
+    </section>
+
+    <!-- ===== AMBIENTE + ESTADO ===== -->
+    <section class="section">
+      <div class="wrap">
+        <div class="split">
+          <div class="split-media reveal">
+            <!-- FOTO: interior / ambiente de la sala en Teatinos -->
+            <div class="ph-img" role="img" aria-label="Ambiente de la sala">
+              <span>FOTO: ambiente de la sala en Teatinos</span>
+            </div>
+          </div>
+          <div class="split-body reveal reveal-delay-1">
+            <h2>Horarios</h2>
+            <!-- data-dia: días de la semana en formato getDay() (domingo = 0).
+                 El script del final marca con .es-hoy la fila que toca.
+                 Si cambian los horarios, cámbialos también en lib/manifest.js
+                 (hours) para que el cartel «Abierto / Cerrado» siga cuadrando. -->
+            <dl class="horario-lista">
+              <div class="horario-dia" data-dia="1,3">
+                <dt>Lunes y miércoles</dt>
+                <dd>13:00 – 16:00</dd>
+              </div>
+              <div class="horario-dia" data-dia="2">
+                <dt>Martes</dt>
+                <dd class="es-cerrado">Cerrado</dd>
+              </div>
+              <div class="horario-dia" data-dia="4">
+                <dt>Jueves</dt>
+                <dd>13:00 – 16:00 · 20:00 – 23:30</dd>
+              </div>
+              <div class="horario-dia" data-dia="5,6,0">
+                <dt>Viernes, sábado y domingo</dt>
+                <dd>13:00 – 16:30 · 20:00 – 23:30</dd>
+              </div>
+            </dl>
+            <p><span class="estado" data-estado><span class="punto"></span><span>Comprobando horario…</span></span></p>
+            <a class="btn btn--primario" href="contacto.html#reserva">Reservar mesa</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== MAPA DECORADO ===== -->
+    <section class="mapa-bloque mapa-bloque--solo" aria-label="Dónde estamos">
+
+      <!-- Mismo mapa decorado que la home, pero SIN la ficha: aquí los datos
+           ya están arriba, así que se deja el mapa limpio con el marcador.
+           El mapa es DECORADO: no se arrastra, no hace zoom y no se puede
+           pulsar (pointer-events:none en el CSS + tabindex -1 + aria-hidden),
+           así no se "engancha" el scroll al pasar por encima. -->
+      <div class="mapa-lienzo" aria-hidden="true">
+        <!-- Por COORDENADAS y no por nombre de sitio a proposito: con
+             ?q=<sitio> Google pinta encima su propio chincheta con la
+             etiqueta del negocio y un boton "Abrir en Maps" que se comen
+             el diseno. Con ?q=<lat,lng> el mapa sale limpio (la atribucion
+             de Google de abajo se mantiene, que es obligatoria). Las
+             coordenadas son las que devuelve el propio embed para
+             Av. de Gregorio Prieto, 25. -->
+        <iframe
+          class="mapa-iframe" tabindex="-1"
+          title="Mapa de Spaghettería Circus en Av. de Gregorio Prieto, 25, Teatinos (Málaga)"
+          src="https://www.google.com/maps?q=36.7157389,-4.4631458&z=17&hl=es&output=embed"
+          loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+        <span class="mapa-velo"></span>
+
+        <!-- Marcador de la casa, justo en el centro (que es donde el embed
+             centra el restaurante). -->
+        <span class="mapa-pin">
+          <span class="mapa-pin-onda"></span>
+          <span class="mapa-pin-gota">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.7L12 17.3 5.8 20.8l1.6-6.7L2.2 8.9l6.9-.6z"/>
+            </svg>
+          </span>
+          <span class="mapa-pin-cartel">Spaghettería Circus</span>
+        </span>
+      </div>
+    </section>
+
+    <!-- Boton limpio bajo el mapa: es la unica via a Google Maps, ya que el
+         mapa de arriba es decorado y no se puede pulsar. -->
+    <div class="mapa-acciones">
+      <a class="btn btn--secundario"
+         href="https://www.google.com/maps/dir/?api=1&amp;destination=Av.+de+Gregorio+Prieto,+25,+29010+M%C3%A1laga&amp;destination_place_id=ChIJQTQ2Euj3cg0R8MCcaTkP9aM"
+         target="_blank" rel="noopener">Cómo llegar</a>
+    </div>
+
+    <!-- ===== BANDA DE RESERVA ===== -->
+    <section class="section banda-reserva">
+      <div class="wrap">
+        <div class="marquesina" aria-hidden="true">
+          <span class="bombilla"></span><span class="bombilla"></span><span class="bombilla"></span>
+          <span class="bombilla"></span><span class="bombilla"></span><span class="bombilla"></span>
+          <span class="bombilla"></span><span class="bombilla"></span><span class="bombilla"></span>
+        </div>
+        <h2>Te guardamos mesa</h2>
+        <p>Llámanos y reserva tu función en Teatinos.</p>
+        <a class="btn btn--primario" href="contacto.html#reserva">Reservar mesa</a>
+        <a class="banda-tel" href="tel:+34951732575">+34 951 732 575</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="brand-word">Spaghettería Circus</span>
+          <p>Trattoria-espectáculo en Teatinos.<br>Montando el mejor plato de Málaga desde 1997.</p>
+          <div class="footer-social">
+            <a href="https://www.instagram.com/spaghetteriacircus/" target="_blank" rel="noopener" aria-label="Instagram">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+            </a>
+            <a href="tel:+34951732575" aria-label="Llamar">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8 9.5a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2z"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Navegación</h4>
+          <ul>
+            <li><a href="carta.html">Carta</a></li>
+            <li><a href="la-casa.html">Nosotros</a></li>
+            <li><a href="el-local.html">El Local</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contacto</h4>
+          <ul>
+            <li><a href="tel:+34951732575">+34 951 732 575</a></li>
+            <li><a href="mailto:1997circus@gmail.com">1997circus@gmail.com</a></li>
+            <li><address>Av. de Gregorio Prieto, 25<br>29010 Málaga (Teatinos)</address></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Horarios</h4>
+          <dl class="footer-horario">
+            <dt>Lun y miér</dt><dd>13:00 – 16:00</dd>
+            <dt>Martes</dt><dd>Cerrado</dd>
+            <dt>Jueves</dt><dd>13:00 – 16:00 · 20:00 – 23:30</dd>
+            <dt>Vie, sáb y dom</dt><dd>13:00 – 16:30 · 20:00 – 23:30</dd>
+          </dl>
+          <p style="margin-top:.8rem"><span class="estado" data-estado><span class="punto"></span><span>Comprobando…</span></span></p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span id="year">2026</span> Spaghettería Circus · Todos los derechos reservados</span>
+        <span><a href="#">Aviso legal</a> · <a href="#">Privacidad</a> · <a href="#">Cookies</a></span>
+      </div>
+    </div>
+  </footer>
+
+
+  <script defer src="lib/gsap.min.js"></script>
+  <script defer src="lib/ScrollTrigger.min.js"></script>
+  <script defer src="lib/manifest.js"></script>
+  <script defer src="main.js?v=20260919e"></script>
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+
+  <!-- Resalta la fila de horario del dia de hoy. getDay(): domingo = 0. -->
+  <script>
+    (function () {
+      var hoy = String(new Date().getDay());
+      var filas = document.querySelectorAll(".horario-lista .horario-dia[data-dia]");
+      for (var i = 0; i < filas.length; i++) {
+        var dias = filas[i].getAttribute("data-dia").split(",");
+        for (var j = 0; j < dias.length; j++) {
+          if (dias[j].trim() === hoy) {
+            filas[i].classList.add("es-hoy");
+            // Token valido de aria-current: dice que esta fila es la de hoy
+            // sin depender del "HOY" que pinta el CSS.
+            filas[i].setAttribute("aria-current", "date");
+            break;
+          }
+        }
+      }
+    })();
+  </script>
+</body>
+</html>

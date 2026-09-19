@@ -1,0 +1,2625 @@
+/* =============================================================
+   SPAGHETTERÍA CIRCUS — Hoja de estilos
+   Trattoria-espectáculo · Teatinos, Málaga · desde 1997
+   -------------------------------------------------------------
+   Índice:
+   1. Tokens (colores, tipografía, espaciados)
+   2. Reset & base
+   3. Utilidades
+   4. Tipografía
+   5. Componentes (botones, cartel, marquesina, iconos, chips)
+   6. Header / Nav
+   7. Secciones Home (hero, franja, estrellas, historia, local,
+      banda reserva, instagram)
+   8. Footer
+   9. Páginas internas (carta, la casa, el local, contacto)
+   10. Efectos (telón, reveals, keyframes)
+   11. Responsive
+   12. Reduced-motion (solo efectos intrusivos)
+   ============================================================= */
+
+/* =============================================================
+   1. TOKENS
+   ============================================================= */
+:root {
+  /* Paleta — teatro cálido */
+  --granate: #8E1F2B;
+  --granate-hondo: #5E1119;
+  --oro: #C8A24C;
+  --oro-claro: #E3C579;
+  --crema: #F4ECD8;
+  --crema-2: #EADFC4;
+  --tinta: #1C2A22;         /* verde casi negro — anclaje de texto */
+  --tinta-70: rgba(28, 42, 34, .72);
+  --tinta-45: rgba(28, 42, 34, .45);
+
+  /* Roles semánticos */
+  --bg: var(--crema);
+  --text: var(--tinta);
+  --accent: var(--oro);
+  --primary: var(--granate);
+
+  /* Tipografía */
+  --display: "Rye", "Georgia", serif;                 /* marca / kickers de feria */
+  --serif: "Fraunces", "Georgia", "Times New Roman", serif; /* titulares */
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; /* cuerpo */
+
+  /* Escala de espaciado */
+  --space-1: .5rem;
+  --space-2: .75rem;
+  --space-3: 1.25rem;
+  --space-4: 2rem;
+  --space-5: 3rem;
+  --space-6: 4.5rem;
+  --space-7: 6rem;
+  --space-8: 8rem;
+
+  /* Layout */
+  --wrap: 1200px;
+  /* OJO con el margen lateral: si sale un valor fraccionario (5vw = 28,4px,
+     p. ej.) el navegador redondea el borde izquierdo y el derecho hacia
+     lados distintos y el marco queda descuadrado 1px por la derecha.
+     Lo dejamos en px y abajo, en .wrap, lo clavamos a píxeles enteros. */
+  --gutter: clamp(20px, 5vw, 48px);
+  --radius: 14px;
+  --radius-sm: 8px;
+
+  /* Sombras cálidas */
+  --shadow-sm: 0 2px 10px rgba(94, 17, 25, .08);
+  --shadow-md: 0 12px 32px rgba(94, 17, 25, .14);
+  --shadow-lg: 0 24px 60px rgba(94, 17, 25, .22);
+
+  /* Easings */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-soft: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --nav-h: 72px;
+}
+
+/* Transición entre páginas (View Transitions API, sin librería) */
+@view-transition { navigation: auto; }
+
+/* =============================================================
+   2. RESET & BASE
+   ============================================================= */
+*, *::before, *::after { box-sizing: border-box; margin: 0; }
+html {
+  -webkit-text-size-adjust: 100%;
+  tab-size: 2;
+  overflow-x: clip;
+  scroll-behavior: smooth;
+  /* Reserva siempre el hueco de la barra de scroll: sin esto, el ancho de la
+     ventana cambia al aparecer/desaparecer y las cajas full-bleed bailan un
+     píxel por la derecha. */
+  scrollbar-gutter: stable;
+}
+body {
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+  overscroll-behavior-y: none;
+}
+img, svg, video { display: block; max-width: 100%; }
+img { height: auto; }
+button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+a { color: inherit; text-decoration: none; }
+p { text-wrap: pretty; }
+h1, h2, h3, h4 { text-wrap: balance; line-height: 1.05; }
+ul { list-style: none; padding: 0; }
+::selection { background: var(--granate); color: var(--crema); }
+
+:focus-visible {
+  outline: 2px solid var(--granate);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* =============================================================
+   3. UTILIDADES
+   ============================================================= */
+/* Contenedor centrado.
+   En vez de `max-width` + `margin-inline:auto` (que reparte el sobrante en
+   medios píxeles y deja el lado derecho 1px descolocado respecto al
+   izquierdo), el contenedor ocupa el 100% y el centrado se hace con UN SOLO
+   valor de padding, idéntico a izquierda y derecha. Con round() lo fijamos
+   además a píxeles enteros, así los dos lados caen exactamente igual.
+   El ancho útil resultante es el mismo de siempre: var(--wrap) - 2*gutter. */
+.wrap {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: max(var(--gutter), calc((100% - var(--wrap)) / 2 + var(--gutter)));
+}
+@supports (width: round(1px, 1px)) {
+  .wrap {
+    padding-inline: round(down, max(var(--gutter), calc((100% - var(--wrap)) / 2 + var(--gutter))), 1px);
+  }
+}
+.wrap--narrow { --wrap: 820px; }
+.section { padding-block: clamp(3.5rem, 9vw, var(--space-8)); }
+.section--tight { padding-block: clamp(2.5rem, 6vw, var(--space-6)); }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+.skip-link {
+  position: fixed; top: -100px; left: 1rem;
+  padding: .6rem 1rem; background: var(--granate); color: var(--crema);
+  z-index: 9999; border-radius: var(--radius-sm); font-weight: 600;
+  transition: top .2s var(--ease-out);
+}
+.skip-link:focus { top: 1rem; }
+
+.center { text-align: center; }
+.bg-crema-2 { background: var(--crema-2); }
+
+/* =============================================================
+   4. TIPOGRAFÍA
+   ============================================================= */
+.kicker {
+  font-family: var(--display);
+  font-size: clamp(.85rem, 2.4vw, 1.05rem);
+  letter-spacing: .08em;
+  color: var(--granate);
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+}
+.kicker::before, .kicker--flanked::after {
+  content: "";
+  width: 28px; height: 2px;
+  background: var(--oro);
+  display: inline-block;
+}
+.kicker--flanked { }
+.kicker--flanked::after { content: ""; }
+
+h1, .h1 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(2.6rem, 7vw, 5.4rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+}
+h2, .h2 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(2rem, 4.8vw, 3.4rem);
+  letter-spacing: -0.015em;
+}
+h3, .h3 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(1.3rem, 2.6vw, 1.7rem);
+}
+.lead {
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+  color: var(--tinta-70);
+  max-width: 60ch;
+}
+.eyebrow-num {
+  font-family: var(--display);
+  color: var(--oro);
+  font-size: 1.1rem;
+}
+
+/* Marca escrita (logo tipográfico) */
+.brand-word {
+  font-family: var(--display);
+  color: var(--granate);
+  line-height: 1;
+  letter-spacing: .01em;
+}
+
+/* =============================================================
+   5. COMPONENTES
+   ============================================================= */
+
+/* --- Botones --- */
+.btn {
+  --btn-bg: var(--granate);
+  --btn-fg: var(--crema);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+  min-height: 48px;              /* target táctil cómodo */
+  padding: .85rem 1.6rem;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: .01em;
+  border-radius: 999px;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  border: 2px solid transparent;
+  transition: transform .3s var(--ease-out), background .3s var(--ease-out),
+              box-shadow .3s var(--ease-out), color .3s var(--ease-out);
+  will-change: transform;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.btn:active { transform: translateY(0); }
+
+.btn--primario { --btn-bg: var(--granate); --btn-fg: var(--crema); }
+.btn--primario:hover { background: var(--granate-hondo); }
+
+.btn--secundario {
+  background: transparent;
+  color: var(--tinta);
+  border-color: var(--oro);
+}
+.btn--secundario:hover { background: var(--oro); color: var(--tinta); }
+
+.btn--fantasma {
+  background: transparent;
+  color: var(--crema);
+  border-color: rgba(244, 236, 216, .5);
+}
+.btn--fantasma:hover { background: rgba(244, 236, 216, .12); border-color: var(--crema); }
+
+.btn--sm { min-height: 40px; padding: .55rem 1.1rem; font-size: .9rem; }
+.btn-row { display: flex; flex-wrap: wrap; gap: 1rem; }
+
+/* --- Iconos SVG de marca (inline, currentColor) --- */
+.ico { width: 1.2em; height: 1.2em; display: inline-block; vertical-align: -0.15em; fill: none; stroke: currentColor; stroke-width: 2; }
+.ico--fill { fill: currentColor; stroke: none; }
+
+/* --- Chip "Est. 1997" / etiquetas --- */
+.chip {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-family: var(--display);
+  font-size: .8rem;
+  letter-spacing: .05em;
+  padding: .35rem .8rem;
+  border: 1.5px solid var(--oro);
+  border-radius: 999px;
+  color: var(--granate);
+}
+
+/* --- Marco de cartel (borde doble con esquinas de oro) --- */
+.cartel {
+  position: relative;
+  background: var(--crema);
+  border: 1px solid rgba(200, 162, 76, .5);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+}
+.cartel::before {
+  content: "";
+  position: absolute; inset: 8px;
+  border: 1px solid rgba(200, 162, 76, .35);
+  border-radius: calc(var(--radius) - 6px);
+  pointer-events: none;
+}
+
+/* --- Marquesina de luces (bombillas parpadeando) --- */
+.marquesina {
+  display: flex;
+  justify-content: center;
+  gap: clamp(10px, 2.5vw, 22px);
+  padding: .5rem 0;
+}
+.marquesina .bombilla {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--oro-claro);
+  box-shadow: 0 0 8px 2px rgba(227, 197, 121, .7);
+  animation: parpadeo 1.6s infinite var(--ease-soft);
+}
+.marquesina .bombilla:nth-child(odd) { animation-delay: .8s; }
+.marquesina .bombilla:nth-child(3n) { animation-delay: .4s; }
+
+/* --- Widget Abierto/Cerrado --- */
+.estado {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  font-weight: 600;
+  font-size: .9rem;
+  padding: .35rem .8rem;
+  border-radius: 999px;
+  border: 1.5px solid currentColor;
+}
+.estado .punto {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: currentColor;
+  animation: pulso 2s infinite var(--ease-soft);
+}
+.estado.is-abierto { color: #3f8f4f; }
+.estado.is-cerrado { color: var(--granate); }
+
+/* --- Tarjeta de plato (hover zoom + precio) --- */
+.plato-card {
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--crema);
+  box-shadow: var(--shadow-sm);
+  transition: transform .4s var(--ease-out), box-shadow .4s var(--ease-out);
+}
+.plato-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+.plato-media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+.plato-media img,
+.plato-media .ph-img { transition: transform .6s var(--ease-out); }
+.plato-card:hover .plato-media img,
+.plato-card:hover .plato-media .ph-img { transform: scale(1.06); }
+.plato-badge {
+  position: absolute; top: .8rem; left: .8rem;
+  background: var(--granate); color: var(--crema);
+  font-family: var(--display); font-size: .75rem;
+  padding: .3rem .7rem; border-radius: 999px;
+  letter-spacing: .04em;
+}
+.plato-precio {
+  position: absolute; bottom: .8rem; right: .8rem;
+  background: var(--oro); color: var(--tinta);
+  font-weight: 700; font-size: 1rem;
+  padding: .35rem .75rem; border-radius: 999px;
+  transform: translateY(12px);
+  opacity: 0;
+  transition: transform .4s var(--ease-out), opacity .4s var(--ease-out);
+}
+.plato-card:hover .plato-precio { transform: translateY(0); opacity: 1; }
+.plato-body { padding: 1.2rem 1.3rem 1.5rem; }
+.plato-body h3 { margin-bottom: .3rem; }
+.plato-body p { color: var(--tinta-70); font-size: .95rem; }
+
+/* --- Placeholder de imagen (mientras no hay fotos reales) --- */
+.ph-img {
+  width: 100%; height: 100%;
+  display: grid; place-items: center;
+  text-align: center;
+  padding: 1.5rem;
+  background:
+    repeating-linear-gradient(45deg, rgba(200,162,76,.10) 0 12px, transparent 12px 24px),
+    linear-gradient(135deg, var(--crema-2), var(--crema));
+  color: var(--tinta-45);
+  font-family: var(--sans);
+  font-size: .8rem;
+  letter-spacing: .04em;
+  border: 1px dashed rgba(28, 42, 34, .2);
+}
+.ph-img span { max-width: 26ch; }
+.ph-img .ph-ico { font-size: 1.6rem; margin-bottom: .4rem; opacity: .5; }
+
+/* =============================================================
+   6. HEADER / NAV
+   ============================================================= */
+/* La barra nace transparente y se funde con el fondo de la pagina: el panel
+   crema con blur y filo dorado solo vuelve al hacer scroll, que es cuando el
+   contenido le pasa por debajo y hace falta para que se lean los enlaces. */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: box-shadow .3s var(--ease-out);
+}
+.site-header.is-scrolled {
+  background: rgba(244, 236, 216, .95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom-color: rgba(200, 162, 76, .35);
+  box-shadow: var(--shadow-sm);
+}
+.site-header { transition: box-shadow .3s var(--ease-out), background .3s var(--ease-out), border-color .3s var(--ease-out); }
+
+/* --- Header transparente sobre el hero (solo home) --- */
+.site-header--home {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom-color: transparent;
+}
+.site-header--home::after {   /* velo oscuro arriba para que se lean los enlaces sobre la ilustración */
+  content: "";
+  position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(180deg, rgba(20, 7, 9, .55), rgba(20, 7, 9, 0));
+  pointer-events: none;
+}
+.site-header--home .nav-brand { color: var(--crema); }
+.site-header--home .nav-brand small { color: rgba(244, 236, 216, .8); }
+.site-header--home .nav-links a { color: var(--crema); }
+.site-header--home .nav-toggle { color: var(--crema); }
+.site-header--home .btn--secundario { color: var(--crema); border-color: var(--oro-claro); }
+.site-header--home.is-scrolled .btn--secundario { color: var(--tinta); border-color: var(--oro); }
+/* Al hacer scroll, la cabecera vuelve a su estado sólido crema */
+.site-header--home.is-scrolled {
+  background: rgba(244, 236, 216, .95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom-color: rgba(200, 162, 76, .35);
+}
+.site-header--home.is-scrolled::after { opacity: 0; }
+.site-header--home.is-scrolled .nav-brand { color: var(--granate); }
+.site-header--home.is-scrolled .nav-brand small { color: var(--tinta-70); }
+.site-header--home.is-scrolled .nav-links a { color: var(--tinta); }
+.site-header--home.is-scrolled .nav-toggle { color: var(--tinta); }
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: var(--nav-h);
+}
+.nav-brand {
+  font-family: var(--display);
+  color: var(--granate);
+  font-size: 1.35rem;
+  line-height: 1;
+  white-space: nowrap;
+}
+.nav-brand small {
+  display: block;
+  font-family: var(--sans);
+  font-size: .6rem;
+  letter-spacing: .18em;
+  color: var(--tinta-70);
+  text-transform: uppercase;
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 2.5vw, 2rem);
+}
+.nav-links a {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: .95rem;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  position: relative;
+  padding: .3rem 0;
+}
+.nav-links a::after {
+  content: ""; position: absolute; left: 0; bottom: 0;
+  width: 0; height: 2px; background: var(--oro);
+  transition: width .3s var(--ease-out);
+}
+.nav-links a:hover::after,
+.nav-links a[aria-current="page"]::after { width: 100%; }
+.nav-links a[aria-current="page"] { color: var(--granate); }
+
+.nav-actions { display: flex; align-items: center; gap: .6rem; }
+
+/* Botón hamburguesa (móvil) */
+.nav-toggle {
+  display: none;
+  width: 46px; height: 46px;
+  align-items: center; justify-content: center;
+  border-radius: var(--radius-sm);
+}
+.nav-toggle svg { width: 26px; height: 26px; }
+
+/* =============================================================
+   Cabecera «MARQUESINA» (solo home)
+   Los 4 enlaces quedan FIJOS arriba (2 a la izquierda y 2 a la
+   derecha) y el logo va absolutamente centrado en la barra.
+   El logo es además el que se transforma con el scroll: arranca
+   grande en el centro de la portada y sube encogiéndose hasta
+   aparcar aquí (lo mueve initBrandMorph() en main.js).
+   ============================================================= */
+body.home { --nav-h: 84px; }
+
+/* En la home la cabecera va FIJA: la portada pasa por debajo de ella. */
+.site-header--home {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+}
+
+.nav--marquesina {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: var(--nav-h);
+}
+
+/* --- Los enlaces: 2 pegados a la izquierda, 2 a la derecha --- */
+.nav--marquesina .nav-menu {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 2.6vw, 2.2rem);
+  width: 100%;
+}
+.nav--marquesina .nav-menu a:nth-child(3) { margin-left: auto; }
+.nav--marquesina .nav-menu a {
+  /* Misma tipografía que el botón «Ver la carta» (Fraunces), para que la
+     portada tenga una sola voz. */
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: .95rem;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  position: relative;
+  padding: .3rem 0;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, .55);
+}
+.site-header--home.is-scrolled .nav-menu a { text-shadow: none; }
+.nav--marquesina .nav-menu a::after {
+  content: ""; position: absolute; left: 0; bottom: -2px;
+  width: 0; height: 2px; background: var(--oro);
+  transition: width .3s var(--ease-out);
+}
+.nav--marquesina .nav-menu a:hover::after,
+.nav--marquesina .nav-menu a[aria-current="page"]::after { width: 100%; }
+
+/* --- El logo (centrado exacto en la barra y motor de la animación) ---
+   IMPORTANTE para la nitidez: el logo NO se agranda con transform: scale().
+   Escalar texto con scale() hace que el navegador rasterice las letras a su
+   tamaño pequeño y después estire ese mapa de bits: de ahí que el logo se
+   viera pixelado y borroso en la portada. En su lugar el JS interpola el
+   font-size (--morph-size), que obliga al navegador a redibujar las letras
+   vectorialmente a cada tamaño. El transform se queda sólo para el
+   desplazamiento vertical (--morph-y), que no deforma nada. */
+.nav--marquesina .nav-brand {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  text-align: center;
+  line-height: .95;
+  white-space: nowrap;
+  /* Reposo = aparcado en la barra. Si no hay JS se queda tal cual. */
+  font-size: var(--morph-size, clamp(1.15rem, 2.5vw, 1.85rem));
+  transform: translate(-50%, calc(-50% + var(--morph-y, 0px)));
+  /* El tamaño va cambiando píxel a píxel con el scroll. Con el modo normal
+     el navegador "ajusta" cada letra a la rejilla de píxeles y los trazos
+     finos de la Rye bailan y se ven sucios; geometricPrecision escala el
+     contorno real de cada letra y las deja limpias a cualquier tamaño. */
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: subpixel-antialiased;
+  /* Legibilidad sobre la ilustración: un CONTORNO oscuro nítido en lugar de
+     la sombra difuminada de antes. La sombra borrosa rodeaba las letras de
+     un halo gris y era lo que hacía que el logo pareciera desenfocado.
+     paint-order pinta el contorno DEBAJO del relleno, así no adelgaza la
+     letra; si el navegador no lo soporta, el trazo es tan fino que apenas
+     se nota. */
+  paint-order: stroke fill;
+  -webkit-text-stroke: .055em rgba(16, 7, 5, .82);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .55);
+}
+/* Los hijos van en `em`, así crecen solos con el font-size del padre */
+.nav-brand-word {
+  display: block;
+  font-family: var(--display);
+  font-size: 1em;
+  line-height: .95;
+}
+.nav--marquesina .nav-brand small {
+  font-size: .3em;
+  letter-spacing: .22em;
+  margin-top: .34em;
+  /* Cae sobre la madera, la moldura verde o el oro según el tamaño de
+     pantalla: mismo truco del contorno, a su escala. */
+  -webkit-text-stroke: .1em rgba(16, 7, 5, .75);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .6);
+}
+.site-header--home.is-scrolled .nav-brand,
+.site-header--home.is-scrolled .nav-brand small {
+  -webkit-text-stroke: 0;
+  text-shadow: none;
+}
+/* Mientras el logo está «volando» sobre la portada no queremos que se
+   coma los clics; vuelve a ser enlace cuando aparca en la cabecera. */
+body.has-morph .nav--marquesina .nav-brand { pointer-events: none; }
+body.has-morph .nav--marquesina .nav-brand.is-aparcado { pointer-events: auto; }
+
+/* Colores sobre la ilustración (home, portada) */
+.site-header--home .nav-menu a { color: var(--crema); }
+/* Al aparcar, la cabecera se vuelve sólida. Mantenemos SIEMPRE la misma
+   altura (--nav-h) para no mover el documento ni provocar saltos. */
+.site-header--home.is-scrolled .nav-menu a { color: var(--tinta); }
+.site-header--home.is-scrolled .nav-brand { text-shadow: none; }
+
+/* Transiciones suaves de color (el tamaño y la posición los lleva el JS) */
+.nav--marquesina .nav-brand,
+.nav--marquesina .nav-brand small,
+.nav--marquesina .nav-menu a {
+  transition: color .35s var(--ease-out), text-shadow .35s var(--ease-out);
+}
+.site-header--home::after { transition: opacity .35s var(--ease-out); }
+
+/* =============================================================
+   7. SECCIONES HOME
+   ============================================================= */
+
+/* --- PORTADA: la ilustración es la protagonista ---
+   Aquí el fondo manda. Sólo tapamos lo justo: una franja arriba para que
+   se lean los enlaces y el logo sobre la madera, y otra abajo para el
+   cartel de reserva. El centro (payaso, plato y cartel de RESERVADO)
+   se deja limpio. */
+.hero {
+  position: relative;
+  height: 100svh;
+  background-color: #2a1a10;          /* respaldo tono madera */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: clamp(4rem, 9vw, 5.5rem);
+  padding-top: calc(var(--nav-h) + clamp(.5rem, 2vw, 1.2rem));
+}
+
+
+/* Fondo: [copia espejada] [escena central] [copia espejada].
+   El solape de -7px es el MISMO a los dos lados, así la tira queda
+   simétrica respecto al centro de la pantalla. */
+.hero-strip {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  pointer-events: none;
+}
+.hero-strip img {
+  height: 100%;
+  width: auto;
+  max-width: none;
+  flex: none;
+  display: block;
+}
+.hero-strip img + img { margin-left: -7px; }
+.hero-copy { transform: scaleX(-1); }
+
+/* Velo: muy suave. Oscurece arriba (enlaces + logo) y abajo (cartel),
+   y deja el centro prácticamente sin tocar. */
+.hero-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    radial-gradient(130% 82% at 50% 40%,
+      rgba(12, 5, 7, 0) 0%, rgba(12, 5, 7, .10) 58%, rgba(12, 5, 7, .46) 100%),
+    linear-gradient(180deg,
+      rgba(12, 5, 7, .74) 0%, rgba(12, 5, 7, .42) 20%,
+      rgba(12, 5, 7, 0) 44%, rgba(12, 5, 7, 0) 58%,
+      rgba(12, 5, 7, .38) 82%, rgba(12, 5, 7, .72) 100%);
+}
+
+/* Columna de la portada: logo arriba, acciones abajo, centro libre */
+.hero-inner {
+  position: relative;
+  z-index: 3;
+  flex: 1;
+  width: 100%;
+  padding-inline: var(--gutter);
+  padding-top: clamp(.4rem, 3svh, 2.2rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  text-align: center;
+}
+/* Hueco reservado para el logo grande (que vive en la cabecera). La altura
+   la escribe el JS; sin JS vale 0 y el logo se queda en la barra. */
+.hero-logo-space { width: 100%; height: 0; flex: none; }
+
+/* --- Acciones de la portada ---
+   Composición: arriba logo + cartel de reserva (pegados), y abajo del todo
+   el botón de la carta. Así el payaso se queda entero en medio. */
+.hero-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(.6rem, 1.8svh, 1.4rem);
+  width: 100%;
+}
+
+/* Cartel de reserva (imagen propia). Nada de caja: la propia ilustración
+   del cartel es el botón.
+
+   EL TAMAÑO manda sobre el ancho. La escena de fondo se dibuja a la altura
+   del hero, así que la cabeza del payaso empieza SIEMPRE al 50% de esa
+   altura. Como el subtítulo termina sobre el 30%, el cartel tiene que caber
+   en esa franja: por eso lo limitamos en svh (alto) y la proporción del
+   cartel (1,559) nos da el ancho. */
+.cta-cartel {
+  display: block;
+  width: min(80vw, calc(19svh * 1.559), 340px);
+  line-height: 0;
+  border-radius: 14px;
+  filter: drop-shadow(0 14px 26px rgba(0, 0, 0, .55));
+  transition: transform .35s var(--ease-out), filter .35s var(--ease-out);
+  animation: cartel-latido 3.2s var(--ease-soft) infinite;
+}
+.cta-cartel img { width: 100%; height: auto; }
+.cta-cartel:hover,
+.cta-cartel:focus-visible {
+  transform: translateY(-4px) scale(1.035);
+  filter: drop-shadow(0 20px 34px rgba(0, 0, 0, .6))
+          drop-shadow(0 0 16px rgba(227, 197, 121, .55));
+  animation-play-state: paused;
+}
+.cta-cartel:active { transform: translateY(-1px) scale(1.01); }
+@keyframes cartel-latido {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-6px) rotate(-.5deg); }
+}
+
+/* Secundario: largo y ancho, pero HUECO. El relleno es casi transparente a
+   propósito, para que la ilustración siga leyéndose por detrás. */
+.cta-carta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .8rem;
+  width: min(92vw, 560px);
+  min-height: 62px;
+  padding: .85rem 2rem;
+  border-radius: 999px;
+  border: 1.5px solid rgba(227, 197, 121, .8);
+  background: rgba(12, 5, 7, .18);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  color: var(--oro-claro);
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(1rem, 2.6vw, 1.2rem);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, .7);
+  transition: background .3s var(--ease-out), color .3s var(--ease-out),
+              border-color .3s var(--ease-out), transform .3s var(--ease-out);
+}
+.cta-carta svg { width: 1.05em; height: 1.05em; flex: none; transition: transform .3s var(--ease-out); }
+.cta-carta:hover,
+.cta-carta:focus-visible {
+  background: rgba(200, 162, 76, .92);
+  border-color: var(--oro-claro);
+  color: #24140a;
+  text-shadow: none;
+  transform: translateY(-2px);
+}
+.cta-carta:hover svg { transform: translateX(4px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-cartel { animation: none; }
+}
+
+/* --- Botón de globos (guiño de feria) ---
+   Discreto a propósito: va justo debajo del cartel de reserva y no puede
+   competir con él. Misma tipografía que los enlaces del menú (Fraunces en
+   versalitas), fondo casi transparente y un filo fino de granate. */
+.cta-globos {
+  display: inline-flex;
+  align-items: center;
+  gap: .4em;
+  padding: .38rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(142, 31, 43, .75);   /* --granate, sin apretar */
+  background: rgba(244, 236, 216, .07);       /* crema apenas insinuado */
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  color: rgba(244, 236, 216, .82);
+  /* Calcado del nav: .nav--marquesina .nav-menu a */
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: .72rem;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, .55);
+  transition: background .3s var(--ease-out), border-color .3s var(--ease-out),
+              color .3s var(--ease-out), transform .3s var(--ease-out);
+}
+.cta-globos:hover,
+.cta-globos:focus-visible {
+  background: rgba(244, 236, 216, .14);
+  border-color: var(--granate);
+  color: var(--crema);
+  transform: translateY(-1px);
+}
+.cta-globos:active { transform: translateY(0); }
+
+/* --- Indicador «desliza» --- */
+.hero-scroll {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(.9rem, 2.5vw, 1.6rem);
+  transform: translateX(-50%);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .45rem;
+  color: rgba(244, 236, 216, .72);
+  font-size: .62rem;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, .7);
+  transition: color .3s var(--ease-out);
+}
+.hero-scroll:hover { color: var(--oro-claro); }
+.hero-scroll-linea {
+  width: 1px; height: 28px;
+  background: rgba(244, 236, 216, .55);
+  animation: scrollHint 2.2s infinite var(--ease-soft);
+}
+/* En vertical la escena se ve recortada y hay menos sitio: fuera el
+   indicador «desliza» (ahí abajo choca con el botón de la carta). */
+@media (max-width: 639px) {
+  .hero { 
+    padding-bottom: 2.2rem; 
+    padding-top: calc(var(--nav-h) - 1.5rem);
+  }
+  .cta-cartel { margin-top: 2rem; }
+  .hero-scroll { display: none; }
+  .cta-carta { letter-spacing: .12em; padding-inline: 1.2rem; gap: .6rem; }
+}
+
+
+/* --- Sección genérica con encabezado --- */
+.section-head {
+  display: flex;
+  flex-direction: column;
+  gap: .8rem;
+  margin-bottom: clamp(2rem, 5vw, 3.5rem);
+}
+.section-head.center { align-items: center; text-align: center; }
+.section-head p.lead { margin-top: .3rem; }
+
+/* --- Platos estrella (grid) --- */
+.platos-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.2rem, 3vw, 2rem);
+}
+
+/* --- La historia (bloque 2 columnas) --- */
+.split {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+}
+/* --- La foto de la fachada en «Nosotros» ---
+   Apaisada, con esquinas suaves y sombra. Nada de círculos: la foto es
+   horizontal y al meterla en un redondel se perdían los neones de los
+   lados, que son justo lo que se quiere ver. */
+.split-media--foto { position: relative; }
+.foto-nosotros {
+  width: 100%;
+  aspect-ratio: 4 / 3;            /* casi el de la foto: recorta lo mínimo */
+  object-fit: cover;
+  /* Un pelín por encima del centro, que es donde están los neones */
+  object-position: center 42%;
+  border-radius: 16px;
+  box-shadow: 0 24px 55px rgba(94, 17, 25, .22), 0 4px 14px rgba(94, 17, 25, .10);
+  transition: transform .5s var(--ease-out), box-shadow .5s var(--ease-out);
+}
+.foto-nosotros:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 32px 70px rgba(94, 17, 25, .28), 0 6px 18px rgba(94, 17, 25, .12);
+}
+
+.split-media .ph-img,
+.split-media img:not(.foto-nosotros) {
+  border-radius: var(--radius);
+  aspect-ratio: 4 / 5;
+  box-shadow: var(--shadow-md);
+}
+.split-media { position: relative; }
+.split-media .sello {
+  position: absolute;
+  bottom: -1rem; right: -1rem;
+  width: 96px; height: 96px;
+  background: var(--granate);
+  color: var(--crema);
+  border-radius: 50%;
+  display: grid; place-items: center; text-align: center;
+  font-family: var(--display);
+  font-size: .8rem; line-height: 1.2;
+  box-shadow: var(--shadow-md);
+  border: 2px solid var(--oro);
+}
+.split-body h2 { margin-bottom: 1rem; }
+.split-body p { color: var(--tinta-70); margin-bottom: 1rem; }
+.split-body .btn { margin-top: .8rem; }
+
+/* =============================================================
+   EL LOCAL — mapa CREMA (decorativo) con la ficha encima
+   ============================================================= */
+.mapa-bloque {
+  --mapa-alto: clamp(260px, 58vw, 380px);   /* sólo se usa en móvil */
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--crema);
+  padding-block: clamp(3.5rem, 9vw, 6.5rem);
+}
+/* El lienzo del mapa. TODO lo de dentro es decorado: ni se arrastra, ni hace
+   zoom, ni se puede pulsar. Así el scroll nunca se queda "enganchado". */
+.mapa-lienzo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+}
+/* Con el lienzo más ancho y pegado a la izquierda, el centro del mapa (que
+   es justo donde cae el restaurante y nuestro marcador) se desplaza a la
+   derecha. Así la ficha se puede arrimar al borde izquierdo sin taparlo,
+   y el marcador queda en la mitad derecha del mapa. */
+@media (min-width: 720px) {
+  .mapa-lienzo { right: auto; width: 132%; }
+}
+.mapa-iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  pointer-events: none;
+  /* Google no deja cambiarle los colores al mapa gratuito, así que lo
+     teñimos desde fuera: sepia lo lleva al terreno cálido, bajamos el
+     color y subimos el brillo hasta dejarlo en crema. */
+  filter: sepia(.52) saturate(.62) brightness(1.06) contrast(.88) hue-rotate(-6deg);
+}
+/* Velo CLARO: aclara el mapa donde va la ficha y funde los bordes de la
+   sección con el crema de arriba y de abajo. */
+.mapa-velo {
+  position: absolute;
+  inset: 0;
+  display: block;
+  background:
+    linear-gradient(100deg, rgba(244, 236, 216, .95) 0%, rgba(244, 236, 216, .88) 26%,
+                            rgba(244, 236, 216, .38) 40%, rgba(244, 236, 216, .10) 56%,
+                            rgba(244, 236, 216, .04) 100%),
+    linear-gradient(180deg, var(--crema) 0%, rgba(244, 236, 216, .55) 12%,
+                            rgba(244, 236, 216, 0) 30%, rgba(244, 236, 216, 0) 70%,
+                            rgba(244, 236, 216, .55) 88%, var(--crema) 100%);
+}
+
+/* --- Marcador de la casa, en el centro del lienzo --- */
+.mapa-pin {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.mapa-pin-onda {
+  position: absolute;
+  left: 50%;
+  bottom: -9px;
+  width: 22px; height: 22px;
+  margin-left: -11px;
+  border-radius: 50%;
+  background: rgba(142, 31, 43, .45);
+  animation: pin-onda 2.4s var(--ease-soft) infinite;
+}
+@keyframes pin-onda {
+  0%   { transform: scale(.5); opacity: .8; }
+  100% { transform: scale(3.4); opacity: 0; }
+}
+/* La gota: círculo + pico abajo, con la estrella de la marca dentro */
+.mapa-pin-gota {
+  position: relative;
+  width: 54px; height: 54px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(180deg, var(--granate), var(--granate-hondo));
+  border: 3px solid var(--oro-claro);
+  box-shadow: 0 10px 24px rgba(94, 17, 25, .35);
+}
+/* OJO: sin este tamaño el SVG de la estrella se estira a lo ancho de la
+   sección y se ve una mancha negra gigante. */
+.mapa-pin-gota svg { width: 24px; height: 24px; fill: var(--oro-claro); }
+.mapa-pin-gota::after {   /* el pico */
+  content: "";
+  position: absolute;
+  left: 50%; bottom: -12px;
+  width: 16px; height: 16px;
+  margin-left: -8px;
+  background: var(--granate-hondo);
+  border-right: 3px solid var(--oro-claro);
+  border-bottom: 3px solid var(--oro-claro);
+  transform: rotate(45deg);
+  border-radius: 0 0 4px 0;
+}
+.mapa-pin-cartel {
+  margin-top: 1.1rem;
+  padding: .35rem .8rem;
+  border-radius: 999px;
+  background: var(--crema);
+  border: 1px solid var(--oro);
+  color: var(--granate);
+  font-family: var(--display);
+  font-size: .72rem;
+  letter-spacing: .04em;
+  white-space: nowrap;
+  box-shadow: var(--shadow-sm);
+}
+
+.mapa-bloque .wrap { position: relative; z-index: 2; }
+
+/* --- La ficha --- */
+.mapa-ficha {
+  width: 100%;
+  max-width: 460px;
+  color: var(--tinta);
+  border-radius: 20px;
+  padding: clamp(1.5rem, 4vw, 2.4rem);
+  /* Un punto más clara que el mapa, para que se despegue del fondo */
+  background: #FBF6EA;
+  border: 1px solid var(--oro);
+  box-shadow: 0 26px 60px rgba(94, 17, 25, .18), 0 6px 18px rgba(94, 17, 25, .10);
+}
+.mapa-ficha h2 {
+  color: var(--granate);
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  margin: .6rem 0 1.2rem;
+}
+.mapa-nombre {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--tinta);
+}
+.mapa-dir {
+  font-style: normal;
+  color: var(--tinta-70);
+  line-height: 1.7;
+  margin-top: .2rem;
+}
+.mapa-estado { margin: 1.1rem 0; }
+
+.mapa-horario {
+  display: grid;
+  border-top: 1px solid rgba(200, 162, 76, .45);
+  margin-bottom: 1.1rem;
+}
+.mapa-fila {
+  display: flex;
+  align-items: baseline;
+  gap: .9rem;
+  padding: .55rem 0;
+  border-bottom: 1px solid rgba(200, 162, 76, .45);
+}
+.mapa-fila dt {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-weight: 600;
+  font-size: .88rem;
+  color: var(--tinta);
+}
+.mapa-fila dd {
+  /* La hora nunca se parte: el que cede es el nombre del día. */
+  flex: none;
+  white-space: nowrap;
+  margin-left: auto;
+  text-align: right;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: .92rem;
+  color: var(--granate);
+}
+.mapa-fila dd.es-cerrado {
+  color: var(--tinta-45);
+  font-style: italic;
+  font-weight: 500;
+}
+
+.mapa-contacto {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  margin-bottom: 1.6rem;
+  font-size: .98rem;
+}
+.mapa-contacto .ico { color: var(--oro); flex: none; }
+.mapa-contacto a { color: var(--tinta-70); border-bottom: 1px solid transparent; }
+.mapa-contacto a:hover { color: var(--granate); border-bottom-color: currentColor; }
+
+/* Único botón de la ficha */
+.mapa-comollegar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+  min-height: 54px;
+  padding: .85rem 2rem;
+  border-radius: 999px;
+  background: var(--granate);
+  color: var(--crema);
+  border: 2px solid var(--granate);
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  box-shadow: var(--shadow-md);
+  transition: background .3s var(--ease-out), color .3s var(--ease-out),
+              border-color .3s var(--ease-out), transform .3s var(--ease-out);
+}
+.mapa-comollegar svg { width: 1.15em; height: 1.15em; transition: transform .3s var(--ease-out); }
+.mapa-comollegar:hover,
+.mapa-comollegar:focus-visible {
+  background: var(--oro);
+  border-color: var(--oro);
+  color: var(--tinta);
+  transform: translateY(-2px);
+}
+.mapa-comollegar:hover svg { transform: translateX(4px); }
+
+/* La ficha se arrima al borde izquierdo (en móvil se queda como está,
+   a lo ancho y debajo del mapa). */
+@media (min-width: 720px) {
+  .mapa-bloque .wrap { padding-left: clamp(1.5rem, 3.5vw, 3.5rem); }
+}
+
+/* En pantallas estrechas, día arriba y horas debajo */
+@media (max-width: 430px) {
+  .mapa-fila { flex-direction: column; align-items: flex-start; gap: .1rem; }
+  .mapa-fila dd { margin-left: 0; text-align: left; }
+}
+
+/* En móvil: banda de mapa arriba y la ficha montada sobre su borde.
+   Así el marcador (que va en el centro del lienzo) queda siempre a la vista. */
+@media (max-width: 719px) {
+  .mapa-bloque {
+    padding-top: calc(var(--mapa-alto) - 2.5rem);
+    padding-bottom: clamp(2.5rem, 8vw, 4rem);
+  }
+  .mapa-lienzo { inset: 0 0 auto 0; height: var(--mapa-alto); }
+  .mapa-velo {
+    background:
+      linear-gradient(180deg, var(--crema) 0%, rgba(244, 236, 216, .35) 18%,
+                              rgba(244, 236, 216, .18) 55%, rgba(244, 236, 216, .85) 100%);
+  }
+  .mapa-pin { transform: translate(-50%, -92%) scale(.86); }
+  .mapa-ficha { max-width: none; }
+}
+
+/* --- Mapa decorado SIN ficha (el-local) ---
+   OJO: .mapa-lienzo es position:absolute, o sea que no aporta altura; en la
+   home la altura de la seccion la da la ficha. Sin ficha hay que darsela a
+   mano o el mapa se queda en una franja de nada. De paso centramos el lienzo
+   (en la home va desplazado para dejarle sitio a la ficha) y quitamos el
+   velo lateral, que existia solo para aclarar la zona de la ficha. */
+.mapa-bloque--solo {
+  min-height: clamp(320px, 46vw, 520px);
+  padding-block: 0;
+}
+@media (min-width: 720px) {
+  .mapa-bloque--solo .mapa-lienzo { right: 0; width: auto; }
+}
+.mapa-bloque--solo .mapa-velo {
+  background:
+    linear-gradient(180deg, var(--crema) 0%, rgba(244, 236, 216, .45) 14%,
+                            rgba(244, 236, 216, 0) 34%, rgba(244, 236, 216, 0) 66%,
+                            rgba(244, 236, 216, .45) 86%, var(--crema) 100%);
+}
+@media (max-width: 719px) {
+  /* En la home el lienzo es una banda arriba y la ficha va debajo; aqui el
+     mapa ocupa la seccion entera. */
+  .mapa-bloque--solo {
+    padding-top: 0;
+    padding-bottom: 0;
+    min-height: var(--mapa-alto);
+  }
+  .mapa-bloque--solo .mapa-lienzo { inset: 0; height: auto; }
+  .mapa-bloque--solo .mapa-velo {
+    background:
+      linear-gradient(180deg, var(--crema) 0%, rgba(244, 236, 216, 0) 22%,
+                              rgba(244, 236, 216, 0) 78%, var(--crema) 100%);
+  }
+}
+
+/* --- Lista de horarios (el-local) ---
+   Mismo patron que .mapa-horario de la ficha, pero con sitio a los lados
+   para que el resaltado del dia de hoy respire. */
+.horario-lista {
+  display: grid;
+  border-top: 1px solid rgba(200, 162, 76, .45);
+  margin: 1.2rem 0 1.4rem;
+}
+.horario-dia {
+  display: flex;
+  align-items: baseline;
+  gap: .9rem;
+  padding: .6rem .75rem;
+  border-bottom: 1px solid rgba(200, 162, 76, .45);
+}
+.horario-dia dt {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-weight: 600;
+  font-size: .95rem;
+  color: var(--tinta);
+}
+.horario-dia dd {
+  /* La hora nunca se parte: el que cede es el nombre del dia. */
+  flex: none;
+  white-space: nowrap;
+  margin-left: auto;
+  text-align: right;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: .95rem;
+  color: var(--granate);
+}
+.horario-dia dd.es-cerrado {
+  color: var(--tinta-45);
+  font-style: italic;
+  font-weight: 500;
+}
+
+/* El dia de hoy: filo de oro, fondo dorado que se desvanece y chapa "HOY".
+   El oro se queda en los adornos y no en el texto: #C8A24C sobre el crema
+   da 2:1 de contraste y no habria quien lo leyera. */
+.horario-lista .horario-dia.es-hoy {
+  background: linear-gradient(90deg, rgba(200, 162, 76, .22) 0%, rgba(200, 162, 76, 0) 88%);
+  box-shadow: inset 3px 0 0 var(--oro);
+  border-radius: 4px 0 0 4px;
+}
+.horario-lista .horario-dia.es-hoy dt,
+.horario-lista .horario-dia.es-hoy dd {
+  color: var(--granate);
+  font-weight: 700;
+}
+.horario-lista .horario-dia.es-hoy dd.es-cerrado {
+  color: var(--granate);
+  font-style: italic;
+}
+.horario-lista .horario-dia.es-hoy dt::after {
+  content: "HOY";
+  margin-left: .55rem;
+  padding: .12rem .45rem;
+  border-radius: 999px;
+  background: var(--oro);
+  color: var(--granate-hondo);
+  font-family: var(--display);
+  font-size: .58rem;
+  letter-spacing: .12em;
+  vertical-align: .14em;
+  white-space: nowrap;
+}
+@media (max-width: 430px) {
+  /* Pantallas estrechas: dia arriba y horas debajo, como en la ficha. */
+  .horario-dia { flex-direction: column; align-items: flex-start; gap: .1rem; }
+  .horario-dia dd { margin-left: 0; text-align: left; }
+}
+
+/* --- Banda de reserva: FOTO FIJA con efecto parallax ---
+   Receta calcada de la referencia (bohemianmalaga.com, sección "Tu nuevo
+   rincón favorito"): la foto se pinta con `background-attachment: fixed`,
+   así que se queda clavada al viewport y el contenido le pasa por encima.
+   No hay JavaScript detrás: es parallax puro de CSS. */
+.banda-reserva {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  text-align: center;
+  color: var(--crema);
+  background-color: var(--tinta);         /* respaldo mientras carga la foto */
+  min-height: clamp(480px, 76vh, 740px);
+  display: flex;
+  align-items: center;
+  padding-block: clamp(4rem, 9vw, 6.5rem);
+}
+/* Separador decorativo: un filo de oro de 2px que marca el corte con el
+   crema del mapa de arriba. Se apaga hacia los lados para que no parezca
+   un borde de caja. */
+.banda-reserva::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(90deg,
+              rgba(200, 162, 76, 0) 0%, var(--oro) 18%,
+              var(--oro-claro) 50%, var(--oro) 82%, rgba(200, 162, 76, 0) 100%);
+}
+/* La capa de la foto. El `inset: -50px` la hace 50px más grande que la
+   sección por los cuatro lados: con `fixed` los redondeos de subpíxel
+   pueden dejar una línea fina en los bordes, y así nunca asoma. Como la
+   sección recorta (overflow:hidden), ese sobrante no se ve. */
+.banda-foto {
+  position: absolute;
+  inset: -50px;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("assets/img/mesa-platos.jpg?v=1");
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+/* Velo: la foto es CLARA (queso gratinado, madera al sol) y el texto va en
+   crema, así que hace falta más cuerpo que con el vídeo.
+   - El radial concentra la sombra detrás del texto.
+   - El lineal cierra la parte de abajo en `--tinta`, que es justo el fondo
+     de la sección de Instagram: las dos sueldan sin costura ni difuminado. */
+.banda-velo {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(64% 58% at 50% 46%,
+                    rgba(12, 8, 5, .52) 0%, rgba(12, 8, 5, .30) 60%,
+                    rgba(12, 8, 5, 0) 100%),
+    linear-gradient(180deg,
+                    rgba(18, 12, 8, .55) 0%, rgba(18, 12, 8, .38) 28%,
+                    rgba(18, 12, 8, .42) 62%, rgba(28, 42, 34, .84) 88%,
+                    var(--tinta) 100%);
+}
+.banda-reserva .wrap { position: relative; z-index: 2; width: 100%; }
+.banda-reserva .marquesina { margin-bottom: 1.5rem; }
+.banda-reserva h2 {
+  color: var(--crema);
+  margin-bottom: 1rem;
+  paint-order: stroke fill;
+  -webkit-text-stroke: .035em rgba(10, 4, 3, .6);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .9), 0 2px 16px rgba(0, 0, 0, .85);
+}
+.banda-reserva p {
+  color: var(--crema);
+  font-weight: 500;
+  max-width: 48ch;
+  margin: 0 auto 2rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .9), 0 2px 14px rgba(0, 0, 0, .8);
+}
+.banda-reserva .btn--primario { background: var(--oro); color: var(--tinta); box-shadow: 0 12px 28px rgba(0, 0, 0, .5); }
+.banda-reserva .btn--primario:hover { background: var(--oro-claro); }
+.banda-tel {
+  display: block;
+  margin-top: 1.2rem;
+  font-family: var(--display);
+  font-size: clamp(1.3rem, 4vw, 2rem);
+  color: var(--oro-claro);
+  /* Cae sobre la zona más clara de la foto: contorno corto y duro además
+     de la sombra difusa. */
+  paint-order: stroke fill;
+  -webkit-text-stroke: .05em rgba(10, 4, 3, .75);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .95), 0 2px 14px rgba(0, 0, 0, .85);
+}
+
+/* FALLBACK MÓVIL (obligatorio).
+   iOS Safari ignora `background-attachment: fixed`: o no pinta la foto, o
+   la deja estirada y temblando al hacer scroll. Android de gama baja
+   tampoco lo lleva fino. En pantallas pequeñas pasamos a `scroll`: se ve
+   como una foto de fondo normal, quieta respecto a la sección. */
+@media (max-width: 820px) {
+  .banda-foto { background-attachment: scroll; }
+  .banda-reserva { min-height: clamp(430px, 62vh, 560px); }
+}
+/* Y en iOS a cualquier ancho (el iPad apaisado se pasa de 820px).
+   `-webkit-touch-callout` sólo existe en Safari de iOS/iPadOS. */
+@supports (-webkit-touch-callout: none) {
+  .banda-foto { background-attachment: scroll; }
+}
+
+/* Si el usuario pide reducir movimiento, fuera el parallax: la foto se
+   queda pegada a la sección y sube con ella. */
+@media (prefers-reduced-motion: reduce) {
+  .banda-foto { background-attachment: scroll; }
+}
+
+/* =============================================================
+   INSTAGRAM — doble marquesina a sangre
+   Receta calcada de la referencia (bohemianmalaga.com): dos filas de
+   fotos que cruzan la pantalla en sentidos opuestos, apagadas con un
+   velo oscuro, y la tarjeta del perfil flotando en el centro.
+   ============================================================= */
+.ig-seccion {
+  position: relative;
+  padding: 0;                    /* a sangre: sin márgenes ni aire lateral */
+  background: var(--tinta);      /* se ve entre foto y foto */
+  overflow: hidden;
+}
+
+.ig-carrusel {
+  --ig-gap: .75rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ig-gap);
+}
+.ig-fila { display: flex; }
+.ig-pista {
+  display: flex;
+  gap: var(--ig-gap);
+  width: max-content;
+  will-change: transform;
+}
+/* La clase la pone main.js DESPUÉS de duplicar las fotos: sin duplicar el
+   bucle daría un salto, así que sin JS mejor quieto. */
+.ig-fila--izq .ig-pista.is-listo { animation: ig-hacia-izq 60s linear infinite; }
+.ig-fila--der .ig-pista.is-listo { animation: ig-hacia-der 60s linear infinite; }
+
+/* La pista lleva sus fotos DOS veces. Media pista deja fuera medio hueco,
+   de ahí el `- var(--ig-gap)/2`: así el salto es invisible. */
+@keyframes ig-hacia-izq {
+  from { transform: translateX(0); }
+  to   { transform: translateX(calc(-50% - var(--ig-gap) / 2)); }
+}
+@keyframes ig-hacia-der {
+  from { transform: translateX(calc(-50% - var(--ig-gap) / 2)); }
+  to   { transform: translateX(0); }
+}
+
+/* PAUSA: al posarse en UNA foto se para la fila entera de esa foto (y sólo
+   ésa). Con :has() la parada se dispara únicamente desde las fotos, así que
+   pasar por los huecos o por la tarjeta del centro no congela nada. */
+.ig-fila:has(.ig-foto:hover) .ig-pista,
+.ig-fila:has(.ig-foto:focus-visible) .ig-pista { animation-play-state: paused; }
+/* Respaldo para navegadores sin :has() */
+@supports not selector(:has(*)) {
+  .ig-fila:hover .ig-pista { animation-play-state: paused; }
+}
+
+/* --- Cada foto --- */
+.ig-foto {
+  position: relative;
+  flex-shrink: 0;
+  width: clamp(160px, 17vw, 250px);
+  aspect-ratio: 4 / 5;
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: transform .5s var(--ease-out), box-shadow .5s var(--ease-out);
+}
+/* Velo oscuro por encima de la foto (esto es lo que la apaga) */
+.ig-foto::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(12, 5, 7, .5);
+  pointer-events: none;
+  transition: background .5s var(--ease-out);
+}
+/* …y el propio archivo va desaturado, para que las 12 fotos (unas más
+   claras, otras más oscuras) canten igual en reposo. */
+.ig-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: saturate(.3) brightness(.72);
+  transform: scale(1);
+  transition: filter .5s var(--ease-out), transform .5s var(--ease-out);
+}
+/* Al posarse: se quita el velo y la foto recupera color y brillo */
+.ig-foto:hover,
+.ig-foto:focus-visible {
+  transform: scale(1.05);
+  z-index: 10;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, .5);
+}
+.ig-foto:hover::before,
+.ig-foto:focus-visible::before { background: rgba(12, 5, 7, 0); }
+.ig-foto:hover img,
+.ig-foto:focus-visible img {
+  filter: saturate(1.1) brightness(1.05);
+  transform: scale(1.08);
+}
+
+/* --- Tarjeta del perfil, clavada en el centro --- */
+.ig-tarjeta {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 50;                       /* por encima de las dos filas */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .9rem;
+  width: min(92vw, 340px);
+  padding: clamp(1.6rem, 3.5vw, 2.2rem) clamp(1.6rem, 4vw, 2.6rem);
+  text-align: center;
+  background: rgba(16, 7, 9, .88);
+  backdrop-filter: blur(20px) saturate(1.1);
+  -webkit-backdrop-filter: blur(20px) saturate(1.1);
+  border: 1px solid rgba(227, 197, 121, .35);
+  border-radius: 20px;
+  box-shadow: 0 26px 60px rgba(0, 0, 0, .55);
+  transition: transform .4s var(--ease-out), border-color .4s var(--ease-out),
+              box-shadow .4s var(--ease-out);
+}
+.ig-tarjeta:hover {
+  transform: translate(-50%, -50%) scale(1.02);
+  border-color: var(--oro);
+  box-shadow: 0 32px 70px rgba(0, 0, 0, .6);
+}
+.ig-tarjeta-logo {
+  display: grid;
+  place-items: center;
+  width: 54px; height: 54px;
+  border-radius: 50%;
+  border: 2px solid rgba(227, 197, 121, .45);
+  color: var(--oro-claro);
+  transition: border-color .4s var(--ease-out), box-shadow .4s var(--ease-out);
+}
+.ig-tarjeta-logo svg { width: 28px; height: 28px; }
+.ig-tarjeta:hover .ig-tarjeta-logo {
+  border-color: var(--oro);
+  box-shadow: 0 0 20px rgba(227, 197, 121, .35);
+}
+.ig-tarjeta-handle {
+  font-family: var(--display);
+  font-size: clamp(1rem, 2.4vw, 1.2rem);
+  color: var(--crema);
+  white-space: nowrap;
+}
+.ig-tarjeta-txt {
+  font-size: .82rem;
+  line-height: 1.5;
+  color: rgba(244, 236, 216, .7);
+  max-width: 24ch;
+}
+.ig-tarjeta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 52px;
+  padding: .85rem 2rem;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--oro-claro), var(--oro));
+  color: #24140a;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  transition: background .3s var(--ease-out), transform .3s var(--ease-out);
+}
+.ig-tarjeta-btn:hover,
+.ig-tarjeta-btn:focus-visible {
+  background: linear-gradient(180deg, #f3dca0, var(--oro-claro));
+  transform: translateY(-2px);
+}
+
+/* En táctil no hay ratón: las fotos no se quedan tan apagadas */
+@media (hover: none) {
+  .ig-foto::before { background: rgba(12, 5, 7, .3); }
+  .ig-foto img { filter: saturate(.75) brightness(.9); }
+}
+@media (max-width: 768px) {
+  .ig-carrusel { --ig-gap: .5rem; }
+  .ig-tarjeta { width: min(76vw, 280px); gap: .7rem; padding: 1.4rem 1.5rem; }
+  .ig-tarjeta-logo { width: 44px; height: 44px; }
+  .ig-tarjeta-logo svg { width: 22px; height: 22px; }
+  .ig-tarjeta-btn { min-height: 46px; font-size: .9rem; }
+}
+/* Sin animación: las filas se quedan quietas y se pueden arrastrar */
+@media (prefers-reduced-motion: reduce) {
+  .ig-fila--izq .ig-pista.is-listo,
+  .ig-fila--der .ig-pista.is-listo { animation: none; }
+  .ig-fila { overflow-x: auto; }
+}
+
+/* =============================================================
+   8. FOOTER + BOTÓN FLOTANTE
+   ============================================================= */
+.site-footer {
+  background: var(--tinta);
+  color: rgba(244, 236, 216, .82);
+  padding-block: clamp(3rem, 7vw, 5rem) 2rem;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  margin-bottom: 2.5rem;
+}
+.footer-brand .brand-word { font-size: 2rem; }
+.footer-brand p { margin-top: .5rem; font-size: .9rem; color: rgba(244,236,216,.6); }
+.footer-col h4 {
+  font-family: var(--display);
+  color: var(--oro-claro);
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  letter-spacing: .03em;
+}
+.footer-col a, .footer-col li { font-size: .95rem; line-height: 2; }
+.footer-col a:hover { color: var(--oro-claro); }
+.footer-horario { display: grid; gap: .3rem; font-size: .9rem; }
+.footer-horario dt { color: var(--crema); font-weight: 600; }
+.footer-horario dd { color: rgba(244,236,216,.7); margin-bottom: .5rem; }
+.footer-social { display: flex; gap: .8rem; margin-top: 1rem; }
+.footer-social a {
+  width: 42px; height: 42px;
+  display: grid; place-items: center;
+  border: 1px solid rgba(244,236,216,.25);
+  border-radius: 50%;
+  transition: all .3s var(--ease-out);
+}
+.footer-social a:hover { background: var(--oro); color: var(--tinta); border-color: var(--oro); }
+.footer-bottom {
+  border-top: 1px solid rgba(244,236,216,.15);
+  padding-top: 1.5rem;
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem;
+  font-size: .82rem; color: rgba(244,236,216,.55);
+}
+.footer-bottom a:hover { color: var(--oro-claro); }
+
+/* =============================================================
+   9. PÁGINAS INTERNAS
+   ============================================================= */
+
+/* --- Encabezado de página interna --- */
+.page-hero {
+  background: var(--tinta);
+  color: var(--crema);
+  padding-block: clamp(3rem, 8vw, 5.5rem) clamp(2.5rem, 6vw, 4rem);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.page-hero::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(90deg, rgba(244,236,216,.04) 0 40px, transparent 40px 80px);
+}
+.page-hero .wrap { position: relative; z-index: 2; }
+.page-hero .kicker { color: var(--oro-claro); }
+.page-hero .kicker::before { background: var(--oro); }
+.page-hero h1 { color: var(--crema); margin: .8rem 0; }
+.page-hero p { color: rgba(244,236,216,.82); max-width: 52ch; margin-inline: auto; }
+
+/* --- CARTA (actos + acordeón) --- */
+.acto { margin-bottom: clamp(2rem, 5vw, 3.5rem); }
+.acto-head {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  border-bottom: 2px solid var(--oro);
+  padding-bottom: .8rem;
+  margin-bottom: 1.5rem;
+}
+.acto-head .acto-num {
+  font-family: var(--display);
+  color: var(--oro);
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+}
+.acto-head h2 { color: var(--granate); }
+.acto-head .acto-sub { color: var(--tinta-70); font-size: .95rem; margin-left: auto; text-align: right; }
+
+.acto-toggle {
+  width: 100%;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem;
+}
+.acto-toggle .chevron { transition: transform .3s var(--ease-out); color: var(--granate); }
+/* En escritorio el chevron no hace falta (todo abierto) */
+.acto-toggle { cursor: default; }
+.acto.is-collapsed .chevron { transform: rotate(-90deg); }
+/* Solo en móvil el acordeón oculta paneles y el botón es interactivo */
+@media (max-width: 719px) {
+  .acto-toggle { cursor: pointer; }
+  .acto.is-collapsed .menu-list { display: none; }
+}
+
+.menu-list { display: grid; gap: 1.1rem; }
+.menu-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: .3rem 1rem;
+  align-items: baseline;
+  padding-bottom: 1rem;
+  border-bottom: 1px dotted rgba(28,42,34,.2);
+}
+.menu-item.has-photo { grid-template-columns: 88px 1fr auto; align-items: center; }
+.menu-item .menu-photo {
+  width: 88px; aspect-ratio: 1;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.menu-item .menu-photo .ph-img { font-size: .6rem; padding: .5rem; }
+.menu-item h3 {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  display: flex; align-items: center; gap: .5rem;
+}
+.menu-item .star-mark { color: var(--oro); font-size: .9rem; }
+.menu-item .menu-desc { color: var(--tinta-70); font-size: .92rem; grid-column: 1 / -2; }
+.menu-item.has-photo .menu-desc { grid-column: 2 / 3; }
+.menu-item .menu-price {
+  font-family: var(--serif);
+  font-weight: 600;
+  color: var(--granate);
+  font-size: 1.15rem;
+  white-space: nowrap;
+}
+.carta-note {
+  text-align: center;
+  color: var(--tinta-70);
+  font-size: .9rem;
+  margin-top: 2rem;
+}
+.carta-actions { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem; }
+
+/* --- EL LOCAL (info + mapa) --- */
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+.info-card { padding: var(--space-4); }
+.info-card h3 { color: var(--granate); margin-bottom: .8rem; display: flex; align-items: center; gap: .5rem; }
+.info-card .ico { color: var(--oro); }
+.info-card p, .info-card address { font-style: normal; color: var(--tinta-70); line-height: 1.8; }
+.map-embed {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border: 0;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  filter: saturate(.9) contrast(1.02);
+}
+
+/* --- CONTACTO --- */
+.contacto-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+}
+.reserva-box {
+  background: var(--granate);
+  color: var(--crema);
+  border-radius: var(--radius);
+  padding: clamp(1.8rem, 5vw, 3rem);
+  text-align: center;
+}
+.reserva-box .marquesina { margin-bottom: 1.2rem; }
+.reserva-box h2 { color: var(--crema); margin-bottom: .8rem; }
+.reserva-box p { color: rgba(244,236,216,.85); margin-bottom: 1.5rem; }
+.reserva-box .tel-grande {
+  display: inline-block;
+  font-family: var(--display);
+  font-size: clamp(1.6rem, 5vw, 2.4rem);
+  color: var(--oro-claro);
+  margin: .5rem 0 1.5rem;
+}
+.contacto-datos { display: grid; gap: 1.2rem; }
+.contacto-datos .dato { display: flex; gap: .9rem; align-items: flex-start; }
+.contacto-datos .dato .ico { color: var(--oro); flex-shrink: 0; margin-top: .2rem; }
+.contacto-datos .dato h4 { font-family: var(--sans); font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; color: var(--tinta-45); margin-bottom: .1rem; }
+.contacto-datos .dato a, .contacto-datos .dato p { color: var(--tinta); font-size: 1.05rem; }
+.contacto-datos .dato a:hover { color: var(--granate); }
+
+/* --- Timeline (Nosotros) --- */
+.timeline { position: relative; display: grid; gap: 2.5rem; margin-top: 2rem; }
+.timeline::before {
+  content: ""; position: absolute; left: 10px; top: 0; bottom: 0;
+  width: 2px; background: linear-gradient(var(--oro), transparent);
+}
+.tl-item { position: relative; padding-left: 2.5rem; }
+.tl-item::before {
+  content: ""; position: absolute; left: 4px; top: .4rem;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--granate); border: 2px solid var(--oro);
+}
+.tl-year { font-family: var(--display); color: var(--granate); font-size: 1.4rem; }
+.tl-item p { color: var(--tinta-70); margin-top: .3rem; }
+
+/* =============================================================
+   10. EFECTOS (telón, reveals, keyframes)
+   ============================================================= */
+
+/* --- Telón de apertura (Home) --- */
+.telon {
+  position: fixed; inset: 0;
+  z-index: 9998;
+  display: flex;
+  pointer-events: none;
+}
+.telon-panel {
+  flex: 1;
+  background:
+    repeating-linear-gradient(90deg, var(--granate) 0 6%, var(--granate-hondo) 6% 12%);
+  box-shadow: inset 0 0 80px rgba(0,0,0,.4);
+  transition: transform 1.1s var(--ease-out);
+}
+.telon-panel.izq { transform: translateX(0); }
+.telon-panel.der { transform: translateX(0); }
+.telon-logo {
+  position: absolute; inset: 0;
+  display: grid; place-content: center; text-align: center;
+  color: var(--oro-claro);
+  z-index: 1;
+  transition: opacity .5s var(--ease-out);
+}
+.telon-logo .brand-word { color: var(--oro-claro); font-size: clamp(2rem, 8vw, 4rem); }
+.telon-logo small { display: block; font-family: var(--sans); letter-spacing: .3em; font-size: .7rem; margin-top: .5rem; color: rgba(244,236,216,.7); }
+.telon.is-open .telon-panel.izq { transform: translateX(-100%); }
+.telon.is-open .telon-panel.der { transform: translateX(100%); }
+.telon.is-open .telon-logo { opacity: 0; }
+.telon.is-done { display: none; }
+
+/* ===== Telon de transicion (reserva) =====
+   Reutiliza el look del telon de apertura pero se controla de forma
+   independiente: aquel lo maneja initTelon() en main.js y solo sale en la
+   primera visita a la home. Este empieza ABIERTO y se cierra al pulsar
+   "Reservar"; en contacto.html nace ya cerrado y se abre. */
+.telon-reserva {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  pointer-events: all;         /* bloquea la interaccion mientras transiciona */
+}
+.telon-reserva-panel {
+  flex: 1;
+  background:
+    repeating-linear-gradient(90deg, var(--granate) 0 6%, var(--granate-hondo) 6% 12%);
+  box-shadow: inset 0 0 80px rgba(0, 0, 0, .4);
+  transition: transform 0.6s var(--ease-out);
+}
+/* Empieza abierto (paneles fuera de pantalla) */
+.telon-reserva-panel.izq { transform: translateX(-100%); }
+.telon-reserva-panel.der { transform: translateX(100%); }
+/* Cerrado: los paneles se juntan en el centro */
+.telon-reserva.is-closed .telon-reserva-panel.izq { transform: translateX(0); }
+.telon-reserva.is-closed .telon-reserva-panel.der { transform: translateX(0); }
+
+.telon-reserva-logo {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  color: var(--oro-claro);
+  z-index: 1;
+  opacity: 0;
+  transition: opacity .5s var(--ease-out);
+}
+/* El logo entra cuando los paneles ya casi se han juntado */
+.telon-reserva.is-closed .telon-reserva-logo { opacity: 1; transition-delay: .5s; }
+/* En cuanto empieza a abrirse deja de bloquear: el wrapper sigue cubriendo
+   la pantalla hasta que el JS lo retira, y sin esto se traga los clics
+   durante casi un segundo con la pagina ya visible. Va por clase y no por
+   tiempo para que no se descuadre si se retocan las duraciones. */
+.telon-reserva.is-open { pointer-events: none; }
+/* Al reabrir, el logo se va primero (sin delay) y luego se abren los paneles */
+.telon-reserva.is-open .telon-reserva-logo { opacity: 0; transition-delay: 0s; }
+.telon-reserva.is-open .telon-reserva-panel.izq { transform: translateX(-100%); transition-delay: .2s; }
+.telon-reserva.is-open .telon-reserva-panel.der { transform: translateX(100%); transition-delay: .2s; }
+
+.telon-reserva-logo .brand-word {
+  color: var(--oro-claro);
+  font-size: clamp(2rem, 8vw, 4rem);
+}
+.telon-reserva-logo small {
+  display: block;
+  font-family: var(--sans);
+  letter-spacing: .3em;
+  font-size: .7rem;
+  margin-top: .5rem;
+  color: rgba(244, 236, 216, .7);
+}
+
+/* Reduced motion: sin animacion. El JS ademas navega directo, asi que esto
+   es solo la red por si el telon llegara a pintarse igualmente. */
+@media (prefers-reduced-motion: reduce) {
+  .telon-reserva-panel,
+  .telon-reserva-logo { transition-duration: 0s !important; transition-delay: 0s !important; }
+}
+
+/* --- Reveal on scroll --- */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity .8s var(--ease-out), transform .8s var(--ease-out);
+}
+.reveal.is-visible { opacity: 1; transform: none; }
+/* Defensa: si un .reveal lleva data-split, nunca queda invisible */
+.reveal[data-split] { opacity: 1; transform: none; }
+.reveal-delay-1 { transition-delay: .1s; }
+.reveal-delay-2 { transition-delay: .2s; }
+.reveal-delay-3 { transition-delay: .3s; }
+
+/* --- Keyframes --- */
+@keyframes parpadeo {
+  0%, 100% { opacity: 1; box-shadow: 0 0 8px 2px rgba(227,197,121,.7); }
+  50% { opacity: .45; box-shadow: 0 0 3px 1px rgba(227,197,121,.4); }
+}
+@keyframes pulso {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: .5; }
+}
+@keyframes scrollHint {
+  0% { transform: scaleY(0); transform-origin: top; }
+  50% { transform: scaleY(1); transform-origin: top; }
+  50.1% { transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+
+/* =============================================================
+   10 bis. MENU KINETICO (overlay movil)
+   Adaptacion a vanilla del componente de referencia. Prefijo .kn- porque
+   .menu-list / .menu-item ya existen en la carta y chocarian.
+   La animacion la monta initMenuKinetico() en main.js con GSAP; aqui van
+   solo los estados de reposo y el aspecto.
+   ============================================================= */
+.kn {
+  position: fixed;
+  inset: 0;
+  z-index: 9990;              /* sobre la cabecera (100), bajo el telon (99999) */
+  display: none;
+}
+.kn[data-kn="open"] { display: block; }
+
+.kn-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 7, 9, .55);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  opacity: 0;
+}
+/* Respaldo: si GSAP no carga o hay reduced-motion no hay quien anime el
+   fundido, asi que el velo tiene que salir visible por CSS. Cuando GSAP si
+   anima, sus estilos en linea mandan sobre esto. */
+.kn[data-kn="open"] .kn-overlay { opacity: 1; }
+
+/* El panel entra desde la derecha */
+.kn-menu {
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: min(100%, 520px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* --- Capas de fondo: entran escalonadas y dan sensacion de telon --- */
+.kn-bg { position: absolute; inset: 0; z-index: 0; }
+.kn-backdrop {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+.kn-backdrop.first  { background: var(--oro); }
+.kn-backdrop.second { background: var(--granate); }
+.kn-backdrop:not(.first):not(.second) {
+  background:
+    repeating-linear-gradient(90deg, var(--granate-hondo) 0 6%, #4a0d14 6% 12%);
+  box-shadow: inset 0 0 120px rgba(0, 0, 0, .45);
+}
+
+/* --- Formas ambientales que responden al enlace activo --- */
+.kn-shapes { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.kn-shape {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  visibility: hidden;
+}
+.kn-shape.active { opacity: 1; visibility: visible; }
+.kn-shape-el { opacity: 0; transform-origin: center; }
+
+/* --- Boton de cerrar --- */
+.kn-close {
+  position: absolute;
+  top: calc((var(--nav-h) - 44px) / 2);
+  right: var(--gutter);
+  z-index: 3;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid rgba(227, 197, 121, .45);
+  color: var(--oro-claro);
+  background: rgba(20, 7, 9, .25);
+}
+.kn-close svg { width: 22px; height: 22px; }
+.kn-close-ico { display: grid; place-items: center; }
+
+/* --- Contenido --- */
+.kn-wrap {
+  position: relative;
+  z-index: 2;
+  padding: var(--nav-h) var(--gutter) clamp(2rem, 8vw, 3rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100%;
+}
+.kn-list { list-style: none; margin: 0; padding: 0; }
+/* Cada fila recorta: asi el enlace puede entrar desde abajo como una persiana */
+.kn-item { overflow: hidden; }
+.kn-link {
+  display: block;
+  padding: .18em 0;
+  color: var(--crema);
+  text-decoration: none;
+  font-family: var(--display);
+  font-size: clamp(2.1rem, 11vw, 3.4rem);
+  line-height: 1.12;
+  letter-spacing: .01em;
+  transition: color .3s var(--ease-out);
+}
+.kn-link:hover,
+.kn-link:focus-visible { color: var(--oro-claro); }
+.kn-link[aria-current="page"] { color: var(--oro-claro); }
+.kn-link-text { display: block; }
+
+.kn-cta { margin-top: clamp(1.6rem, 6vw, 2.4rem); }
+.kn-cta .btn { width: 100%; justify-content: center; }
+.kn-pie {
+  margin: 1.4rem 0 0;
+  font-size: .85rem;
+  line-height: 1.7;
+  color: rgba(244, 236, 216, .72);
+}
+.kn-pie a { color: var(--oro-claro); }
+
+/* Con el menu abierto el fondo no se mueve */
+body.kn-abierto { overflow: hidden; }
+
+/* El menu kinetico es de movil: en escritorio mandan los enlaces en linea */
+@media (min-width: 960px) {
+  .kn { display: none !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kn-overlay, .kn-backdrop, .kn-link, .kn-shape-el { transition: none; }
+}
+
+/* Boton bajo el mapa decorado (el-local) */
+.mapa-acciones {
+  display: flex;
+  justify-content: center;
+  padding: clamp(1.4rem, 5vw, 2rem) var(--gutter) clamp(2rem, 6vw, 3rem);
+  background: var(--crema);
+}
+
+/* =============================================================
+   11. RESPONSIVE (mobile-first)
+   ============================================================= */
+@media (max-width: 959px) {
+  /* Nav móvil: los enlaces en linea desaparecen y el hueco lo cubre el menu
+     kinetico a pantalla completa (ver bloque .kn-* mas abajo). */
+  .nav-toggle { display: flex; }
+  .nav-links { display: none; }
+  /* En móvil, dejamos "Reservar" fuera del menú (siempre visible en header) */
+  .nav-actions .btn--secundario { display: none; }
+  /* --- Marquesina (home) en móvil: logo centrado, hamburguesa a la derecha
+         y los 4 enlaces dentro del desplegable --- */
+  .nav--marquesina .nav-toggle {
+    position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+    z-index: 4;
+  }
+  /* En la home pasa lo mismo: los 4 enlaces repartidos se ocultan y el menu
+     kinetico toma el relevo. */
+  .nav--marquesina .nav-menu { display: none; }
+  /* OJO: aquí NO se puede poner max-width al logo. Como lleva
+     white-space:nowrap, recortar la caja no encoge el texto: lo deja
+     saliéndose por la derecha. Lo que evita que choque con la hamburguesa
+     es el font-size aparcado (más abajo), no un ancho máximo. */
+}
+
+/* Pantallas estrechas: que quepan marca + Reservar + hamburguesa */
+@media (max-width: 540px) {
+  .nav-brand { font-size: 1.05rem; }
+  .nav-brand small { font-size: .5rem; letter-spacing: .12em; }
+  .nav-actions { gap: .4rem; }
+  .nav-actions .btn--sm { padding: .55rem .85rem; font-size: .85rem; }
+  .nav-toggle { width: 44px; height: 44px; }
+  /* Marquesina: logo algo menor para que no choque con la hamburguesa */
+  .nav--marquesina .nav-brand { font-size: var(--morph-size, 1.15rem); }
+  .nav--marquesina .nav-brand small { letter-spacing: .16em; }
+}
+
+@media (min-width: 540px) {
+}
+
+@media (min-width: 720px) {
+  .platos-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer-grid { grid-template-columns: 1.4fr 1fr 1fr; }
+  .info-grid { grid-template-columns: repeat(2, 1fr); }
+  .menu-list { grid-template-columns: 1fr 1fr; gap: 1.1rem 2.5rem; }
+  .menu-item.has-photo { grid-column: 1 / -1; }
+}
+
+@media (min-width: 960px) {
+  .platos-grid { grid-template-columns: repeat(4, 1fr); }
+  .split { grid-template-columns: 1fr 1.1fr; }
+  .split--reverse .split-media { order: 2; }
+  .contacto-grid { grid-template-columns: 1.1fr 1fr; align-items: start; }
+  .footer-grid { grid-template-columns: 1.6fr 1fr 1fr 1.2fr; }
+}
+
+/* =============================================================
+   12. REDUCED-MOTION (solo efectos intrusivos)
+   ============================================================= */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .marquesina .bombilla,
+  .estado .punto,
+  .hero-scroll-linea { animation: none; }
+  .telon { display: none !important; }
+  /* Nota: NO desactivamos hovers, fades ni zoom de platos (micro-interacciones). */
+}
+
+/* =============================================================
+   13. LA CARTA (carta.html) — bloques visuales + acordeón
+   Concepto: una rejilla de tarjetas grandes, una por sección, con la
+   ilustración del plato dentro. Al pulsar, el bloque pasa a ocupar el
+   ancho completo y despliega sus platos.
+   Los datos los pinta el JS de carta.html leyendo el Excel.
+   ============================================================= */
+.carta-seccion { background: var(--crema); }
+
+.carta-cargando,
+.carta-aviso {
+  text-align: center;
+  font-family: var(--serif);
+  color: var(--tinta-70);
+  padding-block: 2.5rem;
+}
+.carta-aviso a { color: var(--granate); font-weight: 600; }
+
+/* --- Rejilla de bloques --- */
+.carta-bloques {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1rem, 2.6vw, 1.6rem);
+  align-items: start;
+}
+@media (min-width: 720px) {
+  .carta-bloques { grid-template-columns: repeat(2, 1fr); }
+}
+/* Extras no tiene ilustración: va de lado a lado, como una banda.
+   Y cualquier bloque abierto ocupa todo el ancho para que sus platos
+   respiren en vez de encajonarse en media rejilla. */
+.carta-bloque--ancha,
+.carta-bloque.es-abierto { grid-column: 1 / -1; }
+
+.carta-bloque {
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--crema);
+  box-shadow: 0 10px 30px rgba(28, 42, 34, .10);
+  border: 1px solid rgba(142, 31, 43, .16);
+  transition: box-shadow .4s var(--ease-out);
+}
+.carta-bloque.es-abierto { box-shadow: 0 16px 44px rgba(28, 42, 34, .17); }
+
+/* --- La tarjeta (el botón) --- */
+.carta-tarjeta {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  overflow: hidden;
+  cursor: pointer;
+  text-align: center;
+  /* Crema cálido: hace de lienzo para la acuarela. */
+  background: linear-gradient(158deg, #FCF8EE 0%, var(--crema) 48%, var(--crema-2) 100%);
+  /* IMPRESCINDIBLE: encierra el `mix-blend-mode` de la ilustración dentro
+     de la tarjeta. Sin esto la mezcla se va al fondo de la página y pelea
+     con el oscurecido de escritorio (las tarjetas se pintaban POR ENCIMA
+     del velo). Así la acuarela sólo multiplica contra el crema de aquí. */
+  isolation: isolate;
+}
+@media (min-width: 720px) {
+  .carta-tarjeta { aspect-ratio: 3 / 2; }
+}
+
+.carta-tarjeta-medio {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+/* CLAVE: las ilustraciones vienen recortadas sobre BLANCO, no son fotos a
+   sangre. Con `multiply` ese blanco desaparece contra el crema de la
+   tarjeta y el dibujo queda flotando, sin caja ni marco. */
+.carta-tarjeta-img {
+  width: 84%;
+  height: 84%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  transform: translateY(-7%);
+  transition: transform .55s var(--ease-out), filter .55s var(--ease-out);
+}
+.carta-tarjeta:hover .carta-tarjeta-img,
+.carta-tarjeta:focus-visible .carta-tarjeta-img {
+  transform: translateY(-7%) scale(1.06);
+  filter: saturate(1.08);
+}
+
+/* Velo: NO cubre la ilustración entera (la apagaría). Sube desde abajo
+   sólo lo justo para que el título se lea sobre el granate. */
+.carta-tarjeta-velo {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 62%;
+  pointer-events: none;
+  background: linear-gradient(180deg,
+              rgba(94, 17, 25, 0) 0%, rgba(94, 17, 25, .28) 38%,
+              rgba(94, 17, 25, .78) 72%, rgba(94, 17, 25, .95) 100%);
+  transition: opacity .4s var(--ease-out);
+}
+.carta-tarjeta:hover .carta-tarjeta-velo { opacity: .92; }
+
+.carta-tarjeta-texto {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 1rem 1.1rem 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+  color: var(--crema);
+}
+/* Misma familia que los enlaces del menú de navegación */
+.carta-tarjeta-titulo {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(1.05rem, 3.2vw, 1.45rem);
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  line-height: 1.15;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, .45);
+}
+.carta-tarjeta-pie {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  font-family: var(--sans);
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--oro-claro);
+}
+/* Chevron dibujado con bordes: gira 180° al abrir. */
+.carta-tarjeta-chevron {
+  width: .5rem;
+  height: .5rem;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform .4s var(--ease-out);
+}
+.es-abierto .carta-tarjeta-chevron { transform: translateY(1px) rotate(-135deg); }
+
+/* Al abrir, la tarjeta se achica a una banda: manda el contenido, no la
+   ilustración. El velo pasa a cubrirla entera para que no pelee con el
+   título, y el dibujo se queda de fondo, en sordina. */
+.es-abierto .carta-tarjeta { aspect-ratio: 16 / 7; }
+@media (min-width: 720px) {
+  .es-abierto .carta-tarjeta { aspect-ratio: 16 / 5; }
+}
+/* Al abrir, el velo cubre la tarjeta entera y lleva las siluetas (chef,
+   carpa, trapecista) POR DEBAJO del granate: se intuyen a traves del color
+   y la cabecera deja de ser un bloque rojo plano. El gradiente se cierra
+   abajo (.82) para que el titulo siga leyendose. */
+.es-abierto .carta-tarjeta-velo {
+  height: 100%;
+  background:
+    linear-gradient(180deg, rgba(94, 17, 25, .52) 0%, rgba(94, 17, 25, .82) 100%),
+    url('assets/img/Gemini_Generated_Image_14cer714cer714ce.jpg') center / cover no-repeat;
+}
+.es-abierto .carta-tarjeta-img { transform: translateY(0) scale(1.02); }
+.es-abierto .carta-tarjeta:hover .carta-tarjeta-img { transform: translateY(0) scale(1.05); }
+
+/* --- Extras: banda sin ilustración --- */
+.carta-bloque--ancha .carta-tarjeta,
+.carta-bloque--ancha.es-abierto .carta-tarjeta {
+  aspect-ratio: auto;
+  min-height: 128px;
+  background: linear-gradient(135deg, var(--granate-hondo) 0%, var(--granate) 100%);
+}
+.carta-bloque--ancha .carta-tarjeta-velo { display: none; }
+/* Guiño de marquesina: una fila de bombillas doradas de fondo. */
+.carta-tarjeta-adorno {
+  position: absolute;
+  inset: 0;
+  opacity: .5;
+  background-image: radial-gradient(circle, var(--oro) 1.5px, transparent 1.6px);
+  background-size: 22px 22px;
+  background-position: center;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.6), transparent 70%);
+          mask-image: linear-gradient(180deg, rgba(0,0,0,.6), transparent 70%);
+}
+.carta-bloque--ancha .carta-tarjeta-texto { position: static; padding: 1.6rem 1.1rem; }
+
+/* --- Panel desplegable ---
+   El truco de las filas de rejilla 0fr -> 1fr anima la altura sin que el
+   JS tenga que medir nada. */
+.carta-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows .5s var(--ease-out);
+}
+.es-abierto .carta-panel { grid-template-rows: 1fr; }
+.carta-panel-dentro { overflow: hidden; }
+.carta-panel-dentro > :first-child { margin-top: clamp(1.2rem, 3vw, 1.8rem); }
+.carta-panel-dentro > :last-child  { margin-bottom: clamp(1.4rem, 3.5vw, 2.2rem); }
+
+/* --- Subgrupos (Bebidas: refrescos / cervezas / vino) --- */
+.carta-grupo + .carta-grupo { margin-top: 1.8rem; }
+.carta-grupo-titulo {
+  font-family: var(--display);
+  font-size: clamp(1rem, 2.6vw, 1.25rem);
+  color: var(--granate);
+  text-align: center;
+  letter-spacing: .04em;
+  margin: 0 clamp(1rem, 4vw, 2.2rem) 1rem;
+  padding-bottom: .5rem;
+  border-bottom: 1px solid rgba(142, 31, 43, .2);
+}
+
+/* --- Platos --- */
+.carta-platos {
+  list-style: none;
+  margin: 0;
+  padding: 0 clamp(1rem, 4vw, 2.2rem);
+  display: grid;
+  gap: 1.1rem;
+}
+@media (min-width: 900px) {
+  /* Dos columnas cuando el bloque está abierto a todo lo ancho */
+  .carta-platos { grid-template-columns: 1fr 1fr; gap: 1.2rem 3rem; }
+}
+.carta-plato.es-agotado { opacity: .5; }
+
+.carta-plato-fila {
+  display: flex;
+  align-items: baseline;
+  gap: .55rem;
+}
+.carta-plato-nombre {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--tinta);
+  margin: 0;
+  letter-spacing: .01em;
+}
+/* Los puntitos de carta de toda la vida entre el plato y el precio */
+.carta-plato-linea {
+  flex: 1 1 auto;
+  min-width: 1.5rem;
+  align-self: center;
+  border-bottom: 1px dotted rgba(142, 31, 43, .38);
+}
+.carta-plato-precio {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--granate);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.carta-plato-desc {
+  margin: .3rem 0 0;
+  font-family: var(--sans);
+  font-size: .86rem;
+  line-height: 1.5;
+  color: var(--tinta-70);
+  max-width: 46ch;
+}
+
+/* Sellos: destacado (oro) y agotado (apagado) */
+.carta-sello {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: .45rem;
+  padding: .15em .55em;
+  border-radius: 999px;
+  font-family: var(--sans);
+  font-size: .58rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  background: var(--oro);
+  color: var(--tinta);
+}
+.carta-sello--agotado {
+  background: transparent;
+  border: 1px solid var(--tinta-45);
+  color: var(--tinta-70);
+}
+
+.carta-note {
+  margin-top: clamp(2rem, 5vw, 3rem);
+  text-align: center;
+  font-family: var(--sans);
+  font-size: .82rem;
+  color: var(--tinta-70);
+}
+
+/* --- ¿Ya sabes qué pedir? (cierre de la carta) ---
+   Granate hondo + oro: misma familia visual que la portada, pero sin
+   fotos, para no competir con las tarjetas de arriba. */
+.carta-reserva {
+  background: linear-gradient(170deg, var(--granate-hondo) 0%, var(--granate) 100%);
+  color: var(--crema);
+  text-align: center;
+  padding-block: clamp(3rem, 8vw, 5rem);
+}
+.carta-reserva h2 {
+  font-family: var(--serif);
+  color: var(--crema);
+  margin: 1.2rem 0 .8rem;
+}
+.carta-reserva p {
+  color: rgba(244, 236, 216, .85);
+  max-width: 42ch;
+  margin: 0 auto 2rem;
+}
+.carta-reserva-acciones {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1rem;
+}
+.carta-reserva .btn--primario {
+  background: var(--oro);
+  color: var(--tinta);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, .28);
+}
+.carta-reserva .btn--primario:hover { background: var(--oro-claro); }
+.carta-reserva-tel {
+  font-family: var(--display);
+  font-size: clamp(1.25rem, 4vw, 1.85rem);
+  color: var(--oro-claro);
+  letter-spacing: .02em;
+}
+.carta-reserva-tel:hover { color: var(--crema); }
+
+@media (prefers-reduced-motion: reduce) {
+  .carta-panel { transition: none; }
+  .carta-tarjeta-img,
+  .carta-tarjeta-chevron { transition: none; }
+  .carta-tarjeta:hover .carta-tarjeta-img { transform: translateY(-7%); }
+}
+
+/* =============================================================
+   13.b LA CARTA — apertura: scroll, oscurecido y botones de cerrar
+   ============================================================= */
+:root { --suave: cubic-bezier(.4, 0, .2, 1); }
+
+/* La cabecera va pegajosa: al hacer scrollIntoView reservamos su alto
+   para que el título de la sección no quede debajo. */
+.carta-bloque { scroll-margin-top: clamp(72px, 12vh, 112px); }
+
+/* --- Oscurecido de escritorio (tipo lightbox) ---
+   Vive dentro del .wrap, hermano de la rejilla, así que compite en el
+   mismo contexto de apilado que los bloques: no hacen falta z-index
+   disparatados ni sacarlo del árbol. */
+.carta-velo-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(20, 8, 10, .55);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  opacity: 0;
+  visibility: hidden;
+  cursor: pointer;
+  transition: opacity .4s var(--suave), visibility .4s var(--suave);
+}
+.carta-hay-abierto .carta-velo-modal { opacity: 1; visibility: visible; }
+
+/* El bloque abierto sube por encima del oscurecido. */
+.carta-bloque.es-abierto {
+  position: relative;
+  z-index: 50;
+  box-shadow: 0 24px 60px rgba(20, 8, 10, .34);
+}
+
+/* En móvil no hay lightbox: la sección abierta ocupa la pantalla y el
+   oscurecido sólo estorbaría. */
+@media (max-width: 719px) {
+  .carta-velo-modal { display: none; }
+  .carta-bloque.es-abierto { box-shadow: 0 16px 44px rgba(28, 42, 34, .17); }
+}
+
+/* --- Aspa de cerrar sobre la tarjeta abierta ---
+   Oculta en TODAS las pantallas: se usa el botón flotante rojo en su lugar. */
+.carta-cerrar {
+  display: none !important;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* --- Pestaña flotante "Cerrar sección" (TODAS las pantallas) --- */
+.carta-cerrar-flotante {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%) translateY(120%);
+  bottom: 1.5rem;
+  z-index: 95;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  min-height: 48px;
+  padding: .7rem 2rem;
+  border-radius: 999px;
+  border: 1px solid var(--oro);
+  background: var(--granate-hondo);
+  color: var(--crema);
+  /* Misma familia que el menú de navegación */
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: .82rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 10px 26px rgba(20, 8, 10, .4);
+  opacity: 0;
+  transition: opacity .35s var(--suave), transform .35s var(--suave),
+              background .3s var(--suave);
+}
+.carta-cerrar-flotante:hover,
+.carta-cerrar-flotante:focus-visible { background: var(--granate); }
+
+/* Se muestra en TODAS las pantallas cuando hay una sección abierta */
+.carta-hay-abierto .carta-cerrar-flotante {
+  display: flex;
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Sin el boton flotante ya no hay nada que esquivar: la pestana vuelve a ir
+   centrada tambien en movil, solo que a lo ancho para que se lea bien. */
+@media (max-width: 719px) {
+  .carta-cerrar-flotante {
+    bottom: 1rem;
+    padding-inline: 1.5rem;
+  }
+}
+
+/* Colapso instantáneo al cambiar de sección (ver cerrar() en carta.html) */
+.carta-bloque.sin-animacion,
+.carta-bloque.sin-animacion * { transition: none !important; }
+
+/* --- Entrada escalonada del contenido del panel ---
+   La altura la sigue animando el truco de filas 0fr -> 1fr (no hay que
+   medir nada desde JS); esto le suma el fundido y el empujoncito hacia
+   arriba que le da el aire "premium". */
+.carta-panel-dentro > * {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity .45s .08s var(--suave), transform .45s .08s var(--suave);
+}
+.es-abierto .carta-panel-dentro > * { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .carta-velo-modal,
+  .carta-cerrar-flotante,
+  .carta-panel-dentro > * { transition: none; }
+  .carta-panel-dentro > * { opacity: 1; transform: none; }
+  .carta-cerrar-flotante { transform: none; }
+}
