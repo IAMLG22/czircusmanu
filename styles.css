@@ -645,7 +645,7 @@ body.has-morph .nav--marquesina .nav-brand.is-aparcado { pointer-events: auto; }
    se deja limpio. */
 .hero {
   position: relative;
-  height: 100svh;
+  min-height: 100dvh;
   background-color: #2a1a10;          /* respaldo tono madera */
   overflow: hidden;
   display: flex;
