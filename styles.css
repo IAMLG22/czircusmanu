@@ -2452,6 +2452,13 @@ body.kn-abierto { overflow: hidden; }
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
+.carta-plato-maxi {
+  font-size: 0.8em;
+  font-weight: 500;
+  color: var(--tinta-70);
+  font-family: var(--sans);
+  margin-left: 0.15rem;
+}
 .carta-plato-desc {
   margin: .3rem 0 0;
   font-family: var(--sans);
