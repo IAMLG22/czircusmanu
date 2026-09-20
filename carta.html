@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>La Carta — Spaghettería Circus · Trattoria en Teatinos, Málaga</title>
-  <meta name="description" content="La carta de Spaghettería Circus: entrantes, pastas, gratinados y postres. Cocina italiana de verdad en Teatinos, Málaga, desde 1997.">
+  <meta name="description"
+    content="La carta de Spaghettería Circus: entrantes, pastas, gratinados y postres. Cocina italiana de verdad en Teatinos, Málaga, desde 1997.">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rye&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Rye&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="styles.css?v=20260920d">
 
   <!-- SheetJS: lee el Excel de la carta directamente en el navegador.
@@ -32,8 +35,8 @@
       wrap.innerHTML =
         '<div class="telon-reserva-panel izq"></div>' +
         '<div class="telon-reserva-logo">' +
-          '<span class="brand-word">Spaghetter\u00eda Circus</span>' +
-          '<small>EST. 1997 \u00b7 TEATINOS, M\u00c1LAGA</small>' +
+        '<span class="brand-word">Spaghetter\u00eda Circus</span>' +
+        '<small>EST. 1997 \u00b7 TEATINOS, M\u00c1LAGA</small>' +
         '</div>' +
         '<div class="telon-reserva-panel der"></div>';
       document.body.appendChild(wrap);
@@ -57,7 +60,7 @@
       });
 
       setTimeout(() => {
-        try { sessionStorage.setItem("circus_telon_reserva", "1"); } catch (e) {}
+        try { sessionStorage.setItem("circus_telon_reserva", "1"); } catch (e) { }
         window.location.href = destino;
       }, 1400);
     }
@@ -67,7 +70,7 @@
       if (!enlace) return;
       // Respetamos abrir en pestana nueva / clic con modificador.
       if (evento.defaultPrevented || evento.metaKey || evento.ctrlKey ||
-          evento.shiftKey || evento.altKey || evento.button !== 0) return;
+        evento.shiftKey || evento.altKey || evento.button !== 0) return;
 
       evento.preventDefault();
       // Sin hash a proposito: contacto se ve desde arriba.
@@ -82,6 +85,7 @@
     });
   </script>
 </head>
+
 <body>
   <a class="skip-link" href="#main">Saltar al contenido</a>
 
@@ -99,8 +103,11 @@
         <div class="nav-actions">
           <a class="btn btn--secundario btn--sm" href="carta.html">Ver la carta</a>
           <a class="btn btn--primario btn--sm" href="contacto.html#reserva">Reservar</a>
-          <button class="nav-toggle" data-nav-toggle aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-links">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          <button class="nav-toggle" data-nav-toggle aria-label="Abrir menú" aria-expanded="false"
+            aria-controls="nav-links">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M3 6h18M3 12h18M3 18h18" />
+            </svg>
           </button>
         </div>
       </nav>
@@ -125,48 +132,59 @@
             <!-- El scale va en el <g> a proposito: GSAP escribe el atributo
                  transform del elemento que anima, y si lo pusieramos en el
                  <path> se lo llevaria por delante (estrellas a tamano 1). -->
-            <g transform="translate(40 60) scale(3.4)"><path class="kn-shape-el" d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.7L12 17.3 5.8 20.8l1.6-6.7L2.2 8.9l6.9-.6z" fill="rgba(227,197,121,.30)"/></g>
-            <g transform="translate(268 150) scale(2.2)"><path class="kn-shape-el" d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.7L12 17.3 5.8 20.8l1.6-6.7L2.2 8.9l6.9-.6z" fill="rgba(227,197,121,.22)"/></g>
-            <g transform="translate(110 262) scale(4.4)"><path class="kn-shape-el" d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.7L12 17.3 5.8 20.8l1.6-6.7L2.2 8.9l6.9-.6z" fill="rgba(227,197,121,.18)"/></g>
+            <g transform="translate(40 60) scale(3.4)">
+              <path class="kn-shape-el" d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.7L12 17.3 5.8 20.8l1.6-6.7L2.2 8.9l6.9-.6z"
+                fill="rgba(227,197,121,.30)" />
+            </g>
+            <g transform="translate(268 150) scale(2.2)">
+              <path class="kn-shape-el" d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.7L12 17.3 5.8 20.8l1.6-6.7L2.2 8.9l6.9-.6z"
+                fill="rgba(227,197,121,.22)" />
+            </g>
+            <g transform="translate(110 262) scale(4.4)">
+              <path class="kn-shape-el" d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.7L12 17.3 5.8 20.8l1.6-6.7L2.2 8.9l6.9-.6z"
+                fill="rgba(227,197,121,.18)" />
+            </g>
           </svg>
           <svg class="kn-shape kn-shape-2" viewBox="0 0 400 400" fill="none">
-            <circle class="kn-shape-el" cx="78" cy="96" r="46" fill="rgba(227,197,121,.26)"/>
-            <circle class="kn-shape-el" cx="296" cy="188" r="66" fill="rgba(227,197,121,.18)"/>
-            <circle class="kn-shape-el" cx="156" cy="304" r="34" fill="rgba(227,197,121,.30)"/>
+            <circle class="kn-shape-el" cx="78" cy="96" r="46" fill="rgba(227,197,121,.26)" />
+            <circle class="kn-shape-el" cx="296" cy="188" r="66" fill="rgba(227,197,121,.18)" />
+            <circle class="kn-shape-el" cx="156" cy="304" r="34" fill="rgba(227,197,121,.30)" />
           </svg>
           <svg class="kn-shape kn-shape-3" viewBox="0 0 400 400" fill="none">
-            <path class="kn-shape-el" d="M92 210 L154 88 L216 210 Z" fill="rgba(227,197,121,.26)"/>
-            <path class="kn-shape-el" d="M214 318 L272 196 L330 318 Z" fill="rgba(227,197,121,.18)"/>
-            <path class="kn-shape-el" d="M36 330 L82 240 L128 330 Z" fill="rgba(227,197,121,.30)"/>
+            <path class="kn-shape-el" d="M92 210 L154 88 L216 210 Z" fill="rgba(227,197,121,.26)" />
+            <path class="kn-shape-el" d="M214 318 L272 196 L330 318 Z" fill="rgba(227,197,121,.18)" />
+            <path class="kn-shape-el" d="M36 330 L82 240 L128 330 Z" fill="rgba(227,197,121,.30)" />
           </svg>
           <svg class="kn-shape kn-shape-4" viewBox="0 0 400 400" fill="none">
-            <circle class="kn-shape-el" cx="112" cy="124" r="58" stroke="rgba(227,197,121,.34)" stroke-width="7"/>
-            <circle class="kn-shape-el" cx="272" cy="226" r="80" stroke="rgba(227,197,121,.24)" stroke-width="7"/>
-            <circle class="kn-shape-el" cx="140" cy="308" r="40" stroke="rgba(227,197,121,.4)" stroke-width="7"/>
+            <circle class="kn-shape-el" cx="112" cy="124" r="58" stroke="rgba(227,197,121,.34)" stroke-width="7" />
+            <circle class="kn-shape-el" cx="272" cy="226" r="80" stroke="rgba(227,197,121,.24)" stroke-width="7" />
+            <circle class="kn-shape-el" cx="140" cy="308" r="40" stroke="rgba(227,197,121,.4)" stroke-width="7" />
           </svg>
         </div>
       </div>
 
       <button class="kn-close" type="button" data-kn-close aria-label="Cerrar menu">
         <span class="kn-close-ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
         </span>
       </button>
 
       <div class="kn-wrap">
         <ul class="kn-list">
-            <li class="kn-item" data-shape="1">
-              <a class="kn-link" href="carta.html" aria-current="page"><span class="kn-link-text">Carta</span></a>
-            </li>
-            <li class="kn-item" data-shape="2">
-              <a class="kn-link" href="la-casa.html"><span class="kn-link-text">Nosotros</span></a>
-            </li>
-            <li class="kn-item" data-shape="3">
-              <a class="kn-link" href="el-local.html"><span class="kn-link-text">El Local</span></a>
-            </li>
-            <li class="kn-item" data-shape="4">
-              <a class="kn-link" href="contacto.html"><span class="kn-link-text">Contacto</span></a>
-            </li>
+          <li class="kn-item" data-shape="1">
+            <a class="kn-link" href="carta.html" aria-current="page"><span class="kn-link-text">Carta</span></a>
+          </li>
+          <li class="kn-item" data-shape="2">
+            <a class="kn-link" href="la-casa.html"><span class="kn-link-text">Nosotros</span></a>
+          </li>
+          <li class="kn-item" data-shape="3">
+            <a class="kn-link" href="el-local.html"><span class="kn-link-text">El Local</span></a>
+          </li>
+          <li class="kn-item" data-shape="4">
+            <a class="kn-link" href="contacto.html"><span class="kn-link-text">Contacto</span></a>
+          </li>
         </ul>
         <div class="kn-cta" data-kn-fade>
           <a class="btn btn--primario" href="contacto.html#reserva">Reservar mesa</a>
@@ -207,10 +225,12 @@
         </div>
 
         <noscript>
-          <p class="carta-aviso">Para ver la carta necesitas activar JavaScript. Si lo prefieres, llámanos al <a href="tel:+34951732575">+34 951 732 575</a> y te la contamos.</p>
+          <p class="carta-aviso">Para ver la carta necesitas activar JavaScript. Si lo prefieres, llámanos al <a
+              href="tel:+34951732575">+34 951 732 575</a> y te la contamos.</p>
         </noscript>
 
-        <p class="carta-note">Establecimiento con información disponible en materia de alergias e intolerancias alimentarias. Soliciten información a nuestro personal.</p>
+        <p class="carta-note">Establecimiento con información disponible en materia de alergias e intolerancias
+          alimentarias. Soliciten información a nuestro personal.</p>
       </div>
     </section>
 
@@ -232,7 +252,8 @@
           </div>
           <span class="kicker">El número de la suerte</span>
           <h2 id="ruleta-titulo">¿Indeciso? Que decida la carpa</h2>
-          <p class="ruleta-lead">Hay días en que la carta se hace larga. Deja que la magia del circo elija por ti: dale a la ruleta, prueba tu suerte y lo que salga… sale a la mesa.</p>
+          <p class="ruleta-lead">Hay días en que la carta se hace larga. Deja que la magia del circo elija por ti: dale
+            a la ruleta, prueba tu suerte y lo que salga… sale a la mesa.</p>
         </div>
 
         <div class="ruleta-caja reveal reveal-delay-1" data-ruleta>
@@ -253,15 +274,16 @@
         </div>
 
         <noscript>
-          <p class="carta-aviso">La ruleta necesita JavaScript. Si no lo tienes activado, pide el gratinado de jamón: acertar es fácil desde 1997.</p>
+          <p class="carta-aviso">La ruleta necesita JavaScript. Si no lo tienes activado, pide el gratinado de jamón:
+            acertar es fácil desde 1997.</p>
         </noscript>
       </div>
 
       <!-- Resultado del sorteo. Nace oculto; lo abre y lo rellena el JS. -->
       <div class="ruleta-modal" data-ruleta-modal hidden>
         <div class="ruleta-modal-velo" data-ruleta-cerrar></div>
-        <div class="ruleta-modal-caja" role="dialog" aria-modal="true"
-             aria-labelledby="ruleta-modal-titulo" tabindex="-1" data-ruleta-dialogo>
+        <div class="ruleta-modal-caja" role="dialog" aria-modal="true" aria-labelledby="ruleta-modal-titulo"
+          tabindex="-1" data-ruleta-dialogo>
           <button class="ruleta-modal-x" type="button" data-ruleta-cerrar aria-label="Cerrar">
             <span aria-hidden="true">&#10005;</span>
           </button>
@@ -312,11 +334,19 @@
           <span class="brand-word">Spaghettería Circus</span>
           <p>Trattoria-espectáculo en Teatinos.<br>Montando el mejor plato de Málaga desde 1997.</p>
           <div class="footer-social">
-            <a href="https://www.instagram.com/spaghetteriacircus/" target="_blank" rel="noopener" aria-label="Instagram">
-              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+            <a href="https://www.instagram.com/spaghetteriacircus/" target="_blank" rel="noopener"
+              aria-label="Instagram">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="5" />
+                <circle cx="12" cy="12" r="4" />
+                <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+              </svg>
             </a>
             <a href="tel:+34951732575" aria-label="Llamar">
-              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8 9.5a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2z"/></svg>
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8 9.5a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2z" />
+              </svg>
             </a>
           </div>
         </div>
@@ -334,18 +364,25 @@
           <ul>
             <li><a href="tel:+34951732575">+34 951 732 575</a></li>
             <li><a href="mailto:1997circus@gmail.com">1997circus@gmail.com</a></li>
-            <li><address>Av. de Gregorio Prieto, 25<br>29010 Málaga (Teatinos)</address></li>
+            <li>
+              <address>Av. de Gregorio Prieto, 25<br>29010 Málaga (Teatinos)</address>
+            </li>
           </ul>
         </div>
         <div class="footer-col">
           <h4>Horarios</h4>
           <dl class="footer-horario">
-            <dt>Lun y miér</dt><dd>13:00 – 16:00</dd>
-            <dt>Martes</dt><dd>Cerrado</dd>
-            <dt>Jueves</dt><dd>13:00 – 16:00 · 20:00 – 23:30</dd>
-            <dt>Vie, sáb y dom</dt><dd>13:00 – 16:30 · 20:00 – 23:30</dd>
+            <dt>Lun y miér</dt>
+            <dd>13:00 – 16:00</dd>
+            <dt>Martes</dt>
+            <dd>Cerrado</dd>
+            <dt>Jueves</dt>
+            <dd>13:00 – 16:00 · 20:00 – 23:30</dd>
+            <dt>Vie, sáb y dom</dt>
+            <dd>13:00 – 16:30 · 20:00 – 23:30</dd>
           </dl>
-          <p style="margin-top:.8rem"><span class="estado" data-estado><span class="punto"></span><span>Comprobando…</span></span></p>
+          <p style="margin-top:.8rem"><span class="estado" data-estado><span
+                class="punto"></span><span>Comprobando…</span></span></p>
         </div>
       </div>
       <div class="footer-bottom">
@@ -379,412 +416,425 @@
        queda antiguo. En el servidor no se nota (manda el Excel), pero
        conviene regenerarlo de vez en cuando. -->
   <script>
-  (function () {
-    "use strict";
+    (function () {
+      "use strict";
 
-    var EXCEL = "Menu_Circus_Spaghetteria.xlsx";
-    var MOVIL = "(max-width: 719px)";
+      var EXCEL = "Menu_Circus_Spaghetteria.xlsx";
+      var MOVIL = "(max-width: 719px)";
 
-    /* Los 5 bloques de la carta. `cats` son las categorías del Excel que
-       caen en cada bloque: Bebidas junta tres (refrescos, cervezas y vino)
-       y las pinta como subgrupos dentro del mismo panel. */
-    var BLOQUES = [
-      { id: "entradas",   titulo: "Entradas y Ensaladas",
-        img: "assets/img/carta/entradas.jpg",
-        cats: ["Entradas y Ensaladas"] },
-      { id: "pasta",      titulo: "Spaghetti y Macarrones",
-        img: "assets/img/carta/pasta.jpg",
-        cats: ["Spaghetti y Macarrones"] },
-      { id: "gratinados", titulo: "Spaghetti y Macarrones Gratinados",
-        img: "assets/img/carta/gratinados.jpg",
-        cats: ["Spaghetti y Macarrones Gratinados"] },
-      { id: "bebidas",    titulo: "Bebidas",
-        img: "assets/img/carta/bebidas.jpg",
-        cats: ["Refrescos", "Cervezas", "Vino"] },
-      /* Extras no tiene ilustración propia: va como banda ancha. */
-      { id: "extras",     titulo: "Extras", img: null, ancha: true,
-        cats: ["Extras"] }
-    ];
+      /* Los 5 bloques de la carta. `cats` son las categorías del Excel que
+         caen en cada bloque: Bebidas junta tres (refrescos, cervezas y vino)
+         y las pinta como subgrupos dentro del mismo panel. */
+      var BLOQUES = [
+        {
+          id: "entradas", titulo: "Entradas y Ensaladas",
+          img: "assets/img/carta/entradas.jpg",
+          cats: ["Entradas y Ensaladas"]
+        },
+        {
+          id: "pasta", titulo: "Spaghetti y Macarrones",
+          img: "assets/img/carta/pasta.jpg",
+          cats: ["Spaghetti y Macarrones"]
+        },
+        {
+          id: "gratinados", titulo: "Spaghetti y Macarrones Gratinados",
+          img: "assets/img/carta/gratinados.jpg",
+          cats: ["Spaghetti y Macarrones Gratinados"]
+        },
+        {
+          id: "bebidas", titulo: "Bebidas",
+          img: "assets/img/carta/bebidas.jpg",
+          cats: ["Refrescos", "Cervezas", "Vino"]
+        },
+        /* Extras no tiene ilustración propia: va como banda ancha. */
+        {
+          id: "extras", titulo: "Extras", img: null, ancha: true,
+          cats: ["Extras"]
+        }
+      ];
 
-    /* Copia literal del Excel (74 platos). Generado desde
-       Menu_Circus_Spaghetteria.xlsx — no editar a mano si puedes evitarlo. */
-    var RESPALDO = [
-      {"categoria": "Entradas y Ensaladas", "nombre": "PAN DE AJO", "desc": "", "precio": 4.3, "estado": "activo", "destacado": false},
-      {"categoria": "Entradas y Ensaladas", "nombre": "BRUSCHETTA", "desc": "", "precio": 6.3, "estado": "activo", "destacado": false},
-      {"categoria": "Entradas y Ensaladas", "nombre": "ENSALADA CÉSAR", "desc": "Lechuga, Tomate, Lascas de Parmesano, Pollo, Picatostes y salsa César", "precio": 8.5, "estado": "activo", "destacado": true},
-      {"categoria": "Entradas y Ensaladas", "nombre": "ENSALADA QUESO DE CABRA", "desc": "Lechuga, Tomate, Bacon, Cacahuetes Caramelizados, Queso de Cabra y Salsa de Miel y Mostaza", "precio": 8.5, "estado": "activo", "destacado": false},
-      {"categoria": "Spaghetti y Macarrones", "nombre": "AL NATURAL", "desc": "Mantequilla y Perejil", "precio": 8.9, "estado": "activo", "destacado": false},
-      {"categoria": "Spaghetti y Macarrones", "nombre": "AL AGLIO", "desc": "Ajo, Aceite Virgen y Perejil", "precio": 8.9, "estado": "activo", "destacado": false},
-      {"categoria": "Spaghetti y Macarrones", "nombre": "AL TOMATE", "desc": "Salsa de Tomate", "precio": 8.9, "estado": "activo", "destacado": false},
-      {"categoria": "Spaghetti y Macarrones", "nombre": "AL ATÚN", "desc": "Salsa de Tomate y Atún", "precio": 9.9, "precioMaxi": 12.9, "estado": "activo", "destacado": false},
-      {"categoria": "Spaghetti y Macarrones", "nombre": "MÁGICO", "desc": "Champiñón y Bechamel", "precio": 9.9, "precioMaxi": 12.9, "estado": "activo", "destacado": false},
-      {"categoria": "Spaghetti y Macarrones", "nombre": "CARPA", "desc": "Jamón y Bechamel", "precio": 9.9, "precioMaxi": 12.9, "estado": "activo", "destacado": true},
-      {"categoria": "Spaghetti y Macarrones", "nombre": "VEGETARIANO", "desc": "Verduras Frescas y Salsa de Tomate", "precio": 9.9, "precioMaxi": 12.9, "estado": "activo", "destacado": false},
-      {"categoria": "Spaghetti y Macarrones", "nombre": "CARBONARA", "desc": "Bacon y Nata", "precio": 11.8, "precioMaxi": 14.4, "estado": "activo", "destacado": true},
-      {"categoria": "Spaghetti y Macarrones", "nombre": "BOLOGNESA", "desc": "Tomate, Carne y Verduras Frescas", "precio": 10.9, "precioMaxi": 13.9, "estado": "activo", "destacado": false},
-      {"categoria": "Spaghetti y Macarrones", "nombre": "FANTASÍA", "desc": "Nata y Champiñones", "precio": 11.8, "precioMaxi": 14.4, "estado": "activo", "destacado": false},
-      {"categoria": "Spaghetti y Macarrones", "nombre": "AL ROQUEFORT", "desc": "Nata y Roquefort", "precio": 11.8, "precioMaxi": 14.4, "estado": "activo", "destacado": false},
-      {"categoria": "Spaghetti y Macarrones Gratinados", "nombre": "AL TOMATE", "desc": "Salsa de Tomate, Bechamel y Queso", "precio": 10.9, "estado": "activo", "destacado": false},
-      {"categoria": "Spaghetti y Macarrones Gratinados", "nombre": "AL ATÚN SPAGHETTI", "desc": "Salsa de Tomate, Atún, Bechamel y Queso", "precio": 11.9, "estado": "activo", "destacado": false},
-      {"categoria": "Spaghetti y Macarrones Gratinados", "nombre": "AL ATÚN MACARRONES", "desc": "Salsa de Tomate, Atún, Bechamel y Queso", "precio": 11.9, "estado": "activo", "destacado": false},
-      {"categoria": "Spaghetti y Macarrones Gratinados", "nombre": "MÁGICO SPAGHETTI", "desc": "Champiñón, Bechamel y Queso", "precio": 11.9, "estado": "activo", "destacado": false},
-      {"categoria": "Spaghetti y Macarrones Gratinados", "nombre": "MÁGICO MACARRONES", "desc": "Champiñón, Bechamel y Queso", "precio": 11.9, "estado": "activo", "destacado": false},
-      {"categoria": "Spaghetti y Macarrones Gratinados", "nombre": "CARPA SPAGHETTI", "desc": "Jamón, Bechamel y Queso", "precio": 11.9, "estado": "activo", "destacado": true},
-      {"categoria": "Spaghetti y Macarrones Gratinados", "nombre": "CARPA MACARRONES", "desc": "Jamón, Bechamel y Queso", "precio": 11.9, "estado": "activo", "destacado": false},
-      {"categoria": "Spaghetti y Macarrones Gratinados", "nombre": "VEGETARIANO SPAGHETTI", "desc": "Verduras Frescas, Salsa de Tomate, Bechamel y Queso", "precio": 11.9, "estado": "activo", "destacado": false},
-      {"categoria": "Spaghetti y Macarrones Gratinados", "nombre": "VEGETARIANO MACARRONES", "desc": "Verduras Frescas, Salsa de Tomate, Bechamel y Queso", "precio": 11.9, "estado": "activo", "destacado": false},
-      {"categoria": "Spaghetti y Macarrones Gratinados", "nombre": "CARBONARA SPAGHETTI", "desc": "Bacon, Nata y Queso", "precio": 13.8, "estado": "activo", "destacado": false},
-      {"categoria": "Spaghetti y Macarrones Gratinados", "nombre": "CARBONARA MACARRONES", "desc": "Bacon, Nata y Queso", "precio": 13.8, "estado": "activo", "destacado": false},
-      {"categoria": "Spaghetti y Macarrones Gratinados", "nombre": "BOLOGNESA SPAGHETTI", "desc": "Tomate, Carne, Verduras Frescas, Bechamel y Queso", "precio": 12.9, "estado": "activo", "destacado": false},
-      {"categoria": "Spaghetti y Macarrones Gratinados", "nombre": "BOLOGNESA MACARRONES", "desc": "Tomate, Carne, Verduras Frescas, Bechamel y Queso", "precio": 12.9, "estado": "activo", "destacado": false},
-      {"categoria": "Spaghetti y Macarrones Gratinados", "nombre": "FANTASÍA SPAGHETTI", "desc": "Nata, Champiñones y Queso", "precio": 13.8, "estado": "activo", "destacado": false},
-      {"categoria": "Spaghetti y Macarrones Gratinados", "nombre": "FANTASÍA MACARRONES", "desc": "Nata, Champiñones y Queso", "precio": 13.8, "estado": "activo", "destacado": false},
-      {"categoria": "Spaghetti y Macarrones Gratinados", "nombre": "ROQUEFORT SPAGHETTI", "desc": "Nata, Roquefort y Queso", "precio": 13.8, "estado": "activo", "destacado": false},
-      {"categoria": "Spaghetti y Macarrones Gratinados", "nombre": "ROQUEFORT MACARRONES", "desc": "Nata, Roquefort y Queso", "precio": 13.8, "estado": "activo", "destacado": false},
-      {"categoria": "Extras", "nombre": "PAN TOSTADO", "desc": "", "precio": 1.8, "estado": "activo", "destacado": false},
-      {"categoria": "Extras", "nombre": "ACEITUNAS", "desc": "", "precio": 1.2, "estado": "activo", "destacado": false},
-      {"categoria": "Extras", "nombre": "EXTRA INGREDIENTES", "desc": "", "precio": 1.8, "estado": "activo", "destacado": false},
-      {"categoria": "Extras", "nombre": "EXTRA QUESO", "desc": "", "precio": 0.9, "estado": "activo", "destacado": false},
-      {"categoria": "Extras", "nombre": "EXTRA SALSA", "desc": "", "precio": 1.8, "estado": "activo", "destacado": false},
-      {"categoria": "Extras", "nombre": "ENVASE PARA LLEVAR", "desc": "", "precio": 0.5, "estado": "activo", "destacado": false},
-      {"categoria": "Refrescos", "nombre": "FANTA LIMÓN", "desc": "", "precio": 2.8, "estado": "activo", "destacado": false},
-      {"categoria": "Refrescos", "nombre": "FANTA NARANJA", "desc": "", "precio": 2.8, "estado": "activo", "destacado": false},
-      {"categoria": "Refrescos", "nombre": "NESTEA", "desc": "", "precio": 2.8, "estado": "activo", "destacado": false},
-      {"categoria": "Refrescos", "nombre": "AQUARIUS LIMÓN", "desc": "", "precio": 2.8, "estado": "activo", "destacado": false},
-      {"categoria": "Refrescos", "nombre": "AQUARIUS NARANJA", "desc": "", "precio": 2.8, "estado": "activo", "destacado": false},
-      {"categoria": "Refrescos", "nombre": "AGUA", "desc": "", "precio": 2.0, "estado": "activo", "destacado": false},
-      {"categoria": "Refrescos", "nombre": "AGUA CON GAS", "desc": "", "precio": 2.0, "estado": "activo", "destacado": false},
-      {"categoria": "Refrescos", "nombre": "COCA-COLA", "desc": "", "precio": 2.8, "estado": "activo", "destacado": false},
-      {"categoria": "Refrescos", "nombre": "COCA-COLA ZERO", "desc": "", "precio": 2.8, "estado": "activo", "destacado": false},
-      {"categoria": "Refrescos", "nombre": "COCA-COLA ZERO ZERO", "desc": "", "precio": 2.8, "estado": "activo", "destacado": false},
-      {"categoria": "Cervezas", "nombre": "TANQUE", "desc": "", "precio": 3.5, "estado": "activo", "destacado": false},
-      {"categoria": "Cervezas", "nombre": "ALHAMBRA 0/0", "desc": "", "precio": 2.8, "estado": "activo", "destacado": false},
-      {"categoria": "Cervezas", "nombre": "ALHAMBRA VERDE", "desc": "", "precio": 3.8, "estado": "activo", "destacado": false},
-      {"categoria": "Cervezas", "nombre": "ALHAMBRA ROJA", "desc": "", "precio": 3.8, "estado": "activo", "destacado": false},
-      {"categoria": "Cervezas", "nombre": "CORONITA", "desc": "", "precio": 3.5, "estado": "activo", "destacado": false},
-      {"categoria": "Cervezas", "nombre": "ALHAMBRA IPA", "desc": "", "precio": 3.8, "estado": "activo", "destacado": false},
-      {"categoria": "Cervezas", "nombre": "ALHAMBRA ESPECIAL", "desc": "", "precio": 2.8, "estado": "activo", "destacado": false},
-      {"categoria": "Cervezas", "nombre": "CLARA LIMÓN", "desc": "", "precio": 2.5, "estado": "activo", "destacado": false},
-      {"categoria": "Cervezas", "nombre": "CLARA CASERA", "desc": "", "precio": 2.5, "estado": "activo", "destacado": false},
-      {"categoria": "Cervezas", "nombre": "CAÑA COPA", "desc": "", "precio": 2.5, "estado": "activo", "destacado": false},
-      {"categoria": "Vino", "nombre": "TINTO VERANO LIMÓN", "desc": "", "precio": 3.0, "estado": "activo", "destacado": false},
-      {"categoria": "Vino", "nombre": "TINTO VERANO CASERA", "desc": "", "precio": 3.0, "estado": "activo", "destacado": false},
-      {"categoria": "Vino", "nombre": "COPA CARRAMIMBRE TINTO", "desc": "", "precio": 3.0, "estado": "activo", "destacado": false},
-      {"categoria": "Vino", "nombre": "COPA CARRAMIMBRE VERDEJO", "desc": "", "precio": 3.0, "estado": "activo", "destacado": false},
-      {"categoria": "Vino", "nombre": "BOTELLA CARRAMIMBRE TINTO", "desc": "", "precio": 15.0, "estado": "activo", "destacado": false},
-      {"categoria": "Vino", "nombre": "BOTELLA CARRAMIMBRE VERDEJO", "desc": "", "precio": 15.0, "estado": "activo", "destacado": false},
-      {"categoria": "Vino", "nombre": "FRIZZANTE J.G.C.", "desc": "", "precio": 12.8, "estado": "activo", "destacado": false},
-      {"categoria": "Vino", "nombre": "LAMBRUSCO ROSADO", "desc": "", "precio": 12.8, "estado": "activo", "destacado": false}
-    ];
+      /* Copia literal del Excel (74 platos). Generado desde
+         Menu_Circus_Spaghetteria.xlsx — no editar a mano si puedes evitarlo. */
+      var RESPALDO = [
+        { "categoria": "Entradas y Ensaladas", "nombre": "PAN DE AJO", "desc": "", "precio": 4.3, "estado": "activo", "destacado": false },
+        { "categoria": "Entradas y Ensaladas", "nombre": "BRUSCHETTA", "desc": "", "precio": 6.3, "estado": "activo", "destacado": false },
+        { "categoria": "Entradas y Ensaladas", "nombre": "ENSALADA CÉSAR", "desc": "Lechuga, Tomate, Lascas de Parmesano, Pollo, Picatostes y salsa César", "precio": 8.5, "estado": "activo", "destacado": true },
+        { "categoria": "Entradas y Ensaladas", "nombre": "ENSALADA QUESO DE CABRA", "desc": "Lechuga, Tomate, Bacon, Cacahuetes Caramelizados, Queso de Cabra y Salsa de Miel y Mostaza", "precio": 8.5, "estado": "activo", "destacado": false },
+        { "categoria": "Spaghetti y Macarrones", "nombre": "AL NATURAL", "desc": "Mantequilla y Perejil", "precio": 8.9, "estado": "activo", "destacado": false },
+        { "categoria": "Spaghetti y Macarrones", "nombre": "AL AGLIO", "desc": "Ajo, Aceite Virgen y Perejil", "precio": 8.9, "estado": "activo", "destacado": false },
+        { "categoria": "Spaghetti y Macarrones", "nombre": "AL TOMATE", "desc": "Salsa de Tomate", "precio": 8.9, "estado": "activo", "destacado": false },
+        { "categoria": "Spaghetti y Macarrones", "nombre": "AL ATÚN", "desc": "Salsa de Tomate y Atún", "precio": 9.9, "precioMaxi": 12.9, "estado": "activo", "destacado": false },
+        { "categoria": "Spaghetti y Macarrones", "nombre": "MÁGICO", "desc": "Champiñón y Bechamel", "precio": 9.9, "precioMaxi": 12.9, "estado": "activo", "destacado": false },
+        { "categoria": "Spaghetti y Macarrones", "nombre": "CARPA", "desc": "Jamón y Bechamel", "precio": 9.9, "precioMaxi": 12.9, "estado": "activo", "destacado": true },
+        { "categoria": "Spaghetti y Macarrones", "nombre": "VEGETARIANO", "desc": "Verduras Frescas y Salsa de Tomate", "precio": 9.9, "precioMaxi": 12.9, "estado": "activo", "destacado": false },
+        { "categoria": "Spaghetti y Macarrones", "nombre": "CARBONARA", "desc": "Bacon y Nata", "precio": 11.8, "precioMaxi": 14.4, "estado": "activo", "destacado": true },
+        { "categoria": "Spaghetti y Macarrones", "nombre": "BOLOGNESA", "desc": "Tomate, Carne y Verduras Frescas", "precio": 10.9, "precioMaxi": 13.9, "estado": "activo", "destacado": false },
+        { "categoria": "Spaghetti y Macarrones", "nombre": "FANTASÍA", "desc": "Nata y Champiñones", "precio": 11.8, "precioMaxi": 14.4, "estado": "activo", "destacado": false },
+        { "categoria": "Spaghetti y Macarrones", "nombre": "AL ROQUEFORT", "desc": "Nata y Roquefort", "precio": 11.8, "precioMaxi": 14.4, "estado": "activo", "destacado": false },
+        { "categoria": "Spaghetti y Macarrones Gratinados", "nombre": "AL TOMATE", "desc": "Salsa de Tomate, Bechamel y Queso", "precio": 10.9, "estado": "activo", "destacado": false },
+        { "categoria": "Spaghetti y Macarrones Gratinados", "nombre": "AL ATÚN SPAGHETTI", "desc": "Salsa de Tomate, Atún, Bechamel y Queso", "precio": 11.9, "estado": "activo", "destacado": false },
+        { "categoria": "Spaghetti y Macarrones Gratinados", "nombre": "AL ATÚN MACARRONES", "desc": "Salsa de Tomate, Atún, Bechamel y Queso", "precio": 11.9, "estado": "activo", "destacado": false },
+        { "categoria": "Spaghetti y Macarrones Gratinados", "nombre": "MÁGICO SPAGHETTI", "desc": "Champiñón, Bechamel y Queso", "precio": 11.9, "estado": "activo", "destacado": false },
+        { "categoria": "Spaghetti y Macarrones Gratinados", "nombre": "MÁGICO MACARRONES", "desc": "Champiñón, Bechamel y Queso", "precio": 11.9, "estado": "activo", "destacado": false },
+        { "categoria": "Spaghetti y Macarrones Gratinados", "nombre": "CARPA SPAGHETTI", "desc": "Jamón, Bechamel y Queso", "precio": 11.9, "estado": "activo", "destacado": true },
+        { "categoria": "Spaghetti y Macarrones Gratinados", "nombre": "CARPA MACARRONES", "desc": "Jamón, Bechamel y Queso", "precio": 11.9, "estado": "activo", "destacado": false },
+        { "categoria": "Spaghetti y Macarrones Gratinados", "nombre": "VEGETARIANO SPAGHETTI", "desc": "Verduras Frescas, Salsa de Tomate, Bechamel y Queso", "precio": 11.9, "estado": "activo", "destacado": false },
+        { "categoria": "Spaghetti y Macarrones Gratinados", "nombre": "VEGETARIANO MACARRONES", "desc": "Verduras Frescas, Salsa de Tomate, Bechamel y Queso", "precio": 11.9, "estado": "activo", "destacado": false },
+        { "categoria": "Spaghetti y Macarrones Gratinados", "nombre": "CARBONARA SPAGHETTI", "desc": "Bacon, Nata y Queso", "precio": 13.8, "estado": "activo", "destacado": false },
+        { "categoria": "Spaghetti y Macarrones Gratinados", "nombre": "CARBONARA MACARRONES", "desc": "Bacon, Nata y Queso", "precio": 13.8, "estado": "activo", "destacado": false },
+        { "categoria": "Spaghetti y Macarrones Gratinados", "nombre": "BOLOGNESA SPAGHETTI", "desc": "Tomate, Carne, Verduras Frescas, Bechamel y Queso", "precio": 12.9, "estado": "activo", "destacado": false },
+        { "categoria": "Spaghetti y Macarrones Gratinados", "nombre": "BOLOGNESA MACARRONES", "desc": "Tomate, Carne, Verduras Frescas, Bechamel y Queso", "precio": 12.9, "estado": "activo", "destacado": false },
+        { "categoria": "Spaghetti y Macarrones Gratinados", "nombre": "FANTASÍA SPAGHETTI", "desc": "Nata, Champiñones y Queso", "precio": 13.8, "estado": "activo", "destacado": false },
+        { "categoria": "Spaghetti y Macarrones Gratinados", "nombre": "FANTASÍA MACARRONES", "desc": "Nata, Champiñones y Queso", "precio": 13.8, "estado": "activo", "destacado": false },
+        { "categoria": "Spaghetti y Macarrones Gratinados", "nombre": "ROQUEFORT SPAGHETTI", "desc": "Nata, Roquefort y Queso", "precio": 13.8, "estado": "activo", "destacado": false },
+        { "categoria": "Spaghetti y Macarrones Gratinados", "nombre": "ROQUEFORT MACARRONES", "desc": "Nata, Roquefort y Queso", "precio": 13.8, "estado": "activo", "destacado": false },
+        { "categoria": "Extras", "nombre": "PAN TOSTADO", "desc": "", "precio": 1.8, "estado": "activo", "destacado": false },
+        { "categoria": "Extras", "nombre": "ACEITUNAS", "desc": "", "precio": 1.2, "estado": "activo", "destacado": false },
+        { "categoria": "Extras", "nombre": "EXTRA INGREDIENTES", "desc": "", "precio": 1.8, "estado": "activo", "destacado": false },
+        { "categoria": "Extras", "nombre": "EXTRA QUESO", "desc": "", "precio": 0.9, "estado": "activo", "destacado": false },
+        { "categoria": "Extras", "nombre": "EXTRA SALSA", "desc": "", "precio": 1.8, "estado": "activo", "destacado": false },
+        { "categoria": "Extras", "nombre": "ENVASE PARA LLEVAR", "desc": "", "precio": 0.5, "estado": "activo", "destacado": false },
+        { "categoria": "Refrescos", "nombre": "FANTA LIMÓN", "desc": "", "precio": 2.8, "estado": "activo", "destacado": false },
+        { "categoria": "Refrescos", "nombre": "FANTA NARANJA", "desc": "", "precio": 2.8, "estado": "activo", "destacado": false },
+        { "categoria": "Refrescos", "nombre": "NESTEA", "desc": "", "precio": 2.8, "estado": "activo", "destacado": false },
+        { "categoria": "Refrescos", "nombre": "AQUARIUS LIMÓN", "desc": "", "precio": 2.8, "estado": "activo", "destacado": false },
+        { "categoria": "Refrescos", "nombre": "AQUARIUS NARANJA", "desc": "", "precio": 2.8, "estado": "activo", "destacado": false },
+        { "categoria": "Refrescos", "nombre": "AGUA", "desc": "", "precio": 2.0, "estado": "activo", "destacado": false },
+        { "categoria": "Refrescos", "nombre": "AGUA CON GAS", "desc": "", "precio": 2.0, "estado": "activo", "destacado": false },
+        { "categoria": "Refrescos", "nombre": "COCA-COLA", "desc": "", "precio": 2.8, "estado": "activo", "destacado": false },
+        { "categoria": "Refrescos", "nombre": "COCA-COLA ZERO", "desc": "", "precio": 2.8, "estado": "activo", "destacado": false },
+        { "categoria": "Refrescos", "nombre": "COCA-COLA ZERO ZERO", "desc": "", "precio": 2.8, "estado": "activo", "destacado": false },
+        { "categoria": "Cervezas", "nombre": "TANQUE", "desc": "", "precio": 3.5, "estado": "activo", "destacado": false },
+        { "categoria": "Cervezas", "nombre": "ALHAMBRA 0/0", "desc": "", "precio": 2.8, "estado": "activo", "destacado": false },
+        { "categoria": "Cervezas", "nombre": "ALHAMBRA VERDE", "desc": "", "precio": 3.8, "estado": "activo", "destacado": false },
+        { "categoria": "Cervezas", "nombre": "ALHAMBRA ROJA", "desc": "", "precio": 3.8, "estado": "activo", "destacado": false },
+        { "categoria": "Cervezas", "nombre": "CORONITA", "desc": "", "precio": 3.5, "estado": "activo", "destacado": false },
+        { "categoria": "Cervezas", "nombre": "ALHAMBRA IPA", "desc": "", "precio": 3.8, "estado": "activo", "destacado": false },
+        { "categoria": "Cervezas", "nombre": "ALHAMBRA ESPECIAL", "desc": "", "precio": 2.8, "estado": "activo", "destacado": false },
+        { "categoria": "Cervezas", "nombre": "CLARA LIMÓN", "desc": "", "precio": 2.5, "estado": "activo", "destacado": false },
+        { "categoria": "Cervezas", "nombre": "CLARA CASERA", "desc": "", "precio": 2.5, "estado": "activo", "destacado": false },
+        { "categoria": "Cervezas", "nombre": "CAÑA COPA", "desc": "", "precio": 2.5, "estado": "activo", "destacado": false },
+        { "categoria": "Vino", "nombre": "TINTO VERANO LIMÓN", "desc": "", "precio": 3.0, "estado": "activo", "destacado": false },
+        { "categoria": "Vino", "nombre": "TINTO VERANO CASERA", "desc": "", "precio": 3.0, "estado": "activo", "destacado": false },
+        { "categoria": "Vino", "nombre": "COPA CARRAMIMBRE TINTO", "desc": "", "precio": 3.0, "estado": "activo", "destacado": false },
+        { "categoria": "Vino", "nombre": "COPA CARRAMIMBRE VERDEJO", "desc": "", "precio": 3.0, "estado": "activo", "destacado": false },
+        { "categoria": "Vino", "nombre": "BOTELLA CARRAMIMBRE TINTO", "desc": "", "precio": 15.0, "estado": "activo", "destacado": false },
+        { "categoria": "Vino", "nombre": "BOTELLA CARRAMIMBRE VERDEJO", "desc": "", "precio": 15.0, "estado": "activo", "destacado": false },
+        { "categoria": "Vino", "nombre": "FRIZZANTE J.G.C.", "desc": "", "precio": 12.8, "estado": "activo", "destacado": false },
+        { "categoria": "Vino", "nombre": "LAMBRUSCO ROSADO", "desc": "", "precio": 12.8, "estado": "activo", "destacado": false }
+      ];
 
-    /* ---------- utilidades ---------- */
+      /* ---------- utilidades ---------- */
 
-    // "Precio (€)" -> "precio ()". Sirve para comparar sin sustos.
-    function normalizar(txt) {
-      return String(txt == null ? "" : txt)
-        .normalize("NFD").replace(/[̀-ͯ]/g, "")
-        .toLowerCase().trim();
-    }
-
-    function escapar(txt) {
-      return String(txt == null ? "" : txt)
-        .replace(/&/g, "&amp;").replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-    }
-
-    // Busca la clave de una fila cuyo nombre CONTENGA la pista.
-    function claveComo(fila, pista) {
-      var claves = Object.keys(fila);
-      for (var i = 0; i < claves.length; i++) {
-        if (normalizar(claves[i]).indexOf(pista) !== -1) return claves[i];
+      // "Precio (€)" -> "precio ()". Sirve para comparar sin sustos.
+      function normalizar(txt) {
+        return String(txt == null ? "" : txt)
+          .normalize("NFD").replace(/[̀-ͯ]/g, "")
+          .toLowerCase().trim();
       }
-      return null;
-    }
 
-    // 8.9 -> "8,90 €"
-    function formatearPrecio(valor) {
-      var n = typeof valor === "number" ? valor
-            : parseFloat(String(valor).replace(",", "."));
-      if (!isFinite(n)) return String(valor || "").trim();
-      return n.toFixed(2).replace(".", ",") + " €";
-    }
-
-    /* ---------- lectura del Excel ---------- */
-
-    function leerExcel(buffer) {
-      var libro = XLSX.read(buffer, { type: "array" });
-      var hoja = libro.Sheets[libro.SheetNames[0]];   // Base_Datos_Carta
-      var filas = XLSX.utils.sheet_to_json(hoja, { defval: "" });
-      if (!filas.length) return [];
-
-      var m = filas[0];
-      var kCat = claveComo(m, "categor");
-      var kNom = claveComo(m, "nombre");
-      var kDes = claveComo(m, "descrip");
-      var kPre = claveComo(m, "precio");
-      var kEst = claveComo(m, "estado");
-      var kDst = claveComo(m, "destac");
-
-      return filas.map(function (fila) {
-        return {
-          categoria:  kCat ? String(fila[kCat]).trim() : "",
-          nombre:     kNom ? String(fila[kNom]).trim() : "",
-          desc:       kDes ? String(fila[kDes]).trim() : "",
-          precio:     kPre ? fila[kPre] : "",
-          estado:     kEst ? normalizar(fila[kEst]) : "activo",
-          destacado:  kDst ? /^s[ií]$/.test(normalizar(fila[kDst])) : false
-        };
-      });
-    }
-
-    /* Filtro común a las DOS fuentes, para que respaldo y Excel se
-       comporten igual: "Oculto" no se pinta, "Agotado" sí pero marcado. */
-    function utilizables(filas) {
-      return filas.filter(function (p) {
-        return p && p.nombre && normalizar(p.estado) !== "oculto";
-      });
-    }
-
-    /* ---------- pintado ---------- */
-
-    function pintarPlato(p) {
-      var agotado = normalizar(p.estado) === "agotado";
-      var txtPrecio = escapar(formatearPrecio(p.precio));
-      if (p.precioMaxi) {
-        txtPrecio += ' <span class="carta-plato-maxi">/ Maxi ' + escapar(formatearPrecio(p.precioMaxi)) + '</span>';
+      function escapar(txt) {
+        return String(txt == null ? "" : txt)
+          .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
       }
-      return '' +
-        '<li class="carta-plato' + (agotado ? " es-agotado" : "") + '">' +
+
+      // Busca la clave de una fila cuyo nombre CONTENGA la pista.
+      function claveComo(fila, pista) {
+        var claves = Object.keys(fila);
+        for (var i = 0; i < claves.length; i++) {
+          if (normalizar(claves[i]).indexOf(pista) !== -1) return claves[i];
+        }
+        return null;
+      }
+
+      // 8.9 -> "8,90 €"
+      function formatearPrecio(valor) {
+        var n = typeof valor === "number" ? valor
+          : parseFloat(String(valor).replace(",", "."));
+        if (!isFinite(n)) return String(valor || "").trim();
+        return n.toFixed(2).replace(".", ",") + " €";
+      }
+
+      /* ---------- lectura del Excel ---------- */
+
+      function leerExcel(buffer) {
+        var libro = XLSX.read(buffer, { type: "array" });
+        var hoja = libro.Sheets[libro.SheetNames[0]];   // Base_Datos_Carta
+        var filas = XLSX.utils.sheet_to_json(hoja, { defval: "" });
+        if (!filas.length) return [];
+
+        var m = filas[0];
+        var kCat = claveComo(m, "categor");
+        var kNom = claveComo(m, "nombre");
+        var kDes = claveComo(m, "descrip");
+        var kPre = claveComo(m, "precio");
+        var kPreMaxi = claveComo(m, "maxi"); // 👈 Busca la columna "Precio Maxi" o "Maxi" en el Excel
+        var kEst = claveComo(m, "estado");
+        var kDst = claveComo(m, "destac");
+
+        return filas.map(function (fila) {
+          return {
+            categoria: kCat ? String(fila[kCat]).trim() : "",
+            nombre: kNom ? String(fila[kNom]).trim() : "",
+            desc: kDes ? String(fila[kDes]).trim() : "",
+            precio: kPre ? fila[kPre] : "",
+            precioMaxi: kPreMaxi ? fila[kPreMaxi] : "", // 👈 Añade esta propiedad
+            estado: kEst ? normalizar(fila[kEst]) : "activo",
+            destacado: kDst ? /^s[ií]$/.test(normalizar(fila[kDst])) : false
+          };
+        });
+      }
+
+      /* Filtro común a las DOS fuentes, para que respaldo y Excel se
+         comporten igual: "Oculto" no se pinta, "Agotado" sí pero marcado. */
+      function utilizables(filas) {
+        return filas.filter(function (p) {
+          return p && p.nombre && normalizar(p.estado) !== "oculto";
+        });
+      }
+
+      /* ---------- pintado ---------- */
+
+      function pintarPlato(p) {
+        var agotado = normalizar(p.estado) === "agotado";
+        var txtPrecio = escapar(formatearPrecio(p.precio));
+        if (p.precioMaxi) {
+          txtPrecio += ' <span class="carta-plato-maxi">/ Maxi ' + escapar(formatearPrecio(p.precioMaxi)) + '</span>';
+        }
+        return '' +
+          '<li class="carta-plato' + (agotado ? " es-agotado" : "") + '">' +
           '<div class="carta-plato-fila">' +
-            '<h4 class="carta-plato-nombre">' + escapar(p.nombre) +
-              (p.destacado ? ' <span class="carta-sello">El favorito</span>' : "") +
-              (agotado ? ' <span class="carta-sello carta-sello--agotado">Hoy no hay</span>' : "") +
-            '</h4>' +
-            '<span class="carta-plato-linea" aria-hidden="true"></span>' +
-            '<span class="carta-plato-precio">' + txtPrecio + '</span>' +
+          '<h4 class="carta-plato-nombre">' + escapar(p.nombre) +
+          (p.destacado ? ' <span class="carta-sello">El favorito</span>' : "") +
+          (agotado ? ' <span class="carta-sello carta-sello--agotado">Hoy no hay</span>' : "") +
+          '</h4>' +
+          '<span class="carta-plato-linea" aria-hidden="true"></span>' +
+          '<span class="carta-plato-precio">' + txtPrecio + '</span>' +
           '</div>' +
           (p.desc ? '<p class="carta-plato-desc">' + escapar(p.desc) + "</p>" : "") +
-        "</li>";
-    }
+          "</li>";
+      }
 
-    function pintarGrupo(nombreCat, platos) {
-      return '' +
-        '<div class="carta-grupo">' +
+      function pintarGrupo(nombreCat, platos) {
+        return '' +
+          '<div class="carta-grupo">' +
           '<h3 class="carta-grupo-titulo">' + escapar(nombreCat) + "</h3>" +
           '<ul class="carta-platos">' + platos.map(pintarPlato).join("") + "</ul>" +
-        "</div>";
-    }
+          "</div>";
+      }
 
-    function pintarBloque(bloque, platos, indice) {
-      // Un solo grupo (p. ej. Entradas) no necesita subtítulo; Bebidas sí.
-      var conSubtitulos = bloque.cats.length > 1;
-      var cuerpo = bloque.cats.map(function (cat) {
-        var deEsta = platos.filter(function (p) {
-          return normalizar(p.categoria) === normalizar(cat);
-        });
-        if (!deEsta.length) return "";
-        return conSubtitulos
-          ? pintarGrupo(cat, deEsta)
-          : '<ul class="carta-platos">' + deEsta.map(pintarPlato).join("") + "</ul>";
-      }).join("");
+      function pintarBloque(bloque, platos, indice) {
+        // Un solo grupo (p. ej. Entradas) no necesita subtítulo; Bebidas sí.
+        var conSubtitulos = bloque.cats.length > 1;
+        var cuerpo = bloque.cats.map(function (cat) {
+          var deEsta = platos.filter(function (p) {
+            return normalizar(p.categoria) === normalizar(cat);
+          });
+          if (!deEsta.length) return "";
+          return conSubtitulos
+            ? pintarGrupo(cat, deEsta)
+            : '<ul class="carta-platos">' + deEsta.map(pintarPlato).join("") + "</ul>";
+        }).join("");
 
-      if (!cuerpo) return "";
+        if (!cuerpo) return "";
 
-      var idPanel = "panel-" + bloque.id;
-      var idBoton = "tarjeta-" + bloque.id;
-      var cuenta = platos.length;
+        var idPanel = "panel-" + bloque.id;
+        var idBoton = "tarjeta-" + bloque.id;
+        var cuenta = platos.length;
 
-      var medio = bloque.img
-        ? '<img class="carta-tarjeta-img" src="' + bloque.img + '" alt="" ' +
+        var medio = bloque.img
+          ? '<img class="carta-tarjeta-img" src="' + bloque.img + '" alt="" ' +
           'width="900" height="900" loading="' + (indice < 2 ? "eager" : "lazy") + '" decoding="async">'
-        : '<span class="carta-tarjeta-adorno" aria-hidden="true"></span>';
+          : '<span class="carta-tarjeta-adorno" aria-hidden="true"></span>';
 
-      return '' +
-      '<article class="carta-bloque' + (bloque.ancha ? " carta-bloque--ancha" : "") + '" data-bloque>' +
-        '<button class="carta-tarjeta" type="button" id="' + idBoton + '" ' +
-                'aria-expanded="false" aria-controls="' + idPanel + '">' +
+        return '' +
+          '<article class="carta-bloque' + (bloque.ancha ? " carta-bloque--ancha" : "") + '" data-bloque>' +
+          '<button class="carta-tarjeta" type="button" id="' + idBoton + '" ' +
+          'aria-expanded="false" aria-controls="' + idPanel + '">' +
           '<span class="carta-tarjeta-medio">' + medio + "</span>" +
           '<span class="carta-tarjeta-velo" aria-hidden="true"></span>' +
           '<span class="carta-tarjeta-texto">' +
-            '<span class="carta-tarjeta-titulo">' + escapar(bloque.titulo) + "</span>" +
-            '<span class="carta-tarjeta-pie">' + cuenta + " " + (cuenta === 1 ? "plato" : "platos") +
-              '<span class="carta-tarjeta-chevron" aria-hidden="true"></span>' +
-            "</span>" +
+          '<span class="carta-tarjeta-titulo">' + escapar(bloque.titulo) + "</span>" +
+          '<span class="carta-tarjeta-pie">' + cuenta + " " + (cuenta === 1 ? "plato" : "platos") +
+          '<span class="carta-tarjeta-chevron" aria-hidden="true"></span>' +
           "</span>" +
-        "</button>" +
-        /* Fuera del <button> a propósito: un botón dentro de otro botón no
-           es HTML válido. */
-        '<button class="carta-cerrar" type="button" data-cerrar ' +
-                'aria-label="Cerrar ' + escapar(bloque.titulo) + '" tabindex="-1">' +
+          "</span>" +
+          "</button>" +
+          /* Fuera del <button> a propósito: un botón dentro de otro botón no
+             es HTML válido. */
+          '<button class="carta-cerrar" type="button" data-cerrar ' +
+          'aria-label="Cerrar ' + escapar(bloque.titulo) + '" tabindex="-1">' +
           '<span aria-hidden="true">&#10005;</span>' +
-        "</button>" +
-        '<div class="carta-panel" id="' + idPanel + '" role="region" aria-labelledby="' + idBoton + '">' +
+          "</button>" +
+          '<div class="carta-panel" id="' + idPanel + '" role="region" aria-labelledby="' + idBoton + '">' +
           '<div class="carta-panel-dentro">' + cuerpo + "</div>" +
-        "</div>" +
-      "</article>";
-    }
+          "</div>" +
+          "</article>";
+      }
 
-    /* ---------- abrir y cerrar ---------- */
+      /* ---------- abrir y cerrar ---------- */
 
-    var contenedor = null;
-    var velo = null;          // el oscurecido de escritorio
-    var barra = null;         // la pestaña flotante de móvil
-    var abierto = null;       // el <article> abierto, o null
+      var contenedor = null;
+      var velo = null;          // el oscurecido de escritorio
+      var barra = null;         // la pestaña flotante de móvil
+      var abierto = null;       // el <article> abierto, o null
 
-    function esMovil() {
-      return window.matchMedia(MOVIL).matches;
-    }
+      function esMovil() {
+        return window.matchMedia(MOVIL).matches;
+      }
 
-    // Dos rAF: esperamos a que el navegador recoloque tras abrir/cerrar,
-    // si no el scroll apunta a una posición que ya no existe.
-    function irA(elemento, suave) {
-      requestAnimationFrame(function () {
+      // Dos rAF: esperamos a que el navegador recoloque tras abrir/cerrar,
+      // si no el scroll apunta a una posición que ya no existe.
+      function irA(elemento, suave) {
         requestAnimationFrame(function () {
-          elemento.scrollIntoView({
-            behavior: suave ? "smooth" : "auto",
-            block: "start"
+          requestAnimationFrame(function () {
+            elemento.scrollIntoView({
+              behavior: suave ? "smooth" : "auto",
+              block: "start"
+            });
           });
         });
-      });
-    }
-
-    /* `instantaneo` colapsa sin animación. Hace falta al cambiar de sección:
-       si la anterior se encoge despacio, el scroll suave apunta a una
-       posición que todavía está moviéndose y acaba en cualquier sitio. */
-    function cerrar(volverALaRejilla, instantaneo) {
-      if (!abierto) return;
-      var eraEste = abierto;
-      if (instantaneo) eraEste.classList.add("sin-animacion");
-      eraEste.classList.remove("es-abierto");
-      eraEste.querySelector(".carta-tarjeta").setAttribute("aria-expanded", "false");
-      eraEste.querySelector("[data-cerrar]").setAttribute("tabindex", "-1");
-      abierto = null;
-      document.body.classList.remove("carta-hay-abierto");
-
-      if (instantaneo) {
-        // Leer offsetHeight fuerza al navegador a recolocar AHORA, así el
-        // scroll de después ya trabaja con la altura definitiva.
-        void eraEste.offsetHeight;
-        requestAnimationFrame(function () {
-          eraEste.classList.remove("sin-animacion");
-        });
       }
 
-      if (volverALaRejilla) {
-        // De vuelta a la tarjeta que acabamos de cerrar, no al principio de
-        // la página: el usuario no pierde el sitio donde estaba mirando.
-        irA(eraEste, true);
-        eraEste.querySelector(".carta-tarjeta").focus({ preventScroll: true });
-      }
-    }
+      /* `instantaneo` colapsa sin animación. Hace falta al cambiar de sección:
+         si la anterior se encoge despacio, el scroll suave apunta a una
+         posición que todavía está moviéndose y acaba en cualquier sitio. */
+      function cerrar(volverALaRejilla, instantaneo) {
+        if (!abierto) return;
+        var eraEste = abierto;
+        if (instantaneo) eraEste.classList.add("sin-animacion");
+        eraEste.classList.remove("es-abierto");
+        eraEste.querySelector(".carta-tarjeta").setAttribute("aria-expanded", "false");
+        eraEste.querySelector("[data-cerrar]").setAttribute("tabindex", "-1");
+        abierto = null;
+        document.body.classList.remove("carta-hay-abierto");
 
-    function abrir(bloque) {
-      if (abierto === bloque) { cerrar(true); return; }
-      cerrar(false, true);   // la anterior se cierra de golpe, sin animar
-
-      bloque.classList.add("es-abierto");
-      bloque.querySelector(".carta-tarjeta").setAttribute("aria-expanded", "true");
-      bloque.querySelector("[data-cerrar]").removeAttribute("tabindex");
-      abierto = bloque;
-      document.body.classList.add("carta-hay-abierto");
-
-      // Al principio de la sección recién abierta (el CSS reserva sitio
-      // para la cabecera pegajosa con scroll-margin-top).
-      irA(bloque, true);
-    }
-
-    function conectar() {
-      contenedor.addEventListener("click", function (evento) {
-        if (evento.target.closest("[data-cerrar]")) { cerrar(true); return; }
-
-        var boton = evento.target.closest(".carta-tarjeta");
-        if (boton && contenedor.contains(boton)) {
-          abrir(boton.closest("[data-bloque]"));
+        if (instantaneo) {
+          // Leer offsetHeight fuerza al navegador a recolocar AHORA, así el
+          // scroll de después ya trabaja con la altura definitiva.
+          void eraEste.offsetHeight;
+          requestAnimationFrame(function () {
+            eraEste.classList.remove("sin-animacion");
+          });
         }
-      });
 
-      // Escritorio: clic en el oscurecido = cerrar.
-      if (velo) velo.addEventListener("click", function () { cerrar(true); });
-
-      // Pestaña flotante de móvil.
-      if (barra) {
-        barra.addEventListener("click", function (evento) {
-          evento.preventDefault();
-          cerrar(true);
-        });
+        if (volverALaRejilla) {
+          // De vuelta a la tarjeta que acabamos de cerrar, no al principio de
+          // la página: el usuario no pierde el sitio donde estaba mirando.
+          irA(eraEste, true);
+          eraEste.querySelector(".carta-tarjeta").focus({ preventScroll: true });
+        }
       }
 
-      document.addEventListener("keydown", function (evento) {
-        if (evento.key === "Escape" && abierto) cerrar(true);
-      });
-    }
+      function abrir(bloque) {
+        if (abierto === bloque) { cerrar(true); return; }
+        cerrar(false, true);   // la anterior se cierra de golpe, sin animar
 
-    /* ---------- arranque ---------- */
+        bloque.classList.add("es-abierto");
+        bloque.querySelector(".carta-tarjeta").setAttribute("aria-expanded", "true");
+        bloque.querySelector("[data-cerrar]").removeAttribute("tabindex");
+        abierto = bloque;
+        document.body.classList.add("carta-hay-abierto");
 
-    function pintarTodo(filas, origen) {
-      var platos = utilizables(filas);
-      if (!platos.length) throw new Error("ningún plato utilizable");
-
-      var html = BLOQUES.map(function (bloque, i) {
-        var suyos = platos.filter(function (p) {
-          return bloque.cats.some(function (c) {
-            return normalizar(p.categoria) === normalizar(c);
-          });
-        });
-        return suyos.length ? pintarBloque(bloque, suyos, i) : "";
-      }).join("");
-
-      if (!html) throw new Error("ninguna categoría coincide");
-
-      contenedor.innerHTML = html;
-      contenedor.setAttribute("data-origen", origen);
-      conectar();
-    }
-
-    // Fuente 1: el Excel. Si algo falla, que reviente y lo recoge el .catch.
-    function desdeExcel() {
-      if (typeof XLSX === "undefined") {
-        return Promise.reject(new Error("SheetJS no cargó"));
+        // Al principio de la sección recién abierta (el CSS reserva sitio
+        // para la cabecera pegajosa con scroll-margin-top).
+        irA(bloque, true);
       }
-      // `no-cache` obliga a revalidar contra el servidor: cuando el dueño
-      // sube un Excel nuevo, la carta cambia sin vaciar caché a mano.
-      return fetch(EXCEL, { cache: "no-cache" })
-        .then(function (r) {
-          if (!r.ok) throw new Error("HTTP " + r.status);
-          return r.arrayBuffer();
-        })
-        .then(function (buffer) {
-          var filas = leerExcel(buffer);
-          if (!filas.length) throw new Error("Excel vacío");
-          return filas;
-        });
-    }
 
-    function iniciar() {
-      contenedor = document.querySelector("[data-carta]");
-      if (!contenedor) return;
-      velo = document.querySelector("[data-carta-velo]");
-      barra = document.querySelector("[data-carta-cerrar-movil]");
+      function conectar() {
+        contenedor.addEventListener("click", function (evento) {
+          if (evento.target.closest("[data-cerrar]")) { cerrar(true); return; }
 
-      desdeExcel()
-        .then(function (filas) { pintarTodo(filas, "excel"); })
-        .catch(function (error) {
-          console.warn("[carta] El Excel no está disponible (" + error.message +
-                       "). Pinto con el respaldo incrustado.");
-          try {
-            pintarTodo(RESPALDO, "respaldo");
-          } catch (fatal) {
-            console.error("[carta] el respaldo también falló:", fatal);
-            contenedor.innerHTML =
-              '<p class="carta-aviso">No hemos podido cargar la carta ahora mismo. ' +
-              'Llámanos al <a href="tel:+34951732575">+34 951 732 575</a> y te la contamos nosotros.</p>';
+          var boton = evento.target.closest(".carta-tarjeta");
+          if (boton && contenedor.contains(boton)) {
+            abrir(boton.closest("[data-bloque]"));
           }
         });
-    }
 
-    document.addEventListener("DOMContentLoaded", iniciar);
-  })();
+        // Escritorio: clic en el oscurecido = cerrar.
+        if (velo) velo.addEventListener("click", function () { cerrar(true); });
+
+        // Pestaña flotante de móvil.
+        if (barra) {
+          barra.addEventListener("click", function (evento) {
+            evento.preventDefault();
+            cerrar(true);
+          });
+        }
+
+        document.addEventListener("keydown", function (evento) {
+          if (evento.key === "Escape" && abierto) cerrar(true);
+        });
+      }
+
+      /* ---------- arranque ---------- */
+
+      function pintarTodo(filas, origen) {
+        var platos = utilizables(filas);
+        if (!platos.length) throw new Error("ningún plato utilizable");
+
+        var html = BLOQUES.map(function (bloque, i) {
+          var suyos = platos.filter(function (p) {
+            return bloque.cats.some(function (c) {
+              return normalizar(p.categoria) === normalizar(c);
+            });
+          });
+          return suyos.length ? pintarBloque(bloque, suyos, i) : "";
+        }).join("");
+
+        if (!html) throw new Error("ninguna categoría coincide");
+
+        contenedor.innerHTML = html;
+        contenedor.setAttribute("data-origen", origen);
+        conectar();
+      }
+
+      // Fuente 1: el Excel. Si algo falla, que reviente y lo recoge el .catch.
+      function desdeExcel() {
+        if (typeof XLSX === "undefined") {
+          return Promise.reject(new Error("SheetJS no cargó"));
+        }
+        // `no-cache` obliga a revalidar contra el servidor: cuando el dueño
+        // sube un Excel nuevo, la carta cambia sin vaciar caché a mano.
+        return fetch(EXCEL, { cache: "no-cache" })
+          .then(function (r) {
+            if (!r.ok) throw new Error("HTTP " + r.status);
+            return r.arrayBuffer();
+          })
+          .then(function (buffer) {
+            var filas = leerExcel(buffer);
+            if (!filas.length) throw new Error("Excel vacío");
+            return filas;
+          });
+      }
+
+      function iniciar() {
+        contenedor = document.querySelector("[data-carta]");
+        if (!contenedor) return;
+        velo = document.querySelector("[data-carta-velo]");
+        barra = document.querySelector("[data-carta-cerrar-movil]");
+
+        desdeExcel()
+          .then(function (filas) { pintarTodo(filas, "excel"); })
+          .catch(function (error) {
+            console.warn("[carta] El Excel no está disponible (" + error.message +
+              "). Pinto con el respaldo incrustado.");
+            try {
+              pintarTodo(RESPALDO, "respaldo");
+            } catch (fatal) {
+              console.error("[carta] el respaldo también falló:", fatal);
+              contenedor.innerHTML =
+                '<p class="carta-aviso">No hemos podido cargar la carta ahora mismo. ' +
+                'Llámanos al <a href="tel:+34951732575">+34 951 732 575</a> y te la contamos nosotros.</p>';
+            }
+          });
+      }
+
+      document.addEventListener("DOMContentLoaded", iniciar);
+    })();
   </script>
 
 </body>
+
 </html>
