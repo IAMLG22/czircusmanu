@@ -410,11 +410,23 @@
 
           <!-- Si cambian los horarios, cámbialos también en lib/manifest.js
                (hours) para que el cartel «Abierto / Cerrado» siga cuadrando. -->
-          <dl class="mapa-horario">
-            <div class="mapa-fila"><dt>Lunes y miércoles</dt><dd>13:00 a 16:00</dd></div>
-            <div class="mapa-fila"><dt>Martes</dt><dd class="es-cerrado">Cerrado</dd></div>
-            <div class="mapa-fila"><dt>Jueves</dt><dd>13:00 a 16:00 y 20:00 a 23:30</dd></div>
-            <div class="mapa-fila"><dt>Viernes, sábado y domingo</dt><dd>13:00 a 16:30 y 20:00 a 23:30</dd></div>
+          <dl class="horario-lista">
+            <div class="horario-dia" data-dia="1,3">
+              <dt>Lunes y miércoles</dt>
+              <dd>13:00 – 16:00</dd>
+            </div>
+            <div class="horario-dia" data-dia="2">
+              <dt>Martes</dt>
+              <dd class="es-cerrado">Cerrado</dd>
+            </div>
+            <div class="horario-dia" data-dia="4">
+              <dt>Jueves</dt>
+              <dd>13:00 – 16:00 · 20:00 – 23:30</dd>
+            </div>
+            <div class="horario-dia" data-dia="5,6,0">
+              <dt>Viernes, sábado y domingo</dt>
+              <dd>13:00 – 16:30 · 20:00 – 23:30</dd>
+            </div>
           </dl>
 
           <p class="mapa-contacto">
@@ -585,5 +597,25 @@
   <script defer src="lib/manifest.js"></script>
   <script defer src="main.js?v=20260919e"></script>
   <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+
+  <!-- Resalta la fila de horario del dia de hoy. getDay(): domingo = 0. -->
+  <script>
+    (function () {
+      var hoy = String(new Date().getDay());
+      var filas = document.querySelectorAll(".horario-lista .horario-dia[data-dia]");
+      for (var i = 0; i < filas.length; i++) {
+        var dias = filas[i].getAttribute("data-dia").split(",");
+        for (var j = 0; j < dias.length; j++) {
+          if (dias[j].trim() === hoy) {
+            filas[i].classList.add("es-hoy");
+            // Token valido de aria-current: dice que esta fila es la de hoy
+            // sin depender del "HOY" que pinta el CSS.
+            filas[i].setAttribute("aria-current", "date");
+            break;
+          }
+        }
+      }
+    })();
+  </script>
 </body>
 </html>

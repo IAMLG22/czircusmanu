@@ -964,8 +964,11 @@ body.has-morph .nav--marquesina .nav-brand.is-aparcado { pointer-events: auto; }
   .mapa-lienzo { right: auto; width: 132%; }
 }
 .mapa-iframe {
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  top: -60px;
+  left: -60px;
+  width: calc(100% + 120px);
+  height: calc(100% + 120px);
   border: 0;
   pointer-events: none;
   /* Google no deja cambiarle los colores al mapa gratuito, así que lo
@@ -1345,7 +1348,7 @@ body.has-morph .nav--marquesina .nav-brand.is-aparcado { pointer-events: auto; }
   background-image: url("assets/img/mesa-platos.jpg?v=1");
   background-attachment: fixed;
   background-size: cover;
-  background-position: center center;
+  background-position: 80% center;
   background-repeat: no-repeat;
 }
 /* Velo: la foto es CLARA (queso gratinado, madera al sol) y el texto va en
