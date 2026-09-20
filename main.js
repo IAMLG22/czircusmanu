@@ -556,6 +556,236 @@
   }
 
   /* =============================================================
+     RULETA DE LA SUERTE (carta.html)
+     Sortea un plato para quien no sabe qué pedir. El disco (sectores,
+     etiquetas y bombillas) se pinta aquí desde RULETA_PLATOS: una sola
+     lista, así los sectores y sus etiquetas no pueden descuadrarse.
+
+     GEOMETRÍA: el sector i ocupa [i*paso, (i+1)*paso] grados contados
+     desde las 12 en punto —donde está la aguja— y en sentido del reloj.
+     Para que gane el sector i hay que dejar su bisectriz a 0º, o sea
+     girar el disco 360 - bisectriz grados.
+
+     PARA MANTENERLO: si cambian los platos o los precios en el Excel,
+     actualiza también esta lista (la ruleta no lee el Excel a propósito:
+     así el dueño elige qué ocho números entran en el sorteo). Con un
+     número par de platos los colores quedan alternos; con impar, dos
+     vecinos comparten color.
+     ============================================================= */
+  const RULETA_PLATOS = [
+    { nombre: "Carbonara",      tipo: "Spaghetti",             desc: "Bacon y nata",                              precio: "11,80 €" },
+    { nombre: "Carpa",          tipo: "Spaghetti gratinado",   desc: "Jamón, bechamel y queso",                   precio: "11,90 €" },
+    { nombre: "Bolognesa",      tipo: "Macarrones",            desc: "Tomate, carne y verduras frescas",          precio: "10,90 €" },
+    { nombre: "Mágico",         tipo: "Macarrones gratinados", desc: "Champiñón, bechamel y queso",               precio: "11,90 €" },
+    { nombre: "Al roquefort",   tipo: "Spaghetti",             desc: "Nata y roquefort",                          precio: "11,80 €" },
+    { nombre: "Fantasía",       tipo: "Spaghetti gratinado",   desc: "Nata, champiñones y queso",                 precio: "13,80 €" },
+    { nombre: "Vegetariano",    tipo: "Macarrones",            desc: "Verduras frescas y salsa de tomate",        precio: "9,90 €" },
+    { nombre: "Ensalada César", tipo: "Entrante",              desc: "Pollo, parmesano, picatostes y salsa César", precio: "8,50 €" }
+  ];
+
+  function initRuleta() {
+    const caja = $("[data-ruleta]");
+    if (!caja) return;
+
+    const disco  = $("[data-ruleta-disco]", caja);
+    const luces  = $("[data-ruleta-luces]", caja);
+    const btn    = $("[data-ruleta-girar]", caja);
+    const estado = $("[data-ruleta-estado]", caja);
+    const modal  = $("[data-ruleta-modal]");
+    const dialogo = modal && $("[data-ruleta-dialogo]", modal);
+    if (!disco || !btn || !modal || !dialogo) return;
+
+    const platos = RULETA_PLATOS;
+    const n = platos.length;
+    const paso = 360 / n;
+    const CX = 200, CY = 200, R = 200;   // viewBox 0 0 400 400
+    const VUELTAS = 5;                   // vueltas enteras antes de frenar
+    const DURACION = 4400;               // ms; igual que la transición del CSS
+
+    /* Grados (0 = las 12) + radio -> coordenadas del viewBox */
+    function punto(grados, radio) {
+      const rad = (grados - 90) * Math.PI / 180;
+      return [CX + radio * Math.cos(rad), CY + radio * Math.sin(rad)];
+    }
+    const num = (v) => Math.round(v * 100) / 100;
+
+    /* ---------- Pintar el disco ---------- */
+    function pintar() {
+      let svg = '<svg viewBox="0 0 400 400" role="img" aria-label="Ruleta con ' + n +
+                ' platos de la carta" focusable="false">';
+
+      platos.forEach((_, i) => {
+        const [x1, y1] = punto(i * paso, R);
+        const [x2, y2] = punto((i + 1) * paso, R);
+        const grande = paso > 180 ? 1 : 0;
+        svg += '<path class="ruleta-sec ruleta-sec--' + (i % 2 ? "b" : "a") + '" d="' +
+               "M" + CX + " " + CY + " L" + num(x1) + " " + num(y1) +
+               " A" + R + " " + R + " 0 " + grande + " 1 " + num(x2) + " " + num(y2) + " Z" + '"/>';
+      });
+
+      platos.forEach((plato, i) => {
+        // Bisectriz del sector: por ahí va la etiqueta, del borde hacia dentro.
+        const centro = i * paso + paso / 2;
+        let giro = centro - 90;               // el texto del SVG corre hacia +x
+        let x = CX + R - 26, ancla = "end";
+        const norm = ((giro % 360) + 360) % 360;
+        // Media rueda quedaría del revés: se voltea y se lee desde el otro lado.
+        if (norm > 90 && norm < 270) { giro += 180; x = CX - R + 26; ancla = "start"; }
+
+        svg += '<g transform="rotate(' + num(giro) + ' ' + CX + ' ' + CY + ')">' +
+                 '<text class="ruleta-et ruleta-et--' + (i % 2 ? "b" : "a") + '" x="' + num(x) +
+                       '" y="' + CY + '" text-anchor="' + ancla + '">' +
+                   '<tspan class="ruleta-et-nombre" x="' + num(x) + '" dy="-3">' + escHTML(plato.nombre) + '</tspan>' +
+                   '<tspan class="ruleta-et-tipo" x="' + num(x) + '" dy="15">' + escHTML(plato.tipo) + '</tspan>' +
+                 '</text>' +
+               '</g>';
+      });
+
+      svg += "</svg>";
+      disco.innerHTML = svg;
+
+      // Dos bombillas por sector, repartidas por el aro dorado.
+      if (luces) {
+        const total = n * 2;
+        let html = "";
+        for (let i = 0; i < total; i++) {
+          html += '<span class="luz" style="--giro:' + num(i * (360 / total)) +
+                  'deg; --retardo:' + (i % 2 ? ".8s" : "0s") + '"></span>';
+        }
+        luces.innerHTML = html;
+      }
+
+      ajustarEtiquetas();
+      caja.classList.add("es-lista");
+    }
+
+    /* Una etiqueta larga ("Macarrones gratinados") se comeria el eje: si no
+       cabe en el radio util la apretamos con textLength en vez de recortarla.
+       Se repasa cuando cargan las tipografias, que cambian los anchos. */
+    function ajustarEtiquetas() {
+      const MAX = 132;      // del borde del disco al eje, en unidades del viewBox
+      $$(".ruleta-et tspan", disco).forEach(el => {
+        el.removeAttribute("textLength");
+        el.removeAttribute("lengthAdjust");
+        let ancho = 0;
+        try { ancho = el.getComputedTextLength(); } catch (_) { return; }
+        if (ancho > MAX) {
+          el.setAttribute("textLength", MAX);
+          el.setAttribute("lengthAdjust", "spacingAndGlyphs");
+        }
+      });
+    }
+
+    /* ---------- Modal del resultado ---------- */
+    let tempCierre = 0;
+
+    function abrirModal(plato) {
+      const pon = (sel, txt) => { const el = $(sel, modal); if (el) el.textContent = txt; };
+      pon("[data-ruleta-plato]", plato.nombre);
+      pon("[data-ruleta-tipo]", plato.tipo);
+      pon("[data-ruleta-desc]", plato.desc);
+      pon("[data-ruleta-precio]", plato.precio);
+      if (estado) {
+        estado.textContent = "Te ha salido " + plato.nombre + ", " + plato.tipo +
+                             ": " + plato.desc + ". " + plato.precio + ".";
+      }
+
+      clearTimeout(tempCierre);
+      modal.hidden = false;
+      document.body.classList.add("ruleta-abierta");
+      // Leer offsetWidth fuerza el cálculo de estilos: el navegador da por
+      // pintado el estado inicial y la transición de entrada sí arranca.
+      // (Con requestAnimationFrame se quedaba a medias si la pestaña estaba
+      // oculta: no hay frames, así que el modal nunca se hacía visible.)
+      void modal.offsetWidth;
+      modal.classList.add("es-abierto");
+      dialogo.focus();
+    }
+
+    function cerrarModal(devolverFoco) {
+      modal.classList.remove("es-abierto");
+      document.body.classList.remove("ruleta-abierta");
+      clearTimeout(tempCierre);
+      // Se retira del DOM cuando acaba el fundido (de golpe si no hay).
+      if (reduced) modal.hidden = true;
+      else tempCierre = setTimeout(() => { modal.hidden = true; }, 340);
+      // El foco vuelve siempre al botón: es lo que abrió el modal.
+      if (devolverFoco !== false) btn.focus();
+    }
+
+    /* ---------- Girar ---------- */
+    let acumulado = 0;      // grados girados en total (siempre hacia adelante)
+    let girando = false;
+
+    function girar() {
+      if (girando) return;
+      girando = true;
+      caja.classList.add("es-girando");
+      btn.disabled = true;
+      if (estado) estado.textContent = "Girando la ruleta…";
+
+      const i = Math.floor(Math.random() * n);
+      // Un poco de margen sobre la bisectriz: si parase siempre clavado en
+      // el centro del sector se le vería el truco.
+      const margen = (Math.random() * 2 - 1) * (paso / 2 - 5);
+      const destino = 360 - (i * paso + paso / 2) + margen;
+      const actual = ((acumulado % 360) + 360) % 360;
+      const falta = (((destino - actual) % 360) + 360) % 360;
+      acumulado += VUELTAS * 360 + falta;
+      disco.style.transform = "rotate(" + num(acumulado) + "deg)";
+
+      let cerrado = false;
+      const terminar = () => {
+        if (cerrado) return;
+        cerrado = true;
+        girando = false;
+        caja.classList.remove("es-girando");
+        btn.disabled = false;
+        abrirModal(platos[i]);
+      };
+
+      // Con reduced-motion el CSS quita la transición: el disco ya está
+      // colocado, así que sólo dejamos un compás antes de cantar el premio.
+      if (reduced) { setTimeout(terminar, 260); return; }
+      disco.addEventListener("transitionend", terminar, { once: true });
+      // Red de seguridad: si el transitionend no llega (pestaña en segundo
+      // plano, transición interrumpida…) cantamos el premio a mano.
+      setTimeout(terminar, DURACION + 700);
+    }
+
+    /* ---------- Cableado ---------- */
+    btn.addEventListener("click", girar);
+
+    $$("[data-ruleta-cerrar]", modal).forEach(el =>
+      el.addEventListener("click", () => cerrarModal()));
+
+    const otra = $("[data-ruleta-otra]", modal);
+    if (otra) otra.addEventListener("click", () => { cerrarModal(); girar(); });
+
+    modal.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") { e.preventDefault(); cerrarModal(); return; }
+      if (e.key !== "Tab") return;
+      // Trampa de foco: el tabulador no se escapa del modal.
+      const focos = $$("button, [href]", dialogo).filter(el => !el.disabled);
+      if (!focos.length) return;
+      const primero = focos[0], ultimo = focos[focos.length - 1];
+      const activo = document.activeElement;
+      if (e.shiftKey && (activo === primero || activo === dialogo)) {
+        e.preventDefault(); ultimo.focus();
+      } else if (!e.shiftKey && activo === ultimo) {
+        e.preventDefault(); primero.focus();
+      }
+    });
+
+    pintar();
+    // Las webfonts suelen llegar despues del primer pintado: al estar listas
+    // los anchos cambian y hay que repasar las etiquetas apretadas.
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(ajustarEtiquetas).catch(() => {});
+    }
+  }
+
+  /* =============================================================
      BOOT
      ============================================================= */
   function boot() {
@@ -571,6 +801,7 @@
     safe(initReveals, "initReveals");
     safe(initSmoothScroll, "initSmoothScroll");
     safe(initAcordeon, "initAcordeon");
+    safe(initRuleta, "initRuleta");
 
     // Actualizar estado abierto/cerrado cada minuto
     setInterval(() => safe(initEstado, "initEstado"), 60000);
@@ -594,27 +825,6 @@
      ===== MÓDULOS EXPERIMENTALES (desactivados) =================
      Descomenta para activarlos. No deben estorbar la conversión.
      ============================================================= */
-
-  /* --- (A) "¿No sabes qué pedir?" — tómbola que sortea un plato ---
-  function initTombola() {
-    const btn = $("[data-tombola]");
-    const out = $("[data-tombola-out]");
-    if (!btn || !out || !data.menu) return;
-    const todos = data.menu.flatMap(a => a.items.filter(i => i.price));
-    btn.addEventListener("click", () => {
-      let ticks = 0;
-      const spin = setInterval(() => {
-        const p = todos[Math.floor(Math.random() * todos.length)];
-        out.textContent = p.name;
-        if (++ticks > 18) {
-          clearInterval(spin);
-          out.classList.add("is-final");
-        }
-      }, 80);
-    });
-  }
-  safe(initTombola, "initTombola");
-  */
 
   /* --- (B) Scroll narrativo 1997→hoy con parallax (La Casa) ---
   function initNarrativa() {

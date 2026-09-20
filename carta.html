@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rye&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="styles.css?v=20260919e">
+  <link rel="stylesheet" href="styles.css?v=20260920c">
 
   <!-- SheetJS: lee el Excel de la carta directamente en el navegador.
        Va con `defer` para no bloquear el pintado (pesa ~950 KB). Los
@@ -72,6 +72,13 @@
       evento.preventDefault();
       // Sin hash a proposito: contacto se ve desde arriba.
       transicionReserva("contacto.html");
+    });
+
+    window.addEventListener("pageshow", (evento) => {
+      if (evento.persisted) {
+        enTransicion = false;
+        document.querySelectorAll(".telon-reserva").forEach(t => t.remove());
+      }
     });
   </script>
 </head>
@@ -207,6 +214,77 @@
       </div>
     </section>
 
+    <!-- ===== RULETA DE LA SUERTE =====
+         Para el indeciso: sortea uno de los platos de la carta. La rueda
+         (sectores, etiquetas y bombillas) la pinta initRuleta() en main.js
+         a partir de un único array de platos; aquí va sólo el cascarón y el
+         modal del resultado. Sin JS la rueda no se pinta y su caja se queda
+         oculta (nace con display:none y la enciende el propio JS), así que
+         sólo se lee el titular y el aviso del <noscript>. -->
+    <section class="ruleta" id="ruleta" aria-labelledby="ruleta-titulo">
+      <div class="wrap wrap--narrow">
+
+        <div class="ruleta-head center reveal">
+          <div class="marquesina" aria-hidden="true">
+            <span class="bombilla"></span><span class="bombilla"></span><span class="bombilla"></span>
+            <span class="bombilla"></span><span class="bombilla"></span><span class="bombilla"></span>
+            <span class="bombilla"></span><span class="bombilla"></span><span class="bombilla"></span>
+          </div>
+          <span class="kicker">El número de la suerte</span>
+          <h2 id="ruleta-titulo">¿Indeciso? Que decida la carpa</h2>
+          <p class="ruleta-lead">Hay días en que la carta se hace larga. Deja que la magia del circo elija por ti: dale a la ruleta, prueba tu suerte y lo que salga… sale a la mesa.</p>
+        </div>
+
+        <div class="ruleta-caja reveal reveal-delay-1" data-ruleta>
+          <div class="ruleta-escena">
+            <!-- El disco lo rellena el JS con el SVG de los sectores -->
+            <div class="ruleta-disco" data-ruleta-disco></div>
+            <!-- Aro de bombillas: lo rellena el JS (una por sector) -->
+            <div class="ruleta-luces" data-ruleta-luces aria-hidden="true"></div>
+            <!-- Eje central y aguja, por encima del disco -->
+            <span class="ruleta-eje" aria-hidden="true"></span>
+            <span class="ruleta-aguja" aria-hidden="true"></span>
+          </div>
+
+          <button class="btn ruleta-btn" type="button" data-ruleta-girar>¡Girar la ruleta!</button>
+          <p class="ruleta-pie">Sin trampa ni cartón: ocho números de nuestro repertorio, uno al azar.</p>
+          <!-- El resultado también por voz: lectores de pantalla no ven girar nada -->
+          <p class="sr-only" role="status" aria-live="polite" data-ruleta-estado></p>
+        </div>
+
+        <noscript>
+          <p class="carta-aviso">La ruleta necesita JavaScript. Si no lo tienes activado, pide el gratinado de jamón: acertar es fácil desde 1997.</p>
+        </noscript>
+      </div>
+
+      <!-- Resultado del sorteo. Nace oculto; lo abre y lo rellena el JS. -->
+      <div class="ruleta-modal" data-ruleta-modal hidden>
+        <div class="ruleta-modal-velo" data-ruleta-cerrar></div>
+        <div class="ruleta-modal-caja" role="dialog" aria-modal="true"
+             aria-labelledby="ruleta-modal-titulo" tabindex="-1" data-ruleta-dialogo>
+          <button class="ruleta-modal-x" type="button" data-ruleta-cerrar aria-label="Cerrar">
+            <span aria-hidden="true">&#10005;</span>
+          </button>
+          <div class="marquesina" aria-hidden="true">
+            <span class="bombilla"></span><span class="bombilla"></span><span class="bombilla"></span>
+            <span class="bombilla"></span><span class="bombilla"></span><span class="bombilla"></span>
+            <span class="bombilla"></span>
+          </div>
+          <p class="ruleta-modal-kicker">Redoble de tambores&hellip;</p>
+          <h3 id="ruleta-modal-titulo">¡Hoy es tu día de suerte!</h3>
+          <p class="ruleta-modal-sub">Te sugerimos probar</p>
+          <p class="ruleta-modal-plato" data-ruleta-plato></p>
+          <p class="ruleta-modal-tipo" data-ruleta-tipo></p>
+          <p class="ruleta-modal-desc" data-ruleta-desc></p>
+          <p class="ruleta-modal-precio" data-ruleta-precio></p>
+          <div class="ruleta-modal-acciones">
+            <button class="btn btn--sm ruleta-modal-otra" type="button" data-ruleta-otra>Girar otra vez</button>
+            <a class="btn btn--sm ruleta-modal-reserva" href="contacto.html#reserva">Reservar mesa</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ===== ¿YA SABES QUÉ PEDIR? (reserva) ===== -->
     <section class="carta-reserva">
       <div class="wrap">
@@ -288,7 +366,7 @@
   <script defer src="lib/gsap.min.js"></script>
   <script defer src="lib/ScrollTrigger.min.js"></script>
   <script defer src="lib/manifest.js"></script>
-  <script defer src="main.js?v=20260919e"></script>
+  <script defer src="main.js?v=20260920c"></script>
   <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
   <!-- ===== CARTA DINÁMICA =====
        Dos fuentes, por este orden:

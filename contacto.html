@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rye&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="styles.css?v=20260919e">
+  <link rel="stylesheet" href="styles.css?v=20260920c">
 </head>
 <body>
   <!-- Aterrizaje del telon de reserva: si venimos de la transicion, el telon
@@ -55,6 +55,15 @@
         if (wrap.parentNode) wrap.parentNode.removeChild(wrap);
       }, 2200);
     })();
+
+    window.addEventListener("pageshow", function (evento) {
+      if (evento.persisted) {
+        var telones = document.querySelectorAll(".telon-reserva");
+        for (var i = 0; i < telones.length; i++) {
+          telones[i].parentNode.removeChild(telones[i]);
+        }
+      }
+    });
   </script>
 
   <a class="skip-link" href="#main">Saltar al contenido</a>
@@ -279,7 +288,7 @@
   <script defer src="lib/gsap.min.js"></script>
   <script defer src="lib/ScrollTrigger.min.js"></script>
   <script defer src="lib/manifest.js"></script>
-  <script defer src="main.js?v=20260919e"></script>
+  <script defer src="main.js?v=20260920c"></script>
   <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
 </body>
 </html>

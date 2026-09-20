@@ -16,6 +16,8 @@
    10. Efectos (telón, reveals, keyframes)
    11. Responsive
    12. Reduced-motion (solo efectos intrusivos)
+   13. La carta (bloques + apertura)
+   14. Ruleta de la suerte (carta.html)
    ============================================================= */
 
 /* =============================================================
@@ -604,11 +606,30 @@ body.home { --nav-h: 84px; }
   font-size: .3em;
   letter-spacing: .22em;
   margin-top: .34em;
+  /* La caja de línea del rótulo va con line-height .95, así que el rabo de
+     la «g» de Spaghettería sale por debajo y se juntaba con esta línea.
+     La bajamos un pelo más.
+     OJO, va en transform y NO en margin-top: el transform no cambia el alto
+     de .nav-brand, y initBrandMorph() mide ese alto para reservar el hueco
+     del logo en la portada y calcular su recorrido. En `em` (del propio
+     small) para que el ajuste escale con el logo y valga igual aparcado en
+     la barra que grande en la portada. */
+  transform: translateY(.5em);   /* .5em del small = .15em del logo */
   /* Cae sobre la madera, la moldura verde o el oro según el tamaño de
      pantalla: mismo truco del contorno, a su escala. */
   -webkit-text-stroke: .1em rgba(16, 7, 5, .75);
   text-shadow: 0 1px 2px rgba(0, 0, 0, .6);
 }
+
+/* En escritorio el logo se ve mucho mayor (llega al 58% del ancho de la
+   portada) y el rótulo pedía respirar por arriba: lo subimos un pelo para
+   descargar la «g» y dejar el conjunto mejor centrado. Mismo motivo que
+   arriba para usar transform + `em`: no toca el alto que mide el JS y el
+   ajuste acompaña al tamaño en toda la animación. */
+@media (min-width: 960px) {
+  .nav--marquesina .nav-brand-word { transform: translateY(-.05em); }
+}
+
 .site-header--home.is-scrolled .nav-brand,
 .site-header--home.is-scrolled .nav-brand small {
   -webkit-text-stroke: 0;
@@ -710,7 +731,12 @@ body.has-morph .nav--marquesina .nav-brand.is-aparcado { pointer-events: auto; }
 }
 /* Hueco reservado para el logo grande (que vive en la cabecera). La altura
    la escribe el JS; sin JS vale 0 y el logo se queda en la barra. */
-.hero-logo-space { width: 100%; height: 0; flex: none; }
+.hero-logo-space { 
+  width: 100%; 
+  height: 0; 
+  flex: none; 
+  transform: translateY(-3svh);
+}
 
 /* --- Acciones de la portada ---
    Composición: arriba logo + cartel de reserva (pegados), y abajo del todo
@@ -2628,4 +2654,334 @@ body.kn-abierto { overflow: hidden; }
   .carta-panel-dentro > * { transition: none; }
   .carta-panel-dentro > * { opacity: 1; transform: none; }
   .carta-cerrar-flotante { transform: none; }
+}
+
+/* =============================================================
+   14. RULETA DE LA SUERTE (carta.html) — sorteo de plato
+   Fondo granate como el cierre de la carta, para que la sección se
+   lea como un «número» aparte y no como otra tarjeta de la carta.
+   El disco es un SVG que pinta initRuleta() en main.js; aquí van el
+   escenario (aro de bombillas, aguja, eje), el botón y el modal.
+   ============================================================= */
+.ruleta {
+  position: relative;
+  padding-block: clamp(3rem, 8vw, 5rem);
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(200, 162, 76, .22) 0%, rgba(200, 162, 76, 0) 60%),
+    linear-gradient(190deg, var(--granate) 0%, var(--granate-hondo) 100%);
+  color: var(--crema);
+  overflow: hidden;
+  /* Filete de oro: separa la ruleta del cierre de reserva, que tambien va
+     en granate, para que no parezcan la misma banda. */
+  border-bottom: 1px solid rgba(227, 197, 121, .28);
+}
+/* Rayos de carpa, muy tenues: dan profundidad sin ensuciar el texto */
+.ruleta::before {
+  content: "";
+  position: absolute;
+  inset: -20% -10% auto -10%;
+  height: 140%;
+  background: repeating-conic-gradient(from 90deg at 50% 0%,
+              rgba(244, 236, 216, .05) 0deg 6deg, rgba(244, 236, 216, 0) 6deg 12deg);
+  pointer-events: none;
+}
+.ruleta > .wrap { position: relative; }
+
+.ruleta-head { margin-bottom: clamp(2rem, 5vw, 2.8rem); }
+.ruleta-head .kicker { color: var(--oro-claro); margin-top: 1rem; }
+.ruleta-head .kicker::before { background: var(--oro-claro); }
+.ruleta-head h2 { color: var(--crema); margin: .7rem 0 .9rem; }
+.ruleta-lead {
+  color: rgba(244, 236, 216, .85);
+  max-width: 54ch;
+  margin-inline: auto;
+}
+
+.ruleta-caja {
+  /* Nace oculta y la enciende initRuleta() al terminar de pintar el disco:
+     así no se ve el aro vacío mientras carga y, sin JS, no se ve nada roto
+     (queda el aviso del <noscript>). */
+  display: none;
+  justify-items: center;
+  gap: clamp(1.4rem, 4vw, 2rem);
+}
+.ruleta-caja.es-lista { display: grid; }
+
+/* --- Escenario: el disco y todo lo que va encima --- */
+.ruleta-escena {
+  position: relative;
+  width: min(86vw, 420px);
+  aspect-ratio: 1;
+  /* Halo de foco de circo */
+  filter: drop-shadow(0 22px 46px rgba(20, 8, 10, .45));
+}
+
+/* Aro exterior dorado con las bombillas por fuera del disco */
+.ruleta-escena::before {
+  content: "";
+  position: absolute;
+  inset: -3.2%;
+  border-radius: 50%;
+  background: linear-gradient(160deg, var(--oro-claro), var(--oro) 45%, #8a6a24 100%);
+  box-shadow: inset 0 0 0 2px rgba(20, 8, 10, .25);
+}
+
+.ruleta-disco {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  /* La rotación la escribe el JS en el style; aquí sólo el easing largo,
+     tipo rueda de feria: arranca fuerte y se muere despacio. */
+  transition: transform 4.4s cubic-bezier(.13, .72, .02, 1);
+  will-change: transform;
+}
+.ruleta-disco svg { width: 100%; height: 100%; display: block; }
+
+/* Sectores: granate y oro alternos, con un filete de oro claro entre
+   ellos. El relleno va por clase y no por atributo fill="var(...)",
+   que no todos los navegadores resuelven. */
+.ruleta-disco .ruleta-sec { stroke: rgba(227, 197, 121, .45); stroke-width: 1.5; }
+.ruleta-disco .ruleta-sec--a { fill: var(--granate); }
+.ruleta-disco .ruleta-sec--b { fill: var(--oro); }
+.ruleta-disco .ruleta-et--a { fill: var(--crema); }
+.ruleta-disco .ruleta-et--b { fill: var(--tinta); }
+
+.ruleta-disco .ruleta-et-nombre {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 17px;
+}
+.ruleta-disco .ruleta-et-tipo {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 9px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  opacity: .78;
+}
+
+/* --- Aro de bombillas --- */
+.ruleta-luces {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+/* Cada bombilla es una caja del tamano del aro que se gira --giro grados;
+   la luz en si va en el ::before, pegada arriba, y asi orbita sola. */
+.ruleta-luces .luz {
+  position: absolute;
+  inset: 0;
+  transform: rotate(var(--giro, 0deg));
+}
+.ruleta-luces .luz::before {
+  content: "";
+  position: absolute;
+  top: -1.9%;
+  left: 50%;
+  width: 9px; height: 9px;
+  margin-left: -4.5px;
+  border-radius: 50%;
+  background: var(--crema);
+  box-shadow: 0 0 9px 3px rgba(255, 244, 214, .8);
+  animation: ruleta-luz 1.6s infinite var(--ease-soft);
+  animation-delay: var(--retardo, 0s);
+}
+/* Mientras gira, las luces parpadean el triple de rapido */
+.ruleta-caja.es-girando .ruleta-luces .luz::before { animation-duration: .38s; }
+
+@keyframes ruleta-luz {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .28; }
+}
+
+/* --- Aguja (arriba, marca el sector ganador) --- */
+.ruleta-aguja {
+  position: absolute;
+  top: -5%;
+  left: 50%;
+  width: 26px; height: 42px;
+  margin-left: -13px;
+  background: linear-gradient(180deg, var(--crema) 0%, var(--oro-claro) 55%, var(--oro) 100%);
+  clip-path: polygon(50% 100%, 0 0, 100% 0);
+  filter: drop-shadow(0 3px 6px rgba(20, 8, 10, .5));
+  z-index: 3;
+}
+
+/* --- Eje central: tapa el vértice de los sectores --- */
+.ruleta-eje {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 17%; aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 30%, var(--crema) 0%, var(--oro-claro) 40%, var(--oro) 70%, #8a6a24 100%);
+  box-shadow: 0 4px 12px rgba(20, 8, 10, .45), inset 0 0 0 3px rgba(94, 17, 25, .35);
+  z-index: 2;
+}
+
+/* --- Botón de girar --- */
+.ruleta-btn {
+  background: var(--oro);
+  color: var(--tinta);
+  font-family: var(--serif);
+  font-size: clamp(1rem, 2.6vw, 1.15rem);
+  letter-spacing: .02em;
+  padding: 1rem 2.2rem;
+  border: 2px solid var(--oro-claro);
+  box-shadow: 0 14px 30px rgba(20, 8, 10, .35);
+}
+.ruleta-btn:hover { background: var(--oro-claro); }
+.ruleta-btn[disabled] {
+  background: rgba(200, 162, 76, .45);
+  color: rgba(28, 42, 34, .6);
+  border-color: rgba(227, 197, 121, .4);
+  box-shadow: none;
+  transform: none;
+  cursor: progress;
+}
+.ruleta-pie {
+  margin-top: -.4rem;
+  font-size: .8rem;
+  color: rgba(244, 236, 216, .74);
+  text-align: center;
+}
+
+/* --- Modal del resultado --- */
+.ruleta-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: grid;
+  place-items: center;
+  padding: var(--gutter);
+}
+.ruleta-modal[hidden] { display: none; }
+.ruleta-modal-velo {
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 8, 10, .72);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  transition: opacity .3s var(--ease-out);
+}
+.ruleta-modal.es-abierto .ruleta-modal-velo { opacity: 1; }
+
+.ruleta-modal-caja {
+  position: relative;
+  width: min(100%, 440px);
+  max-height: calc(100dvh - 2 * var(--gutter));
+  overflow-y: auto;
+  text-align: center;
+  padding: clamp(1.6rem, 5vw, 2.4rem) clamp(1.3rem, 5vw, 2.2rem) clamp(1.5rem, 4vw, 2rem);
+  border-radius: var(--radius);
+  border: 1px solid rgba(227, 197, 121, .55);
+  background: linear-gradient(170deg, var(--crema) 0%, var(--crema-2) 100%);
+  box-shadow: 0 30px 70px rgba(20, 8, 10, .5);
+  opacity: 0;
+  transform: translateY(18px) scale(.94);
+  transition: opacity .35s var(--ease-out), transform .45s var(--ease-bounce);
+}
+.ruleta-modal.es-abierto .ruleta-modal-caja { opacity: 1; transform: none; }
+/* Doble filete de cartel, como .cartel */
+.ruleta-modal-caja::before {
+  content: "";
+  position: absolute; inset: 7px;
+  border: 1px solid rgba(200, 162, 76, .38);
+  border-radius: calc(var(--radius) - 5px);
+  pointer-events: none;
+}
+
+.ruleta-modal-x {
+  position: absolute;
+  top: .55rem; right: .6rem;
+  width: 38px; height: 38px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  color: var(--granate);
+  font-size: .95rem;
+  transition: background .25s var(--ease-out), color .25s var(--ease-out);
+}
+.ruleta-modal-x:hover { background: var(--granate); color: var(--crema); }
+
+.ruleta-modal-kicker {
+  font-family: var(--display);
+  font-size: .82rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--oro);
+  margin-top: .6rem;
+}
+.ruleta-modal-caja h3 {
+  font-family: var(--serif);
+  color: var(--granate);
+  margin: .35rem 0 1.1rem;
+}
+.ruleta-modal-sub {
+  font-size: .78rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--tinta-45);
+}
+.ruleta-modal-plato {
+  font-family: var(--display);
+  font-size: clamp(1.6rem, 6vw, 2.2rem);
+  line-height: 1.1;
+  color: var(--tinta);
+  margin-top: .3rem;
+}
+.ruleta-modal-tipo {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: .78rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--granate);
+  margin-top: .45rem;
+}
+.ruleta-modal-desc {
+  color: var(--tinta-70);
+  font-size: .95rem;
+  margin: .55rem auto 0;
+  max-width: 32ch;
+}
+.ruleta-modal-precio {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: var(--granate);
+  margin-top: .7rem;
+}
+.ruleta-modal-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .7rem;
+  margin-top: 1.5rem;
+}
+.ruleta-modal-otra {
+  background: transparent;
+  color: var(--tinta);
+  border-color: var(--oro);
+}
+.ruleta-modal-otra:hover { background: var(--oro); }
+.ruleta-modal-reserva { background: var(--granate); color: var(--crema); }
+.ruleta-modal-reserva:hover { background: var(--granate-hondo); }
+
+/* Mientras el modal está abierto no se hace scroll por detrás */
+body.ruleta-abierta { overflow: hidden; }
+
+@media (max-width: 430px) {
+  .ruleta-escena { width: min(92vw, 360px); }
+  .ruleta-modal-acciones .btn { width: 100%; }
+}
+
+/* Quien pide menos movimiento: sin giro, sin luces y sin rebote.
+   El JS ya coloca el disco de golpe y abre el modal igual. */
+@media (prefers-reduced-motion: reduce) {
+  .ruleta-disco { transition: none; }
+  .ruleta-luces .luz::before { animation: none; }
+  .ruleta-modal-velo,
+  .ruleta-modal-caja { transition: none; }
+  .ruleta-modal-caja { opacity: 1; transform: none; }
 }
