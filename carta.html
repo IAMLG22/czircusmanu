@@ -587,11 +587,48 @@
       }
 
       /* Filtro común a las DOS fuentes, para que respaldo y Excel se
-         comporten igual: "Oculto" no se pinta, "Agotado" sí pero marcado. */
+         comporten igual: "Oculto" no se pinta, "Agotado" sí pero marcado.
+         Además, agrupa automáticamente las filas "MAXI ..." con su plato base. */
       function utilizables(filas) {
-        return filas.filter(function (p) {
+        var validos = filas.filter(function (p) {
           return p && p.nombre && normalizar(p.estado) !== "oculto";
         });
+
+        var resultado = [];
+        var mapaPendientesMaxi = {};
+
+        validos.forEach(function (p) {
+          var nom = String(p.nombre).trim();
+          var nomUpper = nom.toUpperCase();
+
+          if (/^MAXI\s+/i.test(nom)) {
+            var baseClave = nomUpper.replace(/^MAXI\s+/i, "").trim();
+            var platoBase = resultado.find(function (cand) {
+              var candUpper = String(cand.nombre).trim().toUpperCase();
+              var candSinAl = candUpper.replace(/^AL\s+/i, "").trim();
+              return candUpper === baseClave || candSinAl === baseClave;
+            });
+
+            if (platoBase) {
+              platoBase.precioMaxi = p.precio;
+            } else {
+              mapaPendientesMaxi[baseClave] = p.precio;
+            }
+          } else {
+            var claveNormal = nomUpper;
+            var claveSinAl = nomUpper.replace(/^AL\s+/i, "").trim();
+
+            if (mapaPendientesMaxi[claveNormal] != null) {
+              p.precioMaxi = mapaPendientesMaxi[claveNormal];
+            } else if (mapaPendientesMaxi[claveSinAl] != null) {
+              p.precioMaxi = mapaPendientesMaxi[claveSinAl];
+            }
+
+            resultado.push(p);
+          }
+        });
+
+        return resultado;
       }
 
       /* ---------- pintado ---------- */

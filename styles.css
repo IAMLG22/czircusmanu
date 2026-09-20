@@ -3669,9 +3669,7 @@ body.kn-abierto {
   flex: 1 1 auto;
   min-width: 1rem;
   align-self: flex-end;
-  /* 👈 Se alinean al pie del texto de la primera línea en vez del centro */
   margin-bottom: 0.3em;
-  /* 👈 Ajuste para que queden a la altura exacta de la base de las letras */
   border-bottom: 1px dotted rgba(142, 31, 43, .38);
 }
 
@@ -3683,7 +3681,6 @@ body.kn-abierto {
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
   flex-shrink: 0;
-  /* 👈 Evita que el precio se comprima si el nombre es largo */
 }
 
 .carta-plato-maxi {
