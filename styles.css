@@ -948,6 +948,16 @@ body.has-morph .nav--marquesina .nav-brand.is-aparcado {
   pointer-events: auto;
 }
 
+/* Móvil/tablet (modo GPU de initBrandMorph): mientras vuela, el logo lleva
+   el font-size GRANDE fijo y se encoge con `scale` y se desplaza con
+   `translate`, que mueve la GPU sin repintar las letras. Con el origen en
+   la esquina (0 0) el centro del logo sigue cayendo exactamente donde lo
+   deja translate(-50%, -50%), así que al aparcar no hay salto. */
+body.morph-gpu .nav--marquesina .nav-brand.is-volando {
+  transform-origin: 0 0;
+  will-change: translate, scale;
+}
+
 /* Colores sobre la ilustración (home, portada) */
 .site-header--home .nav-menu a {
   color: var(--crema);
@@ -985,9 +995,13 @@ body.has-morph .nav--marquesina .nav-brand.is-aparcado {
    se deja limpio. */
 .hero {
   position: relative;
-  min-height: 100dvh;
-  background-color: #2a1a10;
-  /* respaldo tono madera */
+  /* svh y NO dvh: en móvil, al hacer scroll la barra del navegador se
+     esconde y 100dvh crece; como el fondo se dibuja al alto del hero, eso
+     lo «ampliaba» mientras se bajaba. svh es fijo y el fondo no se mueve.
+     (Además el JS fija --hero-h en px en pantallas táctiles.) */
+  min-height: 100vh;
+  min-height: var(--hero-h, 100svh);
+  background-color: #2a1a10;          /* respaldo tono madera */
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -1255,20 +1269,11 @@ body.has-morph .nav--marquesina .nav-brand.is-aparcado {
     padding-bottom: 2.2rem;
     padding-top: calc(var(--nav-h) - 1.5rem);
   }
-
-  .cta-cartel {
-    margin-top: 2rem;
-  }
-
-  .hero-scroll {
-    display: none;
-  }
-
-  .cta-carta {
-    letter-spacing: .12em;
-    padding-inline: 1.2rem;
-    gap: .6rem;
-  }
+  /* El logo grande ahora baja hasta justo encima de la franja verde (lo
+     calcula el JS), así que el cartel ya no necesita tanto aire arriba. */
+  .cta-cartel { margin-top: 1rem; }
+  .hero-scroll { display: none; }
+  .cta-carta { letter-spacing: .12em; padding-inline: 1.2rem; gap: .6rem; }
 }
 
 
