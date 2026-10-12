@@ -4544,3 +4544,103 @@ html.i18n-pendiente body {
     left: 0;
   }
 }
+
+/* =============================================================
+   CABECERA DE LAS SECCIONES EN MÓVIL (≤768px)
+   Solo páginas interiores (<header class="site-header--seccion">);
+   la home lleva .site-header--home y no se toca.
+
+     [Reservar]   Spaghettería Circus   [idioma][☰]
+
+   Rejilla de 3 columnas con los laterales del MISMO ancho (--lado),
+   así el título queda centrado en la pantalla aunque a la izquierda
+   no haya nada (contacto.html, que ya es la página de reservas, no
+   lleva «Reservar»). .nav-actions pasa a display:contents para que
+   sus hijos se coloquen directamente en la rejilla.
+   ============================================================= */
+@media (max-width: 768px) {
+  .site-header--seccion {
+    --lado: 92px;          /* «Reservar» / «Réserver» y bandera + ☰ */
+    --hueco: 4px;
+  }
+
+  /* «Reservieren» es más largo: lateral algo más ancho solo en alemán. */
+  html[lang="de"] .site-header--seccion {
+    --lado: 98px;
+  }
+
+  .site-header--seccion .wrap {
+    padding-inline: clamp(10px, 3.5vw, 24px);
+  }
+
+  .site-header--seccion .nav {
+    display: grid;
+    grid-template-columns: var(--lado) minmax(0, 1fr) var(--lado);
+    align-items: center;
+    column-gap: var(--hueco);
+  }
+
+  .site-header--seccion .nav-actions {
+    display: contents;
+  }
+
+  .site-header--seccion .nav-brand {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: center;
+    min-width: 0;
+    max-width: 100%;
+    /* A 320px «Spaghettería» cabe entera en el hueco central; por debajo
+       de ~414px el nombre baja a dos líneas en vez de desbordar. */
+    font-size: clamp(.8rem, 4.2vw, 1.3rem);
+    line-height: 1.05;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .site-header--seccion .nav-brand small {
+    margin-top: .2rem;
+    font-size: .5rem;
+    letter-spacing: .12em;
+    white-space: nowrap;
+  }
+
+  .site-header--seccion .nav-actions .btn--primario {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: start;
+    max-width: 100%;
+    min-height: 40px;
+    padding: .45rem .6rem;
+    font-size: .78rem;
+    white-space: nowrap;
+  }
+
+  /* Bandera sola (sin flecha) y del alto táctil de la hamburguesa. */
+  .site-header--seccion .lang-switch {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: end;
+    margin-right: calc(44px - 6px + 2px);   /* ancho de ☰ menos su sangría, más 2px de aire */
+  }
+
+  .site-header--seccion .lang-btn {
+    justify-content: center;
+    width: 42px;
+    min-height: 44px;
+    padding: 0;
+  }
+
+  .site-header--seccion .lang-chev {
+    display: none;
+  }
+
+  .site-header--seccion .nav-toggle {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: end;
+    width: 44px;
+    height: 44px;
+    margin-right: -6px;    /* el icono se alinea con el borde; el área táctil sigue siendo 44×44 */
+  }
+}
