@@ -394,7 +394,6 @@
     const c = data.contact || {};
     const map = {
       "phone": c.phone,
-      "email": c.email,
       "address": c.address,
       "city": c.city,
       "instagram": "@" + (c.instagram || "")

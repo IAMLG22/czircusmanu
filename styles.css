@@ -2384,7 +2384,10 @@ body.has-morph .nav--marquesina .nav-brand.is-aparcado {
 
 /* --- Encabezado de página interna --- */
 .page-hero {
-  background: var(--tinta);
+  /* Cabecera de páginas interiores (Carta, El Local, Nosotros, Contacto).
+     Antes era verde casi negro (--tinta); ahora rojo teatro para quitar el
+     verde de las franjas de arriba. */
+  background: var(--granate-hondo);
   color: var(--crema);
   padding-block: clamp(3rem, 8vw, 5.5rem) clamp(2.5rem, 6vw, 4rem);
   text-align: center;
@@ -2422,6 +2425,22 @@ body.has-morph .nav--marquesina .nav-brand.is-aparcado {
   max-width: 52ch;
   margin-inline: auto;
 }
+
+/* --- Páginas legales (aviso legal, privacidad, cookies) --- */
+.legal { color: var(--tinta); }
+.legal > h2 { margin: 2rem 0 .6rem; font-size: clamp(1.15rem, 2.5vw, 1.4rem); color: var(--granate); }
+.legal > h2:first-of-type { margin-top: 0; }
+.legal p, .legal li { line-height: 1.7; color: var(--tinta-70); }
+.legal ul { margin: .4rem 0 1.2rem; padding-left: 1.2rem; list-style: disc; }
+.legal li { margin-bottom: .35rem; }
+.legal strong { color: var(--tinta); }
+.legal a { color: var(--granate); text-decoration: underline; }
+.legal-fecha { font-size: .9rem; color: var(--tinta-45); margin-bottom: 2rem; }
+.legal-tabla-wrap { overflow-x: auto; margin: 1rem 0 1.5rem; }
+.legal-tabla { width: 100%; border-collapse: collapse; font-size: .92rem; min-width: 480px; }
+.legal-tabla th, .legal-tabla td { border: 1px solid rgba(28, 42, 34, .15); padding: .55rem .7rem; text-align: left; vertical-align: top; }
+.legal-tabla th { background: var(--crema-2); color: var(--tinta); }
+.legal-tabla td { color: var(--tinta-70); }
 
 /* --- CARTA (actos + acordeón) --- */
 .acto {
@@ -4394,5 +4413,129 @@ body.ruleta-abierta {
   .ruleta-modal-caja {
     opacity: 1;
     transform: none;
+  }
+}
+/* =============================================================
+   SELECTOR DE IDIOMA (bandera + desplegable) — lo monta lib/i18n.js
+   ============================================================= */
+/* Mientras llega el diccionario ocultamos la página un instante para
+   que no se vea el salto de español al idioma elegido. */
+html.i18n-pendiente body {
+  opacity: 0;
+}
+
+.lang-switch {
+  position: relative;
+  flex: none;
+}
+
+.lang-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  min-height: 40px;
+  padding: .35rem .5rem;
+  border-radius: 999px;
+  border: 1.5px solid rgba(200, 162, 76, .55);
+  background: rgba(244, 236, 216, .12);
+  color: inherit;
+  cursor: pointer;
+  transition: background .25s var(--ease-out), border-color .25s var(--ease-out);
+}
+
+.lang-btn:hover {
+  background: rgba(200, 162, 76, .22);
+  border-color: var(--oro);
+}
+
+.lang-flag {
+  display: block;
+  width: 24px;
+  height: 16px;
+  border-radius: 3px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .18);
+  flex: none;
+}
+
+.lang-flag svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.lang-chev {
+  width: 14px;
+  height: 14px;
+  transition: transform .25s var(--ease-out);
+}
+
+.lang-btn[aria-expanded="true"] .lang-chev {
+  transform: rotate(180deg);
+}
+
+.lang-menu {
+  position: absolute;
+  top: calc(100% + .5rem);
+  right: 0;
+  z-index: 300;
+  min-width: 168px;
+  margin: 0;
+  padding: .35rem;
+  list-style: none;
+  background: var(--crema);
+  border: 1px solid rgba(200, 162, 76, .5);
+  border-radius: 14px;
+  box-shadow: var(--shadow-md);
+}
+
+.lang-op {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  width: 100%;
+  padding: .55rem .65rem;
+  border: 0;
+  border-radius: 10px;
+  background: none;
+  color: var(--tinta);
+  font: 500 .95rem var(--sans);
+  text-align: left;
+  cursor: pointer;
+}
+
+.lang-op:hover {
+  background: var(--crema-2);
+}
+
+.lang-op[aria-current="true"] {
+  color: var(--granate);
+  font-weight: 700;
+}
+
+/* Home: la bandera va al final de la barra, tras «Contacto». */
+.nav--marquesina .lang-switch {
+  margin-left: clamp(.8rem, 2vw, 1.6rem);
+  color: var(--crema);
+}
+
+.site-header--home.is-scrolled .lang-switch {
+  color: var(--tinta);
+}
+
+@media (max-width: 959px) {
+  /* Home en móvil: hamburguesa a la derecha, bandera a la izquierda. */
+  .nav--marquesina .lang-switch {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: 0;
+    z-index: 4;
+  }
+
+  .nav--marquesina .lang-menu {
+    right: auto;
+    left: 0;
   }
 }
