@@ -99,11 +99,29 @@
     let tamMax = 0;   // font-size grande en la portada (px)
     let pintando = false;
 
+    // Pantallas táctiles (móvil/tablet): la barra del navegador aparece y
+    // desaparece al hacer scroll y eso dispara «resize» cambiando SOLO el
+    // alto. Si reaccionamos a eso, el fondo y el logo dan saltos/zoom. Allí
+    // fijamos el alto de la portada una vez y solo lo recalculamos cuando
+    // cambia el ANCHO (girar el móvil).
+    const esTactil = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+    let anchoPrevio = window.innerWidth;
+
+    function fijarAltoHero() {
+      if (esTactil) {
+        document.documentElement.style.setProperty("--hero-h", window.innerHeight + "px");
+      }
+    }
+
     function medir() {
       // Volvemos al reposo (aparcado) para medir el tamaño «pequeño» real
       brand.style.removeProperty("--morph-size");
       brand.style.removeProperty("--morph-y");
+      brand.style.removeProperty("translate");
+      brand.style.removeProperty("scale");
+      brand.classList.remove("is-volando");
       hueco.style.height = "0px";
+      hueco.style.marginTop = "0px";
       const caja = brand.getBoundingClientRect();
       if (!caja.width) return;
 
@@ -115,26 +133,108 @@
 
       // 1) Reservamos en la portada el hueco que ocupará el logo grande…
       hueco.style.height = (caja.height * (tamMax / tamMin)) + "px";
+
+      // 1b) En móvil lo bajamos hasta quedar justo ENCIMA de la franja
+      //     verde de la ilustración. El fondo se dibuja al alto del hero y
+      //     en la imagen (1557 px de alto) la franja empieza en y≈290, o sea
+      //     al ~18,6 % del alto. Así el recorrido hasta la barra es más largo
+      //     y el movimiento se aprecia más.
+      if (vw < 640) {
+        const r = hero.getBoundingClientRect();
+        const franja = r.top + hero.offsetHeight * 0.186 - 6; // 6px de aire
+        const extra = franja - hueco.getBoundingClientRect().bottom;
+        if (extra > 0) hueco.style.marginTop = Math.round(extra) + "px";
+      }
+
       // 2) …y ya sabemos dónde cae, así que podemos centrarlo en él.
       const h = hueco.getBoundingClientRect();
       const centroHueco = h.top + window.scrollY + h.height / 2;
       const centroAparcado = caja.top + caja.height / 2; // la cabecera es fija
       bajada = Math.max(0, centroHueco - centroAparcado);
 
+      prepararGpu();
       pintar();
+    }
+
+    /* ---------------------------------------------------------------
+       MODO MÓVIL (GPU)
+       Interpolar el font-size obliga al móvil a recolocar y repintar las
+       letras (con su contorno) en CADA fotograma, y además el JS va siempre
+       un pelín por detrás del scroll, que en móvil lo mueve la GPU: de ahí
+       los tirones. En pantallas táctiles el logo vuela con el font-size
+       GRANDE fijo y se encoge con `scale` (siempre ≤ 1, o sea, reducimos un
+       dibujo grande: no se pixela) y se desplaza con `translate`. Las dos
+       cosas las mueve la GPU sin repintar.
+       · Si el navegador soporta animaciones ligadas al scroll
+         (animation-timeline), la animación va EN el hilo del scroll: el
+         logo queda clavado al dedo, sin ningún retraso.
+       · Si no, el JS escribe translate/scale (sin redondear, que en móvil
+         el redondeo se veía como escalones).
+       Al aparcar volvemos al font-size real: en la barra se ve nítido.
+       --------------------------------------------------------------- */
+    const modoGpu = esTactil;
+    const conTimeline = modoGpu && window.CSS && CSS.supports &&
+                        CSS.supports("animation-timeline: scroll()");
+    let estiloKf = null;
+    let nKf = 0;
+    let volando = null;          // estado actual en modo GPU (null = sin pintar)
+
+    function prepararGpu() {
+      if (!modoGpu) return;
+      document.body.classList.add("morph-gpu");
+      volando = null;            // forzamos a reaplicar el estado en pintar()
+      if (!conTimeline) return;
+      const k = tamMin / tamMax;
+      nKf += 1;                  // nombre nuevo = el navegador rehace la animación
+      if (!estiloKf) {
+        estiloKf = document.createElement("style");
+        document.head.appendChild(estiloKf);
+      }
+      estiloKf.textContent =
+        "@keyframes brandY" + nKf + "{from{translate:0 " + bajada + "px}to{translate:0 0}}" +
+        "@keyframes brandS" + nKf + "{from{scale:1}to{scale:" + k + "}}" +
+        "body.morph-gpu .nav--marquesina .nav-brand.is-volando{" +
+          "animation:brandY" + nKf + " 1s linear both,brandS" + nKf + " 1s cubic-bezier(.45,0,.55,1) both;" +
+          "animation-timeline:scroll(root),scroll(root);" +
+          "animation-range:0px " + bajada + "px,0px " + bajada + "px}";
+    }
+
+    function pintarGpu(y, p) {
+      const enVuelo = p < 1;
+      if (enVuelo !== volando) {
+        volando = enVuelo;
+        brand.classList.toggle("is-volando", enVuelo);
+        if (enVuelo) {
+          brand.style.setProperty("--morph-size", tamMax + "px");
+        } else {
+          brand.style.removeProperty("--morph-size");
+          brand.style.removeProperty("translate");
+          brand.style.removeProperty("scale");
+        }
+      }
+      if (enVuelo && !conTimeline) {
+        const suave = p * p * (3 - 2 * p);           // smoothstep
+        const tam = tamMax + (tamMin - tamMax) * suave;
+        brand.style.translate = "0 " + y + "px";
+        brand.style.scale = String(tam / tamMax);
+      }
     }
 
     function pintar() {
       const y = Math.max(bajada - window.scrollY, 0);
       const p = bajada > 0 ? 1 - y / bajada : 1;   // 0 = portada · 1 = aparcado
-      const suave = p * p * (3 - 2 * p);           // smoothstep
-      const tam = tamMax + (tamMin - tamMax) * suave;
 
-      // Redondeamos a píxeles enteros: con tamaños y desplazamientos
-      // fraccionarios las letras se recolocan medio píxel en cada fotograma
-      // y el logo "vibra" y se ve sucio mientras se hace scroll.
-      brand.style.setProperty("--morph-y", Math.round(y) + "px");
-      brand.style.setProperty("--morph-size", Math.round(tam) + "px");
+      if (modoGpu) {
+        pintarGpu(y, p);
+      } else {
+        const suave = p * p * (3 - 2 * p);           // smoothstep
+        const tam = tamMax + (tamMin - tamMax) * suave;
+        // Redondeamos a píxeles enteros: con tamaños y desplazamientos
+        // fraccionarios las letras se recolocan medio píxel en cada fotograma
+        // y el logo "vibra" y se ve sucio mientras se hace scroll.
+        brand.style.setProperty("--morph-y", Math.round(y) + "px");
+        brand.style.setProperty("--morph-size", Math.round(tam) + "px");
+      }
 
       const aparcado = p > 0.99;
       brand.classList.toggle("is-aparcado", aparcado);
@@ -151,10 +251,24 @@
       requestAnimationFrame(function () { pintando = false; pintar(); });
     }
 
+    function onResize() {
+      const ancho = window.innerWidth;
+      // En táctil, si solo ha cambiado el alto es la barra del navegador:
+      // no tocamos nada para que la portada no «respire» al hacer scroll.
+      if (esTactil && ancho === anchoPrevio) return;
+      anchoPrevio = ancho;
+      fijarAltoHero();
+      medir();
+    }
+
+    fijarAltoHero();
     medir();
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", medir);
-    window.addEventListener("orientationchange", medir);
+    window.addEventListener("resize", onResize);
+    window.addEventListener("orientationchange", function () {
+      // El giro tarda un instante en asentar las medidas nuevas
+      setTimeout(function () { anchoPrevio = window.innerWidth; fijarAltoHero(); medir(); }, 250);
+    });
     // Las fuentes de Google llegan tarde y cambian el ancho del logo
     window.addEventListener("load", medir);
     if (document.fonts && document.fonts.ready) {
